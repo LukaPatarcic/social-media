@@ -14,11 +14,11 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            anonymous: true
-            guard:
-                authenticators:
-                    - App\Security\FacebookAuthenticator
+#        main:
+#            anonymous: true
+#            guard:
+#                authenticators:
+#                    - App\Security\FacebookAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -28,6 +28,6 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
-    access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+#    access_control:
+#         - { path: ^/connect/facebook, roles: ROLE_USER }
+#         - { path: ^/test, roles: ROLE_USER }

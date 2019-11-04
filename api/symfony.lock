@@ -202,6 +202,9 @@
             ".env"
         ]
     },
+    "symfony/form": {
+        "version": "v4.3.6"
+    },
     "symfony/framework-bundle": {
         "version": "4.2",
         "recipe": {
@@ -230,6 +233,9 @@
     "symfony/inflector": {
         "version": "v4.3.6"
     },
+    "symfony/intl": {
+        "version": "v4.3.6"
+    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -242,8 +248,14 @@
     "symfony/mime": {
         "version": "v4.3.6"
     },
+    "symfony/options-resolver": {
+        "version": "v4.3.6"
+    },
     "symfony/orm-pack": {
         "version": "v1.0.7"
+    },
+    "symfony/polyfill-intl-icu": {
+        "version": "v1.12.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.12.0"
@@ -306,6 +318,22 @@
     },
     "symfony/stopwatch": {
         "version": "v4.3.6"
+    },
+    "symfony/translation-contracts": {
+        "version": "v1.1.7"
+    },
+    "symfony/validator": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "d902da3e4952f18d3bf05aab29512eb61cabd869"
+        },
+        "files": [
+            "./config/packages/test/validator.yaml",
+            "./config/packages/validator.yaml"
+        ]
     },
     "symfony/var-dumper": {
         "version": "v4.3.6"

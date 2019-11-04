@@ -4,16 +4,17 @@ namespace App\Security;
 
 use App\Entity\User; // your user entity
 use Doctrine\ORM\EntityManagerInterface;
+use KnpU\OAuth2ClientBundle\Client\OAuth2Client;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\Provider\FacebookClient;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use League\OAuth2\Client\Provider\FacebookUser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FacebookAuthenticator extends SocialAuthenticator
@@ -66,9 +67,18 @@ class FacebookAuthenticator extends SocialAuthenticator
         $user = $this->em->getRepository(User::class)
             ->findOneBy(['email' => $email]);
 
+        if(!$user) {
+            $user = new User();
+
+            $user->setEmail($facebookUser->getEmail())
+                ->setFirstName($facebookUser->getFirstName())
+                ->setLastName($facebookUser->getLastName());
+        }
+//        dd($user,$facebookUser->getId());
+
         // 3) Maybe you just want to "register" them by creating
         // a User object
-        $user->setFacebookId($facebookUser->getId());
+        $user->setFacebookId((int) $facebookUser->getId());
         $this->em->persist($user);
         $this->em->flush();
 
@@ -76,7 +86,7 @@ class FacebookAuthenticator extends SocialAuthenticator
     }
 
     /**
-     * @return FacebookClient
+     * @return OAuth2Client
      */
     private function getFacebookClient()
     {
@@ -88,10 +98,9 @@ class FacebookAuthenticator extends SocialAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         // change "app_homepage" to some route in your app
-//        $targetUrl = $this->router->generate('app_homepage');
-//
-//        return new RedirectResponse($targetUrl);
-        return null;
+        $targetUrl = $this->router->generate('connect_facebook_check');
+
+        return new RedirectResponse($targetUrl);
 
         // or, on success, let the request continue to be handled by the controller
         //return null;
@@ -107,11 +116,14 @@ class FacebookAuthenticator extends SocialAuthenticator
     /**
      * Called when authentication is needed, but it's not sent.
      * This redirects to the 'login'.
+     * @param Request $request
+     * @param AuthenticationException|null $authException
+     * @return RedirectResponse
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
         return new RedirectResponse(
-            '/login/facebook', // might be the site, where users choose their oauth provider
+            'http://localhost:3000/register', // might be the site, where users choose their oauth provider
             Response::HTTP_TEMPORARY_REDIRECT
         );
     }

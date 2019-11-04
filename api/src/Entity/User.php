@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields={"email"}, message="That email is already registered")
  */
 class User implements UserInterface
 {
@@ -19,6 +22,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="Please enter an email address")
+     * @Assert\Email(message="Please enter a valid email address")
      */
     private $email;
 
@@ -30,6 +35,12 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Length(
+     *     max="255",
+     *     maxMessage="Max number of characters is 255 characters",
+     *     min="6",
+     *     minMessage="Your password should be at least 6 characters"
+     * )
      */
     private $password;
 
@@ -37,6 +48,39 @@ class User implements UserInterface
      * @ORM\Column(type="integer", nullable=true)
      */
     private $facebookId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *     max="255",
+     *     maxMessage="Max number of characters is 255 characters",
+     *     min="2",
+     *     minMessage="Your first name should be at least 2 characters"
+     * )
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *     max="255",
+     *     maxMessage="Max number of characters is 255 characters",
+     *     min="2",
+     *     minMessage="Your last name should be at least 2 characters"
+     * )
+     */
+    private $lastName;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *     max="255",
+     *     maxMessage="Max number of characters is 255 characters",
+     *     min="2",
+     *     minMessage="Your username should be at least 2 characters"
+     * )
+     */
+    private $profileName;
 
     public function getId(): ?int
     {
@@ -124,6 +168,42 @@ class User implements UserInterface
     public function setFacebookId(?int $facebookId): self
     {
         $this->facebookId = $facebookId;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getProfileName(): ?string
+    {
+        return $this->profileName;
+    }
+
+    public function setProfileName(?string $profileName): self
+    {
+        $this->profileName = $profileName;
 
         return $this;
     }
