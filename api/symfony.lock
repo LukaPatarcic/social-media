@@ -78,6 +78,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "facebook/graph-sdk": {
+        "version": "5.7.0"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.4.1"
     },

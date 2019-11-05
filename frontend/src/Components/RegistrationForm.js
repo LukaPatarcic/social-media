@@ -2,9 +2,12 @@ import * as React from "react";
 import {ErrorMessage, Field, Formik} from "formik";
 import * as Yup from "yup";
 import {Alert, Button, Col, Form, Spinner} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link,Redirect} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faFacebook,faGoogle} from "@fortawesome/free-brands-svg-icons";
+import FacebookLogin from "react-facebook-login";
+import cookie from 'react-cookies';
+import GoogleLogin from "react-google-login";
 
 export default class RegistrationForm extends React.Component{
 
@@ -16,6 +19,7 @@ export default class RegistrationForm extends React.Component{
         document.title = 'Register'
 
     }
+
 
     onFormSubmitHandler(value) {
 
@@ -53,7 +57,7 @@ export default class RegistrationForm extends React.Component{
             })
             .catch(error => {
                 this.setState({
-                    serverError: 'Oops something went wrong try again later...',
+                    serverError: ['Oops something went wrong try again later...'],
                     isLoading: false
                 })
             })
@@ -62,8 +66,19 @@ export default class RegistrationForm extends React.Component{
     redirectToUrl(url) {
         window.location.href = url;
     }
-
     render() {
+
+        const responseFacebook = (response) => {
+            console.log(response);
+            cookie.save('facebook-access-token',response.accessToken);
+            return (<Redirect to={'/profile'} />)
+        }
+
+        const responseGoogle = (response) => {
+            console.log(response);
+            cookie.save('google-access-token',response.accessToken);
+        }
+
         return (
             <Formik
                 initialValues={{
@@ -77,11 +92,11 @@ export default class RegistrationForm extends React.Component{
                 }}
                 validationSchema={Yup.object().shape({
                     firstName: Yup.string()
-                        .min(2, 'Password must be at least 2 characters'),
+                        .min(2, 'First name must be at least 2 characters'),
                     lastName: Yup.string()
-                        .min(2, 'Password must be at least 2 characters'),
+                        .min(2, 'Last Name must be at least 2 characters'),
                     profileName: Yup.string()
-                        .min(2, 'Password must be at least 2 characters'),
+                        .min(2, 'Username must be at least 2 characters'),
                     email: Yup.string()
                         .email('Email is invalid')
                         .required('Email is required'),
@@ -127,9 +142,9 @@ export default class RegistrationForm extends React.Component{
                     <ErrorMessage name="email" component="div" className="invalid-feedback" />
                     </Col>
                     <Col md={6} sm={12}>
-                    <Form.Label htmlFor="profileName">profileName</Form.Label>
+                    <Form.Label htmlFor="profileName">Username</Form.Label>
                     <Field name="profileName" type="text" className={'form-control' + (errors.profileName && touched.profileName ? ' is-invalid' : '')} />
-                    <ErrorMessage name="email" component="div" className="invalid-feedback" />
+                    <ErrorMessage name="profileName" component="div" className="invalid-feedback" />
                     </Col>
                     </Form.Row>
                     <Form.Row>
@@ -160,14 +175,28 @@ export default class RegistrationForm extends React.Component{
                     <hr/>
                     <p>Or Register with another app</p>
                     <p>
-                    <FontAwesomeIcon
-                        onClick={() => {
-                            this.redirectToUrl('http://localhost:8000/connect/facebook');
-                        }}
-                        color={'#3b5998'}
-                        size={'2x'}
-                        icon={faFacebook}/>
-                    <Link to={'/connect/google'}><FontAwesomeIcon color={'#000'} className={'ml-3'} size={'2x'} icon={faGoogle}/></Link>
+                        <FacebookLogin
+                            appId="1189985861185629"
+                            fields="email,picture"
+                            scope="
+                                public_profile,email,user_photos,
+                                user_age_range,user_birthday,
+                                user_gender,user_likes,user_posts,
+                                user_status,user_location
+                                "
+                            returnScopes={true}
+                            callback={responseFacebook}
+                        />
+                        <br />
+                        <br />
+
+
+                        <GoogleLogin
+                            clientId="292960777305-ftkcpdoccdqft12kh1oqsvvtsv8c62kl.apps.googleusercontent.com"
+                            buttonText="LOGIN WITH GOOGLE"
+                            onSuccess={responseGoogle}
+                            onFailure={responseGoogle}
+                        />
                     </p>
                     </Form>
                 )}

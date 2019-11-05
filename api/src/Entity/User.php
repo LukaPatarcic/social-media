@@ -45,11 +45,6 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $facebookId;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(
      *     max="255",
@@ -81,6 +76,11 @@ class User implements UserInterface
      * )
      */
     private $profileName;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Token", mappedBy="userId", cascade={"persist", "remove"})
+     */
+    private $token;
 
     public function getId(): ?int
     {
@@ -160,18 +160,6 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFacebookId(): ?int
-    {
-        return $this->facebookId;
-    }
-
-    public function setFacebookId(?int $facebookId): self
-    {
-        $this->facebookId = $facebookId;
-
-        return $this;
-    }
-
     public function getFirstName(): ?string
     {
         return $this->firstName;
@@ -204,6 +192,23 @@ class User implements UserInterface
     public function setProfileName(?string $profileName): self
     {
         $this->profileName = $profileName;
+
+        return $this;
+    }
+
+    public function getToken(): ?Token
+    {
+        return $this->token;
+    }
+
+    public function setToken(Token $token): self
+    {
+        $this->token = $token;
+
+        // set the owning side of the relation if necessary
+        if ($token->getUserId() !== $this) {
+            $token->setUserId($this);
+        }
 
         return $this;
     }

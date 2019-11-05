@@ -50,7 +50,7 @@ class SecurityController extends AbstractController
             return $this->json(['error' => $errors]);
         }
 
-        $password = $passwordEncoder->encodePassword($user, $user->getPassword());
+        $password = $passwordEncoder->encodePassword($user, $data['password']['first']);
         $user->setPassword($password);
 
         // 4) save the User!

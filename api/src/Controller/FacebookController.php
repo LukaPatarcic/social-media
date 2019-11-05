@@ -1,6 +1,9 @@
 <?php
 namespace App\Controller;
 
+use Facebook\Exceptions\FacebookResponseException;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Facebook;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\Provider\FacebookClient;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -8,6 +11,7 @@ use League\OAuth2\Client\Provider\FacebookUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -74,32 +78,31 @@ class FacebookController extends AbstractController
 
     /**
      * @Route("/connect/facebook/get/user", name="connect_facebook_get_user")
-     * @param ClientRegistry $clientRegistry
-     * @return JsonResponse
-     * @throws IdentityProviderException
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
-    public function getFacebookUser(ClientRegistry $clientRegistry)
+    public function getFacebookUser(Request $request)
     {
-        $client = $clientRegistry->getClient('facebook_main');
-        $client->setAsStateless();
-        $user = $client->fetchUser();
+//        $accessToken = $request->headers->get('facebook-access-token');
+        $accessToken = json_decode($request->getContent(),true)['facebook-access-token'];
+        if(!$accessToken) {
+            return $this->json(['error' => 'Access token is required']);
+        }
 
-        dd($user);
+        $fb = new Facebook([
+            'app_id' => '1189985861185629',
+            'app_secret' => '26d71f5fa6f3c7decd1b3af3ea4528eb',
+            'default_graph_version' => 'v5.0',
+        ]);
 
         try {
-            // the exact class depends on which provider you're using
-            /** @var FacebookUser $user */
-            $user = $client->fetchUser();
+            // Returns a `Facebook\FacebookResponse` object
+            $response = $fb->get('me?fields=id,name,about,address,email,first_name,gender,hometown,last_name,picture.type(large),birthday,age_range,friends{picture,name}', $accessToken);
+            return $this->json($response->getDecodedBody());
 
-            // do something with all this new power!
-            // e.g. $name = $user->getFirstName();
-//            var_dump($user); die;
-            return $this->json($user, Response::HTTP_OK);
-            // ...
-        } catch (IdentityProviderException $e) {
-            // something went wrong!
-            // probably you should return the reason to the user
-            return $this->json($e->getMessage(), Response::HTTP_BAD_REQUEST);
+        } catch(FacebookResponseException $e) {
+            return $this->json([],Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch(FacebookSDKException $e) {
+            return $this->json([],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
