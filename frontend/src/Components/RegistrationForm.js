@@ -8,6 +8,8 @@ import {faFacebook,faGoogle} from "@fortawesome/free-brands-svg-icons";
 import FacebookLogin from "react-facebook-login";
 import cookie from 'react-cookies';
 import GoogleLogin from "react-google-login";
+import FacebookAuthLogin from "./FacebookAuthLogin";
+import GoogleAuthLogin from "./GoogleAuthLogin";
 
 export default class RegistrationForm extends React.Component{
 
@@ -67,18 +69,6 @@ export default class RegistrationForm extends React.Component{
         window.location.href = url;
     }
     render() {
-
-        const responseFacebook = (response) => {
-            console.log(response);
-            cookie.save('facebook-access-token',response.accessToken);
-            return (<Redirect to={'/profile'} />)
-        }
-
-        const responseGoogle = (response) => {
-            console.log(response);
-            cookie.save('google-access-token',response.accessToken);
-        }
-
         return (
             <Formik
                 initialValues={{
@@ -175,28 +165,8 @@ export default class RegistrationForm extends React.Component{
                     <hr/>
                     <p>Or Register with another app</p>
                     <p>
-                        <FacebookLogin
-                            appId="1189985861185629"
-                            fields="email,picture"
-                            scope="
-                                public_profile,email,user_photos,
-                                user_age_range,user_birthday,
-                                user_gender,user_likes,user_posts,
-                                user_status,user_location,user_friends
-                                "
-                            returnScopes={true}
-                            callback={responseFacebook}
-                        />
-                        <br />
-                        <br />
-
-
-                        <GoogleLogin
-                            clientId="292960777305-ftkcpdoccdqft12kh1oqsvvtsv8c62kl.apps.googleusercontent.com"
-                            buttonText="LOGIN WITH GOOGLE"
-                            onSuccess={responseGoogle}
-                            onFailure={responseGoogle}
-                        />
+                        <FacebookAuthLogin/>
+                        <GoogleAuthLogin/>
                     </p>
                     </Form>
                 )}

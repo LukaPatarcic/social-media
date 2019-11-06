@@ -4,7 +4,7 @@ import './css/style.css'
 import Register from "./Components/Register";
 import Notfound from "./Components/Notfound";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
-import Profile from "./Components/Profile";
+import Profile from "./Components/Profile/Profile";
 import Login from "./Components/Login/Login"
 import LoginFacebook from "./Components/Login/LoginFacebook";
 

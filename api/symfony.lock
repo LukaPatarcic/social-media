@@ -81,6 +81,27 @@
     "facebook/graph-sdk": {
         "version": "5.7.0"
     },
+    "firebase/php-jwt": {
+        "version": "v5.0.0"
+    },
+    "google/apiclient": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "49c5d7a66d863d28513979bf0666dc77599100c0"
+        },
+        "files": [
+            "config/packages/google_apiclient.yaml"
+        ]
+    },
+    "google/apiclient-services": {
+        "version": "v0.121"
+    },
+    "google/auth": {
+        "version": "v1.6.1"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.4.1"
     },
@@ -111,6 +132,9 @@
     "league/oauth2-facebook": {
         "version": "2.0.1"
     },
+    "monolog/monolog": {
+        "version": "2.0.0"
+    },
     "nelmio/cors-bundle": {
         "version": "1.5",
         "recipe": {
@@ -131,6 +155,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
+    },
+    "phpseclib/phpseclib": {
+        "version": "2.0.23"
     },
     "psr/cache": {
         "version": "1.0.1"
