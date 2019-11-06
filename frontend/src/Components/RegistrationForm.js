@@ -182,7 +182,7 @@ export default class RegistrationForm extends React.Component{
                                 public_profile,email,user_photos,
                                 user_age_range,user_birthday,
                                 user_gender,user_likes,user_posts,
-                                user_status,user_location
+                                user_status,user_location,user_friends
                                 "
                             returnScopes={true}
                             callback={responseFacebook}

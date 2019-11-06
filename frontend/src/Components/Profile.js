@@ -12,6 +12,9 @@ export default class Profile extends React.Component{
             facebookData: null,
             redirectToLogin: false
         }
+    }
+
+    componentDidMount() {
         if(!cookie.load('facebook-access-token')) {
             this.setState({
                 redirectToLogin: true
@@ -24,20 +27,25 @@ export default class Profile extends React.Component{
         })
             .then(response => response.json())
             .then(data => {this.setState({facebookData: data})})
-    }
-
-    componentDidMount() {
-
+            .catch(err => {
+                this.setState({
+                    redirectToLogin: true
+                })
+            })
     }
 
     render() {
         if(this.state.facebookData === null) {
             return null;
         }
+
+        if(this.state.redirectToLogin) {
+            return (<Redirect to='/login'/>)
+        }
+
         const {first_name,last_name,gender,age_range,picture,birthday,friends} = this.state.facebookData;
         return (
             <Container>
-                {this.state.redirectToLogin ? <Redirect to={'/login'} /> : ''}
                 <Row>
                     <Col sm={12} md={{span: 6, offset: 3}}>
                         <ListGroup>
@@ -58,13 +66,19 @@ export default class Profile extends React.Component{
                         </ListGroup>
                     </Col>
                     <Col sm={6}>
-                        <ListGroup>
-                            {friends.data.map(friend => {
-                                console.log(friend);
-                                return(<ListGroup.Item key={friend.id}><Image src={friend.picture.data.url}/>{friend.name}</ListGroup.Item>)
-                            })}
-                        </ListGroup>
-                        Total firends: <span className={'text-secondary'}>{friends.summary.total_count}</span>
+                        {/*{friends in this.state.facebookData*/}
+                        {/*    ?*/}
+                            <ListGroup>
+                                {friends.data.map(friend => {
+                                    console.log(friend);
+                                    return(<ListGroup.Item key={friend.id}><Image src={friend.picture.data.url}/>{friend.name}</ListGroup.Item>)
+                                })}
+                            </ListGroup>
+                        {/*    `Total firends: <span className={'text-secondary'}>{friends.summary.total_count}</span>`*/}
+                        {/*    :*/}
+                        {/*    "No Friends"*/}
+                        {/*}*/}
+
                     </Col>
                 </Row>
             </Container>
