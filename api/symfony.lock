@@ -1,4 +1,7 @@
 {
+    "cboden/ratchet": {
+        "version": "v0.4.1"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -78,6 +81,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "evenement/evenement": {
+        "version": "v3.0.1"
+    },
     "facebook/graph-sdk": {
         "version": "5.7.0"
     },
@@ -101,6 +107,15 @@
     },
     "google/auth": {
         "version": "v1.6.1"
+    },
+    "gos/pubsub-router-bundle": {
+        "version": "v0.3.5"
+    },
+    "gos/web-socket-bundle": {
+        "version": "v1.10.0"
+    },
+    "gos/websocket-client": {
+        "version": "v0.1.2"
     },
     "guzzlehttp/guzzle": {
         "version": "6.4.1"
@@ -173,6 +188,42 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
+    },
+    "ratchet/rfc6455": {
+        "version": "v0.2.5"
+    },
+    "react/cache": {
+        "version": "v1.0.0"
+    },
+    "react/dns": {
+        "version": "v1.2.0"
+    },
+    "react/event-loop": {
+        "version": "v1.1.0"
+    },
+    "react/promise": {
+        "version": "v2.7.1"
+    },
+    "react/promise-timer": {
+        "version": "v1.5.1"
+    },
+    "react/socket": {
+        "version": "v1.3.0"
+    },
+    "react/stream": {
+        "version": "v1.1.0"
+    },
+    "sensio/framework-extra-bundle": {
+        "version": "5.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.2",
+            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
+        },
+        "files": [
+            "config/packages/sensio_framework_extra.yaml"
+        ]
     },
     "symfony/cache": {
         "version": "v4.3.6"
@@ -352,6 +403,27 @@
     "symfony/translation-contracts": {
         "version": "v1.1.7"
     },
+    "symfony/twig-bridge": {
+        "version": "v4.3.8"
+    },
+    "symfony/twig-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "1da1987340b5ba64b16383906d678b989e3d096e"
+        },
+        "files": [
+            "config/packages/test/twig.yaml",
+            "config/packages/twig.yaml",
+            "config/routes/dev/twig.yaml",
+            "templates/base.html.twig"
+        ]
+    },
+    "symfony/twig-pack": {
+        "version": "v1.0.0"
+    },
     "symfony/validator": {
         "version": "4.3",
         "recipe": {
@@ -382,6 +454,12 @@
     },
     "symfony/yaml": {
         "version": "v4.3.6"
+    },
+    "twig/extra-bundle": {
+        "version": "v3.0.0"
+    },
+    "twig/twig": {
+        "version": "v2.12.2"
     },
     "zendframework/zend-code": {
         "version": "3.4.0"
