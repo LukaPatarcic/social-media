@@ -78,9 +78,14 @@ class User implements UserInterface
     private $profileName;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Token", mappedBy="userId", cascade={"persist", "remove"})
+     * @ORM\Column(type="string", length=255, nullable=true, unique=true)
      */
     private $token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $expiresAt;
 
     public function getId(): ?int
     {
@@ -196,19 +201,26 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getToken(): ?Token
+    public function getToken(): ?string
     {
         return $this->token;
     }
 
-    public function setToken(Token $token): self
+    public function setToken(?string $token): self
     {
         $this->token = $token;
 
-        // set the owning side of the relation if necessary
-        if ($token->getUserId() !== $this) {
-            $token->setUserId($this);
-        }
+        return $this;
+    }
+
+    public function getExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->expiresAt;
+    }
+
+    public function setExpiresAt(?\DateTimeInterface $expiresAt): self
+    {
+        $this->expiresAt = $expiresAt;
 
         return $this;
     }

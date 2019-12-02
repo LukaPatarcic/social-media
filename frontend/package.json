@@ -7,10 +7,12 @@
     "@fortawesome/free-brands-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/react-fontawesome": "^0.1.7",
+    "autobahn-react": "^0.3.1",
     "bootstrap": "^4.3.1",
     "formik": "^2.0.3",
     "jquery": "^3.4.1",
     "materialize-css": "^1.0.0",
+    "pusher-js": "^5.0.3",
     "react": "^16.11.0",
     "react-bootstrap": "^1.0.0-beta.14",
     "react-cookies": "^0.1.1",
@@ -20,6 +22,7 @@
     "react-materialize": "^3.4.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "reactjs-autobahn": "^1.8.19",
     "yup": "^0.27.0"
   },
   "scripts": {

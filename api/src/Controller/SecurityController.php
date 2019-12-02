@@ -18,22 +18,6 @@ class SecurityController extends AbstractController
 {
 
     /**
-     * @Route("/register/email")
-     * @param Request $request
-     * @return Response
-     */
-    public function emailValidation(Request $request)
-    {
-        $email = $request->getContent();
-        $exists = $this->getDoctrine()->getRepository(User::class)->findOneBy(['email' => $email]);
-        if($exists) {
-            return $this->json([],Response::HTTP_BAD_REQUEST);
-
-        }
-        return $this->json([],Response::HTTP_OK);
-    }
-
-    /**
      * @Route("/register", name="app_register")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
@@ -122,5 +106,21 @@ class SecurityController extends AbstractController
         }
 
         return $errors;
+    }
+
+    /**
+     * @Route("/chole")
+     */
+    public function chole()
+    {
+        $words = ['kill','destroy','drop','delete'];
+        $s = 'kill vts kill destroy vts drop subotica delete 024';
+        // "k**l vts k**l d*****y vts d**p subotica d****e 024"
+        foreach ($words as $word) {
+            $a = substr($word,1,-1);
+            $b = str_repeat('*',substr_count());
+            var_dump(str_replace($a,$b,$s));
+        }
+        return new Response('asd');
     }
 }

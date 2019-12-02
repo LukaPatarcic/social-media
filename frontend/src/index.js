@@ -7,6 +7,7 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Profile from "./Components/Profile/Profile";
 import Login from "./Components/Login/Login"
 import LoginFacebook from "./Components/Login/LoginFacebook";
+import WS from "./Components/WebSocketConnection";
 
 
 const routing = (
@@ -14,6 +15,7 @@ const routing = (
         <Switch>
             <Route path="/register" component={Register} />
             <Route path="/profile" component={Profile} />
+            <Route path="/ws" component={WS} />
             <Route path="/login" component={Login}/>
             <Route path="/login/facebook" component={LoginFacebook} />
             <Route component={Notfound} />

@@ -8,7 +8,8 @@
         "ext-json": "*",
         "doctrine/annotations": "^1.8",
         "facebook/graph-sdk": "^5.7",
-        "gos/web-socket-bundle": "^1.10",
+        "gos/web-socket-bundle": "^2.0@beta",
+        "symfony/apache-pack": "^1.0.1",
         "knpuniversity/oauth2-client-bundle": "^1.30",
         "league/oauth2-facebook": "^2.0",
         "nelmio/cors-bundle": "^1.5",
@@ -25,6 +26,7 @@
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.14",
+        "symfony/debug-pack": "*",
         "symfony/var-dumper": "4.3.*",
         "symfony/web-server-bundle": "4.3.*"
     },
