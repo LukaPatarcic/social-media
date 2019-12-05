@@ -8,12 +8,10 @@ export default class Logout extends React.Component {
         this.state = {
             redirectToLogin: false
         }
-        this.logout = this.logout.bind(this);
-
     }
 
-    logout() {
-        cookie.remove('token');
+    componentDidMount() {
+        cookie.remove('access-token');
         this.setState({
             redirectToLogin: true
         })
@@ -21,10 +19,10 @@ export default class Logout extends React.Component {
 
     render() {
         if(this.state.redirectToLogin) {
-            return (<Redirect to={'/login'}/>)
+            return (<Redirect to={'/'}/>)
         }
         return (
-            <a onClick={this.logout} href={'#'}>Logout</a>
+            <React.Fragment/>
         );
     }
 

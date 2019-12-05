@@ -8,7 +8,6 @@
         "ext-json": "*",
         "doctrine/annotations": "^1.8",
         "facebook/graph-sdk": "^5.7",
-        "gos/web-socket-bundle": "^2.0@beta",
         "symfony/apache-pack": "^1.0.1",
         "knpuniversity/oauth2-client-bundle": "^1.30",
         "league/oauth2-facebook": "^2.0",

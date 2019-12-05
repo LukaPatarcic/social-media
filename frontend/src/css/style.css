@@ -1,2 +1,18 @@
-@import "~bootstrap/dist/css/bootstrap.min.css";
-@import "~materialize-css/dist/css/materialize.min.css";
+@import "https://fonts.googleapis.com/css?family=Fredoka+One&display=swap";
+
+* {
+    font-family: 'Fredoka One', cursive;
+}
+
+.md-form input:not([type]):focus:not([readonly]) + label, .md-form input[type="text"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="password"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="email"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="url"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="time"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="date"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="datetime"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="datetime-local"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="tel"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="number"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="search"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="search-md"]:focus:not([readonly]) + label, .md-form textarea.md-textarea:focus:not([readonly]) + label {
+    color: #f00;
+}
+
+.md-form input:not([type]):focus:not([readonly]), .md-form input[type="text"]:not(.browser-default):focus:not([readonly]), .md-form input[type="password"]:not(.browser-default):focus:not([readonly]), .md-form input[type="email"]:not(.browser-default):focus:not([readonly]), .md-form input[type="url"]:not(.browser-default):focus:not([readonly]), .md-form input[type="time"]:not(.browser-default):focus:not([readonly]), .md-form input[type="date"]:not(.browser-default):focus:not([readonly]), .md-form input[type="datetime"]:not(.browser-default):focus:not([readonly]), .md-form input[type="datetime-local"]:not(.browser-default):focus:not([readonly]), .md-form input[type="tel"]:not(.browser-default):focus:not([readonly]), .md-form input[type="number"]:not(.browser-default):focus:not([readonly]), .md-form input[type="search"]:not(.browser-default):focus:not([readonly]), .md-form input[type="search-md"]:focus:not([readonly]), .md-form textarea.md-textarea:focus:not([readonly]) {
+    border-bottom: 1px solid #f00;
+    box-shadow: 0 1px 0 0 #f00;
+}
+
+.background {
+    background-image: './images/logo.svg';
+}
