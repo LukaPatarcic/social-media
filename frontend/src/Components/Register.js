@@ -35,7 +35,7 @@ export default class Register extends React.Component{
             loading: '',
             successMessage: ''
         }
-        document.title = 'Register';
+        document.title = 'Allshak | Register';
     }
 
     submitHandler = event => {
@@ -70,6 +70,7 @@ export default class Register extends React.Component{
                             email: '',
                             password: '',
                             confirmPassword: '',
+                            serverError: '',
                             loading: false
                         })
                     }

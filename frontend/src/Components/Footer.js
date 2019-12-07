@@ -1,6 +1,7 @@
 import * as React from "react";
-import {MDBCol, MDBContainer, MDBFooter, MDBInput, MDBRow} from "mdbreact";
+import {MDBBtn, MDBCol, MDBContainer, MDBFooter, MDBInput, MDBRow} from "mdbreact";
 import SimpleReactValidator from "simple-react-validator";
+import {Link} from "react-router-dom";
 
 export default class Footer extends React.Component{
     constructor(props) {
@@ -30,7 +31,7 @@ export default class Footer extends React.Component{
 
     render() {
         return (
-            <MDBFooter color="blue" className="font-small pt-4 mt-4">
+            <MDBFooter color="grey" className="font-small pt-4 mt-5">
                 <MDBContainer fluid className="text-center text-md-left">
                     <MDBRow>
                         <MDBCol md="6">
@@ -39,32 +40,58 @@ export default class Footer extends React.Component{
                                 Get links to our social media and other
                             </p>
                             <form noValidate onSubmit={this.submitHandler}>
-                                <MDBInput
-                                    value={this.state.emailNewsletter}
-                                    name="emailNewsletter"
-                                    onChange={this.changeHandler}
-                                    label="Email"
-                                    icon="at"
-                                    group
-                                    type='email'
-                                />
-                                <small>{this.validator.message('emailNewsletter', this.state.emailNewsletter, 'required|email|max:255')}</small>
+                                <MDBRow>
+                                    <MDBCol md={6}>
+                                        <MDBInput
+                                            value={this.state.emailNewsletter}
+                                            name="emailNewsletter"
+                                            onChange={this.changeHandler}
+                                            label="Newsletter Email"
+                                            group
+                                            type='email'
+                                        />
+                                        <small>{this.validator.message('emailNewsletter', this.state.emailNewsletter, 'required|email|max:255')}</small>
+                                    </MDBCol>
+                                    <MDBCol md={6}>
+                                        <MDBBtn size={'sm'} outline color={'elegant'} style={{marginTop: 42}}>Subscribe</MDBBtn>
+                                    </MDBCol>
+                                </MDBRow>
                             </form>
                         </MDBCol>
-                        <MDBCol md="6">
+                        <MDBCol md="3">
                             <h5 className="title">Links</h5>
                             <ul>
                                 <li className="list-unstyled">
-                                    <a href="#!">Link 1</a>
+                                    <Link to={'/'}>Home</Link>
                                 </li>
                                 <li className="list-unstyled">
-                                    <a href="#!">Link 2</a>
+                                    <Link to={'/about'}>About</Link>
                                 </li>
                                 <li className="list-unstyled">
-                                    <a href="#!">Link 3</a>
+                                    <Link to={'/contact'}>Contact</Link>
                                 </li>
                                 <li className="list-unstyled">
-                                    <a href="#!">Link 4</a>
+                                    <Link to={'/register'}>Register</Link>
+                                </li>
+                                <li className="list-unstyled">
+                                    <Link to={'/login'}>Login</Link>
+                                </li>
+                            </ul>
+                        </MDBCol>
+                        <MDBCol md="3">
+                            <h5 className="title">Social Media</h5>
+                            <ul>
+                                <li className="list-unstyled">
+                                    <Link to={'/'}>Facebook</Link>
+                                </li>
+                                <li className="list-unstyled">
+                                    <Link to={'/about'}>Instagram</Link>
+                                </li>
+                                <li className="list-unstyled">
+                                    <Link to={'/contact'}>Twitter</Link>
+                                </li>
+                                <li className="list-unstyled">
+                                    <Link to={'/register'}>YouTube</Link>
                                 </li>
                             </ul>
                         </MDBCol>
@@ -72,7 +99,7 @@ export default class Footer extends React.Component{
                 </MDBContainer>
                 <div className="footer-copyright text-center py-3">
                     <MDBContainer fluid>
-                        &copy; {new Date().getFullYear()} Copyright: <a href="https://www.MDBootstrap.com"> Lukaku Tech </a>
+                        &copy; {new Date().getFullYear()} Copyright: <a href="https://lukaku.tech"> Lukaku Tech </a>
                     </MDBContainer>
                 </div>
             </MDBFooter>

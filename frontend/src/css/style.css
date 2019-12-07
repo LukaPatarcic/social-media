@@ -14,8 +14,10 @@
     box-shadow: 0 1px 0 0 #f00;
 }
 
-.background {
-    background-image: './images/logo.svg';
+body {
+    background-image: url('../images/background.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .md-form .prefix.active {

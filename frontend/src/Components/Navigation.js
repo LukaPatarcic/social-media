@@ -6,6 +6,7 @@ import {
     MDBNavItem, MDBNavLink,
 } from "mdbreact";
 import { BrowserRouter as Router } from 'react-router-dom';
+import {withRouter} from 'react-router'
 import cookie from "react-cookies";
 
 export default class Navigation extends React.Component{
@@ -37,7 +38,7 @@ export default class Navigation extends React.Component{
                 <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
                     <MDBNavbarNav left>
                         <MDBNavItem active>
-                            <MDBNavLink to="#!">Home</MDBNavLink>
+                            <MDBNavLink to="/">Home</MDBNavLink>
                         </MDBNavItem>
                         {this.state.isLoggedIn == true ?
                             <MDBNavItem>

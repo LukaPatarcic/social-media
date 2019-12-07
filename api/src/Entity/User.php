@@ -91,7 +91,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isVerified;
+    private $isVerified = 0;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)

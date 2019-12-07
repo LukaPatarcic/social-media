@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Content" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1920 1080" style="enable-background:new 0 0 1920 1080;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFF6C7;}
+	.st1{fill:#091318;}
+	.st2{fill:url(#XMLID_3_);}
+	.st3{fill:url(#XMLID_4_);}
+	.st4{fill:url(#XMLID_5_);}
+	.st5{fill:url(#XMLID_6_);}
+	.st6{fill:url(#XMLID_7_);}
+	.st7{fill:url(#XMLID_8_);}
+	.st8{fill:url(#XMLID_14_);}
+	.st9{fill:url(#XMLID_36_);}
+	.st10{opacity:0.41;fill:url(#XMLID_37_);}
+	.st11{opacity:0.41;fill:url(#XMLID_39_);}
+	.st12{opacity:0.41;fill:url(#XMLID_41_);}
+	.st13{opacity:0.41;fill:url(#XMLID_42_);}
+	.st14{filter:url(#Adobe_OpacityMaskFilter);}
+	.st15{fill:#020202;}
+	.st16{opacity:0.41;mask:url(#XMLID_44_);}
+	.st17{fill:#FFF6C8;}
+	.st18{opacity:0.21;}
+	.st19{fill:#47665A;}
+	.st20{fill:#FDFDFE;}
+	.st21{fill:url(#XMLID_45_);}
+	.st22{fill:#C1C447;}
+	.st23{fill:#FFFFFF;}
+	.st24{fill:#E8E8E8;}
+	.st25{fill:#3A3850;}
+	.st26{fill:#827DA3;}
+	.st27{fill:#D71F26;}
+	.st28{fill:#3C53A4;}
+	.st29{fill:#43B49F;}
+	.img-float-1 {
+    -webkit-transform: translatey(0px);
+    transform: translatey(0px);
+    -webkit-animation: float 7s ease-in-out infinite;
+    animation: float 7s ease-in-out infinite;
+}
+	.img-float-2 {
+    -webkit-transform: translatey(0px);
+    transform: translatey(0px);
+    -webkit-animation: float 9s ease-in-out infinite;
+    animation: float 9s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        -webkit-transform: translatey(0px);
+        transform: translatey(0px);
+    }
+    50% {
+        -webkit-transform: translatey(-40px);
+        transform: translatey(-35px);
+    }
+    100% {
+        -webkit-transform: translatey(0px);
+        transform: translatey(0px);
+    }
+}
+@-webkit-keyframes float {
+    0% {
+        -webkit-transform: translatey(0px);
+        transform: translatey(0px);
+    }
+    50% {
+        -webkit-transform: translatey(-60px);
+        transform: translatey(-50px);
+    }
+    100% {
+        -webkit-transform: translatey(0px);
+        transform: translatey(0px);
+    }
+}
+</style>
+<symbol  id="sparkle" viewBox="-5.4 -5.4 10.8 10.8">
+	<path id="XMLID_50_" class="st0" d="M4.8,0.7H0.7v4.1c0,0.4-0.3,0.7-0.7,0.7c-0.4,0-0.7-0.3-0.7-0.7V0.7h-4.1
+		c-0.4,0-0.7-0.3-0.7-0.7s0.3-0.7,0.7-0.7h4.1v-4.1c0-0.4,0.3-0.7,0.7-0.7c0.4,0,0.7,0.3,0.7,0.7v4.1h4.1c0.4,0,0.7,0.3,0.7,0.7
+		S5.1,0.7,4.8,0.7z"/>
+</symbol>
+<symbol  id="stars" viewBox="-4.3 -3.8 8.6 7.6">
+	<path id="XMLID_49_" class="st0" d="M4.3,0c0-2.1-1.9-3.8-4.3-3.8S-4.3-2.1-4.3,0S-2.4,3.8,0,3.8S4.3,2.1,4.3,0z"/>
+</symbol>
+<rect id="XMLID_38_" class="st1" width="1920" height="1080"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_99_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 43.3153 663.3275)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_98_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 201.8688 713.5026)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_97_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 201.8688 221.8797)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_96_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1312.8693 1008.3172)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_95_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 991.4644 698.7857)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_94_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 99.6667 856.6082)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_92_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 755.9169 178.7137)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_91_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1047.8706 76.5268)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_90_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1426.0409 279.3477)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_89_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1013.6418 956.026)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_88_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1299.9335 877.4478)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_87_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1556.4141 921.3435)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_86_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1716.8835 692.2747)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_85_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1739.203 313.3174)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_84_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1809.2791 435.9783)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_83_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1811.0187 834.7769)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_82_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1634.3761 341.6785)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_81_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1560.2559 146.5716)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_80_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1696.9529 148.6135)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_79_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1337.7892 168.6921)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_78_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1028.1199 499.678)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_77_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1516.4506 720.2959)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_76_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1071.1108 275.5328)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_75_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 695.2304 106.0611)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_74_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 279.326 288.5)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_73_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 585.3011 575.2909)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_71_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1066.7312 577.9832)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_70_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 57.648 198.8887)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_69_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 747.9088 289.5477)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_68_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 654.9871 778.2354)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_66_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 186.611 931.0212)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_65_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 99.6667 427.9854)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_63_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 359.0713 589.5092)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_62_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 601.3939 327.2148)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_58_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 795 656.1851)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_55_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1181.8613 1008.1522)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_133_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 162.7351 723.0468)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_132_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 480.9961 87.0158)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_131_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 983.002 130.0304)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_130_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1419.6598 216.4634)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_129_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1616.1233 302.7029)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_128_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1796.7725 210.6717)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_127_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1794.531 87.6644)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_126_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1467.9312 95.465)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_124_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 147.3537 117.7307)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_123_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 88.4479 323.2585)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_122_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 64.6752 67.4034)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_121_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1546.4751 480.6581)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_120_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1153.9999 433.4021)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_119_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 533.165 256.9204)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_118_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 581.7636 159.729)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_117_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 223.4233 658.0906)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_116_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 995.4368 371.3437)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_115_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1666.3428 441.5158)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_114_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1141.3339 109.5096)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_113_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1175.4984 198.9457)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_112_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 157.3184 545.3321)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_111_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1007.8195 732.2156)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_110_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 133.9317 970.7036)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_108_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1748.1193 952.2111)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_107_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1539.606 566.0258)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_106_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1844.7767 537.6174)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_105_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 815.5511 310.9603)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_104_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 716.6069 564.4461)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_103_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 759.5131 706.2354)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_102_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 607.9227 857.9809)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_100_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 845.6564 448.4332)" style="overflow:visible;"/>
+<linearGradient id="XMLID_3_" gradientUnits="userSpaceOnUse" x1="1711.2965" y1="601.9963" x2="1702.7872" y2="671.2988" gradientTransform="matrix(0.9986 5.374856e-002 -5.374856e-002 0.9986 26.6052 -76.6062)">
+	<stop  offset="0" style="stop-color:#FFF6C8;stop-opacity:0.3"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<path id="XMLID_53_" class="st2" d="M1884.2,699.9c1.2-22.6-19.2-42-45.7-43.5c-15.7-0.8-29.9,4.8-39.2,14.3
+	c-13.7-5-31.1-8.5-50.3-9.5c-0.1,0-0.2,0-0.3,0c-2.9-27.7-55.3-52.4-120.9-55.9c-68.4-3.7-125.1,17-126.7,46.2"/>
+<linearGradient id="XMLID_4_" gradientUnits="userSpaceOnUse" x1="920.3635" y1="837.3141" x2="905.0919" y2="923.213">
+	<stop  offset="0" style="stop-color:#FFF6C8;stop-opacity:0.3"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<path id="XMLID_101_" class="st3" d="M1030.5,884.6c0-18.2-14.8-33-33-33c-16.3,0-29.8,11.8-32.5,27.3c-4.8-4.5-11.3-7.3-18.5-7.3
+	c-4.1,0-7.9,0.9-11.4,2.5c-2.2-22.7-21.3-40.5-44.6-40.5c-23.3,0-42.4,17.8-44.6,40.5c-5.7-4-12.7-6.4-20.2-6.4
+	c-19.4,0-35.2,15.7-35.2,35.2"/>
+<linearGradient id="XMLID_5_" gradientUnits="userSpaceOnUse" x1="701.0339" y1="475.7316" x2="701.0339" y2="475.7316">
+	<stop  offset="0" style="stop-color:#FFF6C8;stop-opacity:0.3"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<path id="XMLID_56_" class="st4" d="M701,475.7"/>
+<linearGradient id="XMLID_6_" gradientUnits="userSpaceOnUse" x1="650.6953" y1="479.8197" x2="650.6953" y2="479.8197">
+	<stop  offset="0" style="stop-color:#FFF6C8;stop-opacity:0.3"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<path id="XMLID_54_" class="st5" d="M650.7,479.8"/>
+<linearGradient id="XMLID_7_" gradientUnits="userSpaceOnUse" x1="1543.3856" y1="962.5986" x2="1531.6277" y2="1028.7339">
+	<stop  offset="0" style="stop-color:#FFF6C8;stop-opacity:0.3"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<path id="XMLID_135_" class="st6" d="M1622.7,1018.8c0-9.9-10.8-17.8-24.2-17.8c-1.6,0-3.2,0.1-4.8,0.3c0-0.1,0-0.2,0-0.3
+	c0-19.7-17.5-35.7-39.1-35.7c-16.8,0-31.1,9.7-36.6,23.3c-7.4-9.5-19-15.6-31.9-15.6c-22.4,0-40.5,18.1-40.5,40.5"/>
+<linearGradient id="XMLID_8_" gradientUnits="userSpaceOnUse" x1="166.5147" y1="575.4142" x2="154.7568" y2="641.5496">
+	<stop  offset="0" style="stop-color:#FFF6C8;stop-opacity:0.3"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<path id="XMLID_12_" class="st7" d="M245.9,631.6c0-9.9-10.8-17.8-24.2-17.8c-1.6,0-3.2,0.1-4.8,0.3c0-0.1,0-0.2,0-0.3
+	c0-19.7-17.5-35.7-39.1-35.7c-16.8,0-31.1,9.7-36.6,23.3c-7.4-9.5-19-15.6-31.9-15.6c-22.4,0-40.5,18.1-40.5,40.5"/>
+<linearGradient id="XMLID_14_" gradientUnits="userSpaceOnUse" x1="241.2235" y1="1019.4772" x2="241.2235" y2="1019.4772">
+	<stop  offset="0" style="stop-color:#FFF6C8;stop-opacity:0.3"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<path id="XMLID_134_" class="st8" d="M241.2,1019.5"/>
+<linearGradient id="XMLID_36_" gradientUnits="userSpaceOnUse" x1="1631.6343" y1="183.3926" x2="1620.0642" y2="248.4706">
+	<stop  offset="0" style="stop-color:#FFF6C8;stop-opacity:0.3"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<path id="XMLID_136_" class="st9" d="M1773.3,242.3c0-12.8-13.3-23.2-29.8-23.2c-3.1,0-6.1,0.4-8.9,1c-2.4-14.1-20.8-25.1-43.2-25.1
+	c-15.3,0-28.7,5.1-36.5,12.9c-9-1.7-18.8-2.7-29.1-2.7c-20.7,0-39.4,3.8-53.4,10.1c-3.4-24.2-24.2-42.8-49.3-42.8
+	c-27.5,0-49.8,22.3-49.8,49.8"/>
+<linearGradient id="XMLID_37_" gradientUnits="userSpaceOnUse" x1="295.7728" y1="51.6475" x2="276.5439" y2="159.8047" gradientTransform="matrix(0.9905 0.1377 -0.1377 0.9905 45.2492 -32.2734)">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.9"/>
+	<stop  offset="8.430076e-002" style="stop-color:#FFFEF7;stop-opacity:0.8241"/>
+	<stop  offset="0.6911" style="stop-color:#FFF8D5;stop-opacity:0.278"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<circle id="XMLID_137_" class="st10" cx="314.1" cy="111.8" r="54.9"/>
+<linearGradient id="XMLID_39_" gradientUnits="userSpaceOnUse" x1="295.7728" y1="51.6475" x2="276.5439" y2="159.8047" gradientTransform="matrix(0.9905 0.1377 -0.1377 0.9905 45.2492 -32.2734)">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.9"/>
+	<stop  offset="8.430076e-002" style="stop-color:#FFFEF7;stop-opacity:0.8241"/>
+	<stop  offset="0.6911" style="stop-color:#FFF8D5;stop-opacity:0.278"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<circle id="XMLID_139_" class="st11" cx="314.1" cy="111.8" r="54.9"/>
+<linearGradient id="XMLID_41_" gradientUnits="userSpaceOnUse" x1="593.1168" y1="361.35" x2="573.8879" y2="469.5072" gradientTransform="matrix(0.9905 0.1377 -0.1377 0.9905 45.2492 -32.2734)">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.9"/>
+	<stop  offset="8.430076e-002" style="stop-color:#FFFEF7;stop-opacity:0.8241"/>
+	<stop  offset="0.6911" style="stop-color:#FFF8D5;stop-opacity:0.278"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<circle id="XMLID_10_" class="st12" cx="566" cy="459.5" r="54.9"/>
+<linearGradient id="XMLID_42_" gradientUnits="userSpaceOnUse" x1="1385.196" y1="204.834" x2="1365.9673" y2="312.9912" gradientTransform="matrix(0.9905 0.1377 -0.1377 0.9905 45.2492 -32.2734)">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.9"/>
+	<stop  offset="8.430076e-002" style="stop-color:#FFFEF7;stop-opacity:0.8241"/>
+	<stop  offset="0.6911" style="stop-color:#FFF8D5;stop-opacity:0.278"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<circle id="XMLID_9_" class="st13" cx="1372.1" cy="413.6" r="54.9"/>
+<defs>
+	<filter id="Adobe_OpacityMaskFilter" filterUnits="userSpaceOnUse" x="227.7" y="93.7" width="172.8" height="36.4">
+		<feFlood  style="flood-color:white;flood-opacity:1" result="back"/>
+		<feBlend  in="SourceGraphic" in2="back" mode="normal"/>
+	</filter>
+</defs>
+<mask maskUnits="userSpaceOnUse" x="227.7" y="93.7" width="172.8" height="36.4" id="XMLID_44_">
+	<g id="XMLID_125_" class="st14">
+		<path id="XMLID_152_" class="st15" d="M368.9,115.3c1.9-28.5-18.5-54-47.2-58c-29-4-55.8,15.4-61.4,43.7
+			C295.6,111,332.6,112.6,368.9,115.3z"/>
+	</g>
+</mask>
+<g id="XMLID_138_" class="st16">
+	<path id="XMLID_140_" class="st17" d="M313.1,97.8c0.3,0,0.7,0.1,1,0.1C313.7,97.9,313.4,97.8,313.1,97.8z"/>
+	<path id="XMLID_141_" class="st17" d="M318,98.5c0.3,0,0.7,0.1,1,0.1C318.6,98.6,318.3,98.5,318,98.5z"/>
+	<path id="XMLID_142_" class="st17" d="M319.7,98.7c35.5,5.2,63.1,12.9,62.5,17.6c-0.7,4.8-31.4,4.5-68.6-0.6s-66.8-13.3-66.2-18.1
+		c0.6-4.7,29.4-4.6,64.9,0.1c-46-6.1-83.5-5.2-84.5,2.2c-1,7.5,36.8,19,84.5,25.7s87.2,5.9,88.3-1.7
+		C401.5,116.5,365.7,105.4,319.7,98.7z"/>
+	<path id="XMLID_143_" class="st17" d="M319,98.6c0.3,0,0.5,0.1,0.8,0.1C319.5,98.7,319.2,98.6,319,98.6z"/>
+	<path id="XMLID_144_" class="st17" d="M312.3,97.7c0.3,0,0.5,0.1,0.8,0.1C312.8,97.8,312.6,97.7,312.3,97.7z"/>
+	<path id="XMLID_145_" class="st17" d="M316,98.2c0.7,0.1,1.3,0.2,2,0.3C317.3,98.4,316.7,98.3,316,98.2z"/>
+	<path id="XMLID_146_" class="st17" d="M314.1,97.9c0.7,0.1,1.3,0.2,2,0.3C315.4,98.1,314.7,98,314.1,97.9z"/>
+</g>
+<g id="Satelite" class="st18">
+	<g id="XMLID_148_">
+		<path id="XMLID_163_" class="st19" d="M877.3,113.5c-3.9-9.1,0.2-19.7,9.3-23.6c9.1-3.9,19.7,0.2,23.6,9.3L877.3,113.5z"/>
+	</g>
+	<g id="XMLID_147_">
+		<path id="XMLID_162_" class="st20" d="M910.2,99.2c-15.9,8.5-32.9,14.3-32.9,14.3L910.2,99.2z"/>
+	</g>
+	<g id="XMLID_149_">
+		<path id="XMLID_159_" class="st19" d="M897.5,116.2l-7.8-17.9c-0.1-0.2,0-0.5,0.3-0.6c0.2-0.1,0.5,0,0.6,0.3l7.8,17.9
+			c0.1,0.2,0,0.5-0.3,0.6C897.9,116.5,897.6,116.4,897.5,116.2z"/>
+	</g>
+	<g id="XMLID_151_">
+		<path id="XMLID_158_" class="st19" d="M888.9,98.6l-7.8-17.9c-0.3-0.7,0-1.5,0.7-1.8c0.7-0.3,1.5,0,1.8,0.7l7.8,17.9
+			c0.3,0.7,0,1.5-0.7,1.8C890,99.7,889.2,99.3,888.9,98.6z"/>
+	</g>
+	<g id="XMLID_150_">
+		
+			<rect id="XMLID_161_" x="856.3" y="55.4" transform="matrix(-0.3982 -0.9173 0.9173 -0.3982 1164.7515 895.4033)" class="st19" width="39.6" height="20.5"/>
+	</g>
+	<g id="XMLID_154_">
+		
+			<rect id="XMLID_157_" x="875" y="32" transform="matrix(0.3982 0.9173 -0.9173 0.3982 587.4032 -764.1011)" class="st19" width="2.1" height="67.3"/>
+	</g>
+	<g id="XMLID_153_">
+		
+			<rect id="XMLID_160_" x="907.5" y="25.5" transform="matrix(0.3982 0.9173 -0.9173 0.3982 595.1418 -808.9168)" class="st19" width="13.2" height="47.3"/>
+	</g>
+	<g id="XMLID_156_">
+		
+			<rect id="XMLID_155_" x="831.3" y="58.6" transform="matrix(0.3982 0.9173 -0.9173 0.3982 579.6375 -719.129)" class="st19" width="13.2" height="47.3"/>
+	</g>
+</g>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_72_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 372.3256 479.2192)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_32_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 392.4074 772.4977)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_31_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 475.4432 887.1564)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_30_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 241.6868 834.7769)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_29_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 889.4861 961.3658)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_28_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 233.2339 453.5388)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_27_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 414.8381 358.6354)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_26_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1061.1499 511.3194)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_25_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1252.0615 646.3348)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_24_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1294.2838 760.9857)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_23_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1295.9568 351.0043)" style="overflow:visible;"/>
+<use xlink:href="#stars"  width="8.6" height="7.6" id="XMLID_22_" x="-4.3" y="-3.8" transform="matrix(1 0 0 -1 1388.6526 565.8293)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_21_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 353.6543 688.4601)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_20_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 783.2185 567.5414)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_19_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1055.5605 746.5698)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_18_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 839.1937 830.5782)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_17_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 372.3253 903.347)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_16_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 453.417 654.3997)" style="overflow:visible;"/>
+<use xlink:href="#sparkle"  width="10.8" height="10.8" id="XMLID_15_" x="-5.4" y="-5.4" transform="matrix(1 0 0 -1 1203.7712 533.4208)" style="overflow:visible;"/>
+<linearGradient id="XMLID_45_" gradientUnits="userSpaceOnUse" x1="489.8355" y1="978.8643" x2="476.8225" y2="1052.059">
+	<stop  offset="0" style="stop-color:#FFF6C8;stop-opacity:0.3"/>
+	<stop  offset="1" style="stop-color:#FFF6C8;stop-opacity:0"/>
+</linearGradient>
+<path id="XMLID_11_" class="st21" d="M599.3,1028.5c0-19.9-16.1-36-36-36c-18.2,0-33.2,13.5-35.6,31c-10.2-9.9-24.1-15.9-39.5-15.9
+	c-15.5,0-29.5,6.2-39.8,16.3c-4.1-17.6-21.5-30.8-42.4-30.8c-23.9,0-43.3,17.3-43.3,38.7"/>
+<g id="Spaceman2" class="img-float-1">
+	
+		<ellipse id="Backpack" transform="matrix(0.7345 -0.6787 0.6787 0.7345 82.7186 1324.3937)" class="st22" cx="1733.7" cy="556.5" rx="46.5" ry="50.5"/>
+	<path id="Leg_Left" class="st23" d="M1746.7,624.2l-26.7-30.3c-5.1-5.7-5.3-13.8-0.4-17.9l0,0c4.8-4.2,12.8-2.9,17.9,2.9l26.7,30.3
+		c5.1,5.7,5.3,13.8,0.4,17.9l0,0C1759.7,631.2,1751.7,629.9,1746.7,624.2z"/>
+	<path id="XMLID_190_" class="st24" d="M1739.1,580.6c0.1,0.1,0.2,0.2,0.3,0.3l25.4,28.8c4.7,5.4,4.7,13.1-0.1,17.2
+		c-3.2,2.8-7.7,3.2-11.7,1.6c3.4,0.7,6.9,0,9.6-2.3c4.8-4.1,4.8-11.8,0.1-17.2l-25.4-28.8c-0.1-0.1-0.2-0.2-0.3-0.3
+		c-1.5-1.6-3.3-2.9-5.2-3.6C1734.4,576.9,1737,578.4,1739.1,580.6z"/>
+	<path id="Leg_Right" class="st23" d="M1781.8,593.6l-27-30c-5.1-5.7-5.4-13.7-0.6-18l0,0c4.8-4.2,12.8-3,17.9,2.7l27,30
+		c5.1,5.7,5.4,13.7,0.6,18l0,0C1795,600.5,1787,599.3,1781.8,593.6z"/>
+	<path id="XMLID_185_" class="st24" d="M1774.2,549.9c0.1,0.1,0.2,0.2,0.3,0.3l25.4,28.8c4.7,5.4,4.7,13.1-0.1,17.2
+		c-3.2,2.8-7.7,3.2-11.7,1.6c3.4,0.7,6.9,0,9.6-2.3c4.8-4.1,4.8-11.8,0.1-17.2l-25.4-28.8c-0.1-0.1-0.2-0.2-0.3-0.3
+		c-1.5-1.6-3.3-2.9-5.2-3.6C1769.5,546.2,1772.1,547.6,1774.2,549.9z"/>
+	<path id="Stomach" class="st23" d="M1670.7,540.2l46,49.7c15.1,16.3,39,18.9,53.3,5.6c14.3-13.2,13.6-37.2-1.6-53.5l-46-49.7
+		L1670.7,540.2z"/>
+	<path id="Stomach_1_" class="st23" d="M1668,538.9l46,49.7c15.1,16.3,39,18.9,53.3,5.6c14.3-13.2,13.6-37.2-1.6-53.5l-46-49.7
+		L1668,538.9z"/>
+	<path id="XMLID_176_" class="st24" d="M1768.7,542.1c14.5,16.9,15.3,40.4,1.3,53.4c-6.2,5.7-14.2,8.4-22.7,8.3
+		c6-1.2,11.7-4,16.5-8.5c14-13,14.8-35.1,2.2-50.7L1768.7,542.1z"/>
+	<g id="Hand_Left">
+		<path id="Hand_Left_1" class="st23" d="M1711.7,583.4l6.1,13.1c2.7,5.8,0.1,12.7-5.6,15.3l0,0c-5.8,2.7-12.7,0.1-15.3-5.6
+			l-6.1-13.1c-2.7-5.8-0.1-12.7,5.6-15.3h0C1702.2,575.1,1709.1,577.6,1711.7,583.4z"/>
+		<path id="Hand_Left_2" class="st23" d="M1714.2,579.6l-1.5,9.5c-1,6.3-6.9,10.6-13.2,9.6v0c-6.3-1-10.6-6.9-9.6-13.2l1.5-9.5
+			c1-6.3,6.9-10.6,13.2-9.6l0,0C1710.9,567.4,1715.2,573.3,1714.2,579.6z"/>
+	</g>
+	<g id="Hand_Right">
+		<path id="Hand_Left_1_1_" class="st23" d="M1790.3,528.6l-12-9.3c-5-3.9-12.3-3-16.2,2.1l0,0c-3.9,5-3,12.3,2.1,16.2l12,9.3
+			c5,3.9,12.3,3,16.2-2.1l0,0C1796.2,539.8,1795.3,532.5,1790.3,528.6z"/>
+		<path id="Hand_Left_2_1_" class="st23" d="M1756.8,516.1l13.2,0.7c6.3,0.3,11.3,5.8,10.9,12.1l0,0c-0.3,6.3-5.8,11.3-12.1,10.9
+			l-13.2-0.7c-6.3-0.3-11.3-5.8-10.9-12.1l0,0C1745,520.7,1750.4,515.8,1756.8,516.1z"/>
+	</g>
+	<path id="XMLID_165_" class="st24" d="M1732.5,487.8c17.2,18.5,16.1,47.4-2.5,64.6c-10.7,9.9-24.8,13.7-38.1,11.6
+		c-9.8-1.5-19.2-6.2-26.5-14.1c-17.2-18.5-16.1-47.4,2.5-64.6c9.7-9,22.2-13,34.5-12.1C1713.4,474.1,1724.3,478.9,1732.5,487.8z"/>
+	<path id="XMLID_93_" class="st23" d="M1728.8,487.3c17.2,18.5,16.1,47.4-2.5,64.6c-9.7,9-22.2,13-34.5,12.1
+		c-9.8-1.5-19.2-6.2-26.5-14.1c-17.2-18.5-16.1-47.4,2.5-64.6c9.7-9,22.2-13,34.5-12.1C1712.2,474.8,1721.6,479.5,1728.8,487.3z"/>
+	<g id="Helmet_1_">
+		<path id="Helmet" class="st25" d="M1666.1,535.6c-9.3-18.1-2.1-40.3,16-49.6c6.4-3.3,13.2-4.5,19.9-3.9c2,0.2,4.1,0.5,6,1
+			c1.5,0.4,3,0.9,4.4,1.4c2.9,1.2,5.8,2.7,8.3,4.6c4.5,3.3,8.2,7.6,10.9,12.9c6.7,13.2,4.8,28.5-3.7,39.4c-1.9,2.5-4.2,4.7-6.8,6.7
+			c-1.2,0.9-2.5,1.8-3.9,2.6c-0.5,0.3-1.1,0.6-1.6,0.9c-1.3,0.7-2.6,1.2-3.9,1.7C1694.6,559.9,1674.8,552.5,1666.1,535.6z"/>
+		<path id="XMLID_59_" class="st26" d="M1721.3,548.2l-8.8-63.6c2.9,1.2,5.8,2.7,8.3,4.6l7.2,52.3
+			C1726.1,543.9,1723.8,546.2,1721.3,548.2z"/>
+		<path id="XMLID_47_" class="st26" d="M1711.9,553.4l-9.8-71.3c2,0.2,4.1,0.5,6,1l9.3,67.6c-0.5,0.3-1.1,0.6-1.6,0.9
+			C1714.5,552.3,1713.2,552.9,1711.9,553.4z"/>
+	</g>
+	<circle id="XMLID_46_" class="st27" cx="1753.9" cy="548.3" r="2.8"/>
+	
+		<rect id="XMLID_40_" x="1703.5" y="559" transform="matrix(0.7345 -0.6787 0.6787 0.7345 57.4278 1312.3003)" class="st22" width="4.3" height="47.6"/>
+	
+		<rect id="XMLID_33_" x="1760.5" y="508.2" transform="matrix(0.7336 -0.6796 0.6796 0.7336 107.6669 1339.8718)" class="st22" width="4.3" height="48.8"/>
+	
+		<rect id="XMLID_13_" x="1741.8" y="539.8" transform="matrix(0.7345 -0.6787 0.6787 0.7345 96.8291 1329.297)" class="st27" width="10.6" height="2.3"/>
+	
+		<rect id="XMLID_2_" x="1744.4" y="542.6" transform="matrix(0.7345 -0.6787 0.6787 0.7345 95.5937 1331.842)" class="st28" width="10.6" height="2.3"/>
+</g>
+<g id="Spaceman1" class="img-float-2">
+	
+		<ellipse id="Backpack_1_" transform="matrix(0.8447 0.5353 -0.5353 0.8447 264.467 -36.7476)" class="st29" cx="195.6" cy="437.3" rx="51.9" ry="56.4"/>
+	<path id="Leg_Left_1_" class="st23" d="M126.2,470.7l25-37.5c4.7-7.1,13.4-9.6,19.2-5.6h0c5.9,4,6.8,13,2.1,20.1l-25,37.5
+		c-4.7,7.1-13.4,9.6-19.2,5.6l0,0C122.4,486.8,121.5,477.8,126.2,470.7z"/>
+	<path id="XMLID_233_" class="st24" d="M171.1,450.1c-0.1,0.1-0.1,0.2-0.2,0.4L147,486.1c-4.4,6.6-12.8,8.8-18.6,4.9
+		c-3.9-2.6-5.7-7.3-5.1-12.1c0.2,3.9,2,7.5,5.2,9.7c5.8,4,14.1,1.8,18.6-4.9l23.8-35.6c0.1-0.1,0.2-0.2,0.2-0.4
+		c1.3-2.1,2.1-4.4,2.4-6.7C173.7,444,172.9,447.2,171.1,450.1z"/>
+	<path id="Leg_Right_1_" class="st23" d="M169.3,499.9l24.7-37.8c4.7-7.2,13.3-9.8,19.2-5.8l0,0c5.9,3.9,6.9,12.9,2.3,20.1
+		l-24.7,37.8c-4.7,7.2-13.3,9.8-19.2,5.8h0C165.7,516,164.7,507,169.3,499.9z"/>
+	<path id="XMLID_228_" class="st24" d="M214.3,479.1c-0.1,0.1-0.1,0.2-0.2,0.4l-23.8,35.6c-4.4,6.6-12.8,8.8-18.6,4.9
+		c-3.9-2.6-5.7-7.3-5.1-12.1c0.2,3.9,2,7.5,5.2,9.7c5.8,4,14.1,1.8,18.6-4.9l23.8-35.6c0.1-0.1,0.2-0.2,0.2-0.4
+		c1.3-2.1,2.1-4.4,2.4-6.7C216.9,473,216.1,476.2,214.3,479.1z"/>
+	<path id="Stomach_3_" class="st23" d="M195,364.7l-40.4,63.9c-13.3,21-9.2,47.5,9.2,59.1s44,3.9,57.3-17.1l40.4-63.9L195,364.7z"/>
+	<path id="Stomach_2_" class="st23" d="M195.6,361.4l-40.4,63.9c-13.3,21-9.2,47.5,9.2,59.1s44,3.9,57.3-17.1l40.4-63.9L195.6,361.4
+		z"/>
+	<path id="XMLID_221_" class="st24" d="M221.1,470.9c-14,20.5-39.2,28.1-57.2,16.7c-8-5-13.2-13-15.4-22.1
+		c3.1,6.1,7.7,11.5,13.8,15.3c18,11.4,42.1,5.8,55.4-12.1L221.1,470.9z"/>
+	<g id="Hand_Left_1_">
+		<path id="Hand_Left_1_3_" class="st23" d="M143.9,391.9l4.5-15.4c2-6.8,9.2-10.8,16-8.8h0c6.8,2,10.8,9.2,8.8,16l-4.5,15.4
+			c-2,6.8-9.2,10.8-16,8.8h0C145.8,405.9,141.9,398.8,143.9,391.9z"/>
+		<path id="Hand_Left_2_3_" class="st23" d="M156,413.7l-7.9-7.2c-5.2-4.8-5.6-13-0.8-18.2l0,0c4.8-5.2,13-5.6,18.2-0.8l7.9,7.2
+			c5.2,4.8,5.6,13,0.8,18.2l0,0C169.4,418.1,161.2,418.5,156,413.7z"/>
+	</g>
+	<g id="Hand_Right_1_">
+		<path id="Hand_Left_1_2_" class="st23" d="M241.9,490.3l6.6-15.7c2.8-6.5-0.3-14.1-6.9-16.9h0c-6.5-2.8-14.1,0.3-16.9,6.9
+			l-6.6,15.7c-2.8,6.5,0.3,14.1,6.9,16.9h0C231.5,499.9,239.1,496.8,241.9,490.3z"/>
+		<path id="Hand_Left_2_2_" class="st23" d="M245.7,450.6l3.1,14.5c1.5,6.9-3,13.8-9.9,15.3h0c-6.9,1.5-13.8-3-15.3-9.9l-3.1-14.5
+			c-1.5-6.9,3-13.8,9.9-15.3h0C237.4,439.2,244.2,443.6,245.7,450.6z"/>
+	</g>
+	<path id="XMLID_210_" class="st24" d="M269.3,416.2c-15.1,23.8-46.6,30.9-70.4,15.9c-13.7-8.7-21.9-22.8-23.5-37.8
+		c-1.2-11,1.2-22.5,7.6-32.7c15.1-23.8,46.6-30.9,70.4-15.9c12.5,7.9,20.4,20.3,22.9,33.7C278.7,391.8,276.5,404.9,269.3,416.2z"/>
+	<path id="XMLID_207_" class="st23" d="M268.7,412.2c-15.1,23.8-46.6,30.9-70.4,15.9c-12.5-7.9-20.4-20.3-22.9-33.7
+		c-1.2-11,1.2-22.5,7.6-32.7c15.1-23.8,46.6-30.9,70.4-15.9c12.5,7.9,20.4,20.3,22.9,33.7C277.5,390.6,275.1,402.1,268.7,412.2z"/>
+	<g id="Helmet_2_">
+		<path id="Helmet_3_" class="st25" d="M261,411c-12.1,19.2-37.5,24.9-56.8,12.8c-6.7-4.3-11.8-10.2-15.1-16.9c-1-2-1.8-4.2-2.4-6.4
+			c-0.5-1.7-0.9-3.4-1.1-5.1c-0.6-3.5-0.7-7.1-0.3-10.6c0.6-6.1,2.6-12.2,6.2-17.8c8.8-14,24.6-20.8,40-18.9
+			c3.5,0.4,6.9,1.3,10.3,2.7c1.6,0.6,3.2,1.4,4.7,2.3c0.6,0.3,1.2,0.7,1.8,1.1c1.4,0.9,2.6,1.8,3.9,2.8
+			C268.1,369.9,272.3,393.1,261,411z"/>
+		<path id="XMLID_202_" class="st26" d="M241.7,350.9l-56.1,44.6c-0.6-3.5-0.7-7.1-0.3-10.6l46.1-36.7
+			C234.9,348.6,238.3,349.5,241.7,350.9z"/>
+		<path id="XMLID_199_" class="st26" d="M252,357l-62.9,50c-1-2-1.8-4.2-2.4-6.4l59.7-47.4c0.6,0.3,1.2,0.7,1.8,1.1
+			C249.5,355.1,250.8,356,252,357z"/>
+	</g>
+	<circle id="XMLID_198_" class="st28" cx="174.1" cy="422.5" r="3.1"/>
+	<circle id="XMLID_184_" class="st27" cx="180.7" cy="427.1" r="3.1"/>
+	
+		<rect id="XMLID_43_" x="161.7" y="389.5" transform="matrix(0.8447 0.5353 -0.5353 0.8447 243.2099 -24.6602)" class="st29" width="4.8" height="34.6"/>
+	
+		<rect id="XMLID_34_" x="227.2" y="434.5" transform="matrix(0.8454 0.5342 -0.5342 0.8454 282.1344 -51.2656)" class="st29" width="4.8" height="54.5"/>
+</g>
+</svg>

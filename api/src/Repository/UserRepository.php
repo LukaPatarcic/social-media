@@ -19,22 +19,19 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+   /**
+    * @return User[] Returns an array of User objects
+    */
+    public function findUsersToDelete()
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('u.isVerified = 0')
+            ->andWhere("u.deletesIn < :now")
+            ->setParameter('now', new \DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?User
