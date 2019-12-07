@@ -37,12 +37,6 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\Length(
-     *     max="255",
-     *     maxMessage="Max number of characters is 255 characters",
-     *     min="6",
-     *     minMessage="Your password should be at least 6 characters"
-     * )
      */
     private $password;
 
@@ -93,6 +87,21 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Chat", mappedBy="fromUser")
      */
     private $chats;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $verificationCode;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletesIn;
 
     public function __construct()
     {
@@ -264,6 +273,42 @@ class User implements UserInterface
                 $chat->setFromUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getVerificationCode(): ?string
+    {
+        return $this->verificationCode;
+    }
+
+    public function setVerificationCode(?string $verificationCode): self
+    {
+        $this->verificationCode = $verificationCode;
+
+        return $this;
+    }
+
+    public function getDeletesIn(): ?\DateTimeInterface
+    {
+        return $this->deletesIn;
+    }
+
+    public function setDeletesIn(?\DateTimeInterface $deletesIn = null): self
+    {
+        $this->deletesIn = $deletesIn ? new \DateTime('+ 1 day') : null;
 
         return $this;
     }

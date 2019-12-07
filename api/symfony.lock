@@ -90,6 +90,9 @@
             "config/packages/dev/easy_log_handler.yaml"
         ]
     },
+    "egulias/email-validator": {
+        "version": "2.1.11"
+    },
     "evenement/evenement": {
         "version": "v3.0.1"
     },
@@ -98,9 +101,6 @@
     },
     "gos/pubsub-router-bundle": {
         "version": "v1.3.0"
-    },
-    "gos/web-socket-bundle": {
-        "version": "v2.0.0-beta2"
     },
     "gos/websocket-client": {
         "version": "v0.3.0"
@@ -206,6 +206,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "swiftmailer/swiftmailer": {
+        "version": "v6.2.3"
     },
     "symfony/apache-pack": {
         "version": "1.0",
@@ -431,6 +434,20 @@
     },
     "symfony/stopwatch": {
         "version": "v4.3.8"
+    },
+    "symfony/swiftmailer-bundle": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "ae4d22af30bbd484506bc1817c5a3ef72c855b93"
+        },
+        "files": [
+            "./config/packages/dev/swiftmailer.yaml",
+            "./config/packages/swiftmailer.yaml",
+            "./config/packages/test/swiftmailer.yaml"
+        ]
     },
     "symfony/translation-contracts": {
         "version": "v1.1.7"

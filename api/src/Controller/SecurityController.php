@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Services\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,11 +23,13 @@ class SecurityController extends AbstractController
      * @Route("/register", name="app_register")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param \Swift_Mailer $mailer
      * @return Response
+     * @throws Exception
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
     {
-        $data = json_decode($request->getContent(),true);
+        $data = json_decode($request->getContent(),true);;
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->submit($data);
@@ -35,9 +39,14 @@ class SecurityController extends AbstractController
         }
 
         $password = $passwordEncoder->encodePassword($user, $data['password']['first']);
-        $user->setPassword($password);
+        $user->setPassword($password)
+            ->setDeletesIn()
+            ->setVerificationCode(hash('sha256',$user->getEmail().bin2hex(random_bytes(32))));
 
-        // 4) save the User!
+        $sendMail = $mailer->verificationEmail($user->getEmail(),$user->getVerificationCode());
+        if(!$sendMail) {
+            return $this->json(['error' => ['Oops something went wrong please try again later...']]);
+        }
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
@@ -60,7 +69,7 @@ class SecurityController extends AbstractController
             return $this->json(['error' => 'Empty username or password'], Response::HTTP_BAD_REQUEST);
         }
         $userRepo = $entityManager->getRepository(User::class);
-        $user = $userRepo->findOneBy(['email' => $data['email']]);
+        $user = $userRepo->findOneBy(['email' => $data['email'],'isVerified' => 1]);
         if(!$user) {
             return $this->json(['error' => 'Invalid username'],Response::HTTP_BAD_REQUEST);
         }
@@ -71,7 +80,8 @@ class SecurityController extends AbstractController
         }
         $token = hash('sha256',$user->getEmail().bin2hex(random_bytes(64)));
         $user->setToken($token);
-        $user->setExpiresAt(new \DateTime('+8 hours'));
+        $time = $data['rememberMe'] ? '+1 month' : '+8 hours';
+        $user->setExpiresAt(new \DateTime($time));
         $entityManager->flush();
 
         return $this->json([
@@ -88,39 +98,25 @@ class SecurityController extends AbstractController
         throw new Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 
+    /**
+     * @Route("/email/verify/{verificationCode}", methods={"GET"})
+     */
+    public function emailVerification(User $user)
+    {
+        $user->setIsVerified(1)
+            ->setDeletesIn(null)
+            ->setVerificationCode(null);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirect('http://localhost:3000/login');
+    }
+
     private function getErrorMessages(FormInterface $form) {
         $errors = [];
-
-        foreach ($form->getErrors() as $key => $error) {
-            if ($form->isRoot()) {
-                $errors[] = 'Oops... Something went wrong!';
-            } else {
-                $errors[] = $error->getMessage();
-            }
-        }
-
-        foreach ($form->all() as $child) {
-            if (!$child->isValid()) {
-                $errors = $this->getErrorMessages($child);
-            }
+        foreach ($form->getErrors(true, true) as $error) {
+            $errors[] = $error->getMessage();
         }
 
         return $errors;
-    }
-
-    /**
-     * @Route("/chole")
-     */
-    public function chole()
-    {
-        $words = ['kill','destroy','drop','delete'];
-        $s = 'kill vts kill destroy vts drop subotica delete 024';
-        // "k**l vts k**l d*****y vts d**p subotica d****e 024"
-        foreach ($words as $word) {
-            $a = substr($word,1,-1);
-            $b = str_repeat('*',substr_count());
-            var_dump(str_replace($a,$b,$s));
-        }
-        return new Response('asd');
     }
 }
