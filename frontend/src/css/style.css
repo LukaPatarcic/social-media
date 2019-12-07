@@ -1,4 +1,5 @@
 @import "https://fonts.googleapis.com/css?family=Fredoka+One&display=swap";
+@import "checkbox.css";
 
 * {
     font-family: 'Fredoka One', cursive;
@@ -15,4 +16,8 @@
 
 .background {
     background-image: './images/logo.svg';
+}
+
+.md-form .prefix.active {
+    color: #f00;
 }
