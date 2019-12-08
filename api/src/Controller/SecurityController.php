@@ -18,6 +18,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
 {
+    /**
+     * @Route("/test")
+     */
+    public function test()
+    {
+        return $this->json(['message' => 'Hello from API']);
+    }
 
     /**
      * @Route("/register", name="app_register")
