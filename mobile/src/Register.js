@@ -152,7 +152,7 @@ export default class Register extends React.Component {
                         onPress={this.onRegister.bind(this)}
                     />
                 }
-                <Text style={{marginTop: 20}}>Already have an account? <Text style={{color:'red',fontWeight: 'bold'}} onPress={() => history.push('/')}>Log in now!</Text></Text>
+                <Text style={{marginTop: 20}}>Already have an account? <Text style={{color:'red',fontWeight: 'bold'}} onPress={() => history.push('/login')}>Log in now!</Text></Text>
             </Card>
         );
     }

@@ -4,6 +4,7 @@ import { NativeRouter, Switch, Route } from "react-router-native";
 
 import Login from "./Login";
 import Register from "./Register";
+import Profile from "./Profile";
 
 const styles = StyleSheet.create({
     container: {
@@ -26,8 +27,9 @@ export default class App extends React.Component {
                     source={{uri: 'http://allshak.lukaku.tech/images/background.png'}}>
                     <ScrollView contentContainerStyle={styles.container}>
                         <Switch>
-                            <Route exact path="/" component={Login} />
+                            <Route exact path="/" component={Profile} />
                             <Route exact path="/register" component={Register} />
+                            <Route exact path="/login" component={Login} />
                         </Switch>
                     </ScrollView>
                 </ImageBackground>

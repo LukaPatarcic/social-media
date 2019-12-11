@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    Text,
     View,
     Button,
     StyleSheet,
@@ -10,7 +9,8 @@ import {
     ActivityIndicator,
     ImageBackground,
 } from 'react-native';
-import { Item, Input, Icon, Card, Content } from 'native-base';
+import { Item, Input, Icon, Card, Content, Text, ListItem, Body } from 'native-base';
+import { CheckBox } from "react-native-elements";
 import AsyncStorage from "@react-native-community/async-storage";
 
 const styles = StyleSheet.create({
@@ -25,13 +25,14 @@ const styles = StyleSheet.create({
 });
 
 
-export default class App extends React.Component {
+export default class Login extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             email: '',
             password: '',
+            rememberMe: false,
             error: '',
             token: '',
             loading: false,
@@ -39,7 +40,7 @@ export default class App extends React.Component {
     }
 
     onLogin() {
-        const { email, password, error } = this.state;
+        const { email, password, error, rememberMe } = this.state;
         if(email === '' || password === '') {
             this.setState({
                 error: 'Please enter all fields'
@@ -52,23 +53,27 @@ export default class App extends React.Component {
                     'Content-Type': 'application/json'
                 },
                 method: "POST",
-                body: JSON.stringify({email,password,"rememberMe":false})
+                body: JSON.stringify({email,password,rememberMe})
             })
                 .then((response => response.json()))
                 .then((data => {
                     this.setState({error: data.error,loading: false});
                     if(data.token) {
                         AsyncStorage.setItem('access-token',data.token);
-                        this.setState({error: 'Success'})
+                        this.props.history.push('/profile')
                     }
                 }))
+                .catch(err => {
+                    this.setState({error: 'Oops... Something went wrong!',loading: false});
+                })
         }
 
     }
 
     render() {
-        const {error,email,password,token,loading} = this.state;
+        const {error,email,password,token,loading,rememberMe} = this.state;
         const {history} = this.props;
+        const colorValue = 'red'
         const color = error === 'Success' ? 'green' : 'red';
         return (
             <Card style={{padding: 50}}>
@@ -91,7 +96,11 @@ export default class App extends React.Component {
                         secureTextEntry={true}
                     />
                 </Item>
-
+                <CheckBox
+                    checked={rememberMe}
+                    title={'Remember Me'}
+                    onPress={() => this.setState({ rememberMe: !rememberMe })}
+                />
                 <Text style={{color: color}}>
                     {error ? error : ''}
                 </Text>
