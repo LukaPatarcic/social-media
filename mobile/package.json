@@ -1,5 +1,5 @@
 {
-  "name": "mobile",
+  "name": "Allshak",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,9 +10,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.7.0",
+    "native-base": "^2.13.8",
     "react": "16.9.0",
     "react-native": "0.61.5",
-    "react-native-bootstrap-styles": "0.0.9"
+    "react-router-native": "^5.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",
