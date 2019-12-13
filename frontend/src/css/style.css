@@ -1,5 +1,5 @@
 @import "https://fonts.googleapis.com/css?family=Fredoka+One&display=swap";
-@import "checkbox.css";
+@import "~@khallion/md-checkbox/bootstrap-addons.css";
 
 * {
     font-family: 'Fredoka One', cursive;

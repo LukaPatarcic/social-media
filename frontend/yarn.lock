@@ -1225,6 +1225,11 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@khallion/md-checkbox@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@khallion/md-checkbox/-/md-checkbox-1.0.1.tgz#c5fadc981abd82c8a8cd40e325030904615f44e9"
+  integrity sha512-jceNn6tyHQu3nYM+oBiezBWk+Ddt5CmOIjOLI5N/YbnB1G8eLQuqFzfHn47+eI1WQAKpAqYQdTwT29aXppIjVA==
+
 "@material-ui/core@3.9.3":
   version "3.9.3"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-3.9.3.tgz#d378c1f4beb18df9a534ca7258c2c33fb8e0e51f"
