@@ -1,6 +1,5 @@
 import * as React from "react";
 import cookie from 'react-cookies'
-import {Redirect} from "react-router-dom";
 
 export default class Logout extends React.Component {
     constructor(props) {

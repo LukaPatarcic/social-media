@@ -151,5 +151,15 @@ class SecurityController extends BaseController
         return $this->json($user,Response::HTTP_OK);
     }
 
+    /**
+     * @Route("/auth", name="auth")
+     * @IsGranted("ROLE_USER")
+     */
+    public function auth(Request $request)
+    {
+        return $this->json(['success' => 1],Response::HTTP_OK);
+
+    }
+
 
 }

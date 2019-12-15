@@ -6,6 +6,7 @@ import FacebookLogin from "../components/FacebookLogin";
 import { Avatar } from 'react-native-paper';
 import {Button} from "react-native-elements";
 import { Redirect } from "react-router-native";
+import { NativeModules } from "react-native";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -45,19 +46,17 @@ export default class Profile extends React.Component {
                        lastName: data.lastName,
                        profileName: data.profileName
                    })
-               } else {
-                   AsyncStorage.removeItem('access-token')
                }
 
            }))
            .catch(err => {
-               AsyncStorage.removeItem('access-token')
+
            })
    }
 
    logout() {
-
        AsyncStorage.removeItem('access-token')
+       NativeModules.DevSettings.reload();
    }
 
     render() {

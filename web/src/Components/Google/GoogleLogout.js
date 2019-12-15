@@ -1,30 +1,19 @@
 import * as React from "react";
 import cookie from 'react-cookies'
 import {Redirect} from "react-router-dom";
+import {MDBBtn} from "mdbreact";
 
 export default class GoogleLogout extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            redirectToLogin: false
-        }
-        this.logout = this.logout.bind(this);
-
-    }
 
     logout() {
         cookie.remove('google-access-token');
-        this.setState({
-            redirectToLogin: true
-        })
+        window.location.reload(true);
     }
 
     render() {
-        if(this.state.redirectToLogin) {
-            return (<Redirect to={'/profile'}/>)
-        }
+
         return (
-            <a onClick={this.logout} href={'#'}>Google Logout</a>
+            <MDBBtn color={'grey'} onClick={this.logout}> Logout</MDBBtn>
         );
     }
 

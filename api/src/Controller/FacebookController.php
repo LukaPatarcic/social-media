@@ -8,6 +8,7 @@ use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\Provider\FacebookClient;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\FacebookUser;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FacebookController extends AbstractController
+class FacebookController extends BaseController
 {
     /**
      * Link to this controller to start the "connect" process
@@ -79,11 +80,11 @@ class FacebookController extends AbstractController
     /**
      * @Route("/connect/facebook/get/user", name="connect_facebook_get_user")
      * @throws \Facebook\Exceptions\FacebookSDKException
+     * @IsGranted("ROLE_USER")
      */
     public function getFacebookUser(Request $request)
     {
-//        $accessToken = $request->headers->get('facebook-access-token');
-        $accessToken = json_decode($request->getContent(),true)['facebook-access-token'];
+        $accessToken = $request->headers->get('facebook-access-token');
         if(!$accessToken) {
             return $this->json(['error' => 'Access token is required']);
         }

@@ -1,15 +1,13 @@
 import * as React from "react";
-import FacebookLogin from "react-facebook-login";
+import FacebookLogin from 'react-facebook-login'
 import cookie from "react-cookies";
-import {Redirect} from "react-router-dom";
 
 export default class FacebookAuthLogin extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            redirect: false
+            update: false
         }
-
     }
 
     render() {
@@ -22,22 +20,23 @@ export default class FacebookAuthLogin extends React.Component{
             });
         };
         if(this.state.redirect) {
-
+            window.location.reload(true);
             return (
-                <Redirect to={'/profile'} />
+                <React.Fragment/>
             );
         }
 
         return (
             <FacebookLogin
+                cssClass={'btn btn-primary'}
                 appId="1189985861185629"
                 fields="email,picture"
                 scope="
-                                public_profile,email,user_photos,
-                                user_age_range,user_birthday,
-                                user_gender,user_likes,user_posts,
-                                user_status,user_location,user_friends
-                                "
+                    public_profile,email,user_photos,
+                    user_age_range,user_birthday,
+                    user_gender,user_likes,user_posts,
+                    user_status,user_location,user_friends
+                    "
                 returnScopes={true}
                 callback={responseFacebook}
             />

@@ -14,12 +14,11 @@
     box-shadow: 0 1px 0 0 #f00;
 }
 
-html,body {
-    background-image: url('../images/background.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
 .md-form .prefix.active {
     color: #f00;
+}
+
+.form-check-input[type=checkbox]:checked+label:before, label.btn input[type=checkbox]:checked+label:before {
+    border-right: 2px solid #f00;
+    border-bottom: 2px solid #f00;
 }

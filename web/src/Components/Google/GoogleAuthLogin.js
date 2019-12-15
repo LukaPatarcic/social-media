@@ -24,9 +24,9 @@ export default class GoogleAuthLogin extends React.Component{
         };
 
         if(this.state.redirect) {
-
+            window.location.reload(true);
             return (
-                <Redirect to={'/profile'} />
+            <React.Fragment/>
             );
         }
 

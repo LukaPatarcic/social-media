@@ -1,11 +1,9 @@
 import * as React from "react";
 import {MDBAlert, MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBIcon, MDBInput, MDBRow} from "mdbreact";
-import Navigation from "../Components/Navigation";
 import SimpleReactValidator from "simple-react-validator";
 import PasswordStrengthBar from 'react-password-strength-bar';
-import Footer from "../Components/Footer";
 import {ClipLoader} from "react-spinners";
-import {Redirect, BrowserRouter as Router, Link} from "react-router-dom";
+import {Redirect, Link} from "react-router-dom";
 
 export default class Register extends React.Component{
 
@@ -101,7 +99,7 @@ export default class Register extends React.Component{
                         <MDBCard>
                             <div className="header pt-3 red">
                                 <MDBRow className="mt-2 mb-3 d-flex justify-content-center">
-                                    <img className={'img-fluid'} src={'./images/logo.svg'} />
+                                    <img alt={'Logo'} className={'img-fluid'} src={'./images/logo.svg'} />
                                 </MDBRow>
                                 <MDBRow className="d-flex justify-content-center">
                                     <h3 className="white-text mb-3 pt-3 font-weight-bold">
@@ -121,7 +119,6 @@ export default class Register extends React.Component{
                                                     value={firstName.value}
                                                     name="firstName"
                                                     onChange={this.changeHandler}
-                                                    onBlur={() => this.validator.showMessageFor('firstName')}
                                                     label="First Name"
                                                     group
                                                 />
@@ -148,7 +145,6 @@ export default class Register extends React.Component{
                                                     value={email}
                                                     name="email"
                                                     onChange={this.changeHandler}
-                                                    onBlur={() => this.validator.showMessageFor('email')}
                                                     label="Email"
                                                     icon="at"
                                                     group

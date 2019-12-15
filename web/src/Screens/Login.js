@@ -1,10 +1,7 @@
 import React from "react";
 import cookie from "react-cookies";
-import {Link, Redirect} from "react-router-dom";
-import LoginErrorMessage from "../Components/LoginErrorMessage";
-import {MDBAlert, MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBIcon, MDBInput, MDBRow} from "mdbreact";
-import { BrowserRouter as Router } from 'react-router-dom';
-import Navigation from "../Components/Navigation";
+import {Link} from "react-router-dom";
+import {MDBAlert, MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBInput, MDBRow} from "mdbreact";
 import {ClipLoader} from "react-spinners";
 import SimpleReactValidator from "simple-react-validator";
 
@@ -13,7 +10,6 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
             error: '',
             data: [],
             loading: false,
@@ -25,9 +21,7 @@ export default class Login extends React.Component {
         this.submitHandler = this.submitHandler.bind(this);
         this.validator = new SimpleReactValidator();
 
-
-        let elem = document.querySelector('body');
-        elem.classList.add('background');
+        document.title = 'Allshak | Login';
     }
 
     submitHandler(e) {
@@ -70,7 +64,7 @@ export default class Login extends React.Component {
 
     render() {
         
-        const {error,email,password,loading,rememberMe,name} = this.state;
+        const {error,email,password,loading,rememberMe} = this.state;
 
         return (
             <MDBContainer>
@@ -79,7 +73,7 @@ export default class Login extends React.Component {
                         <MDBCard className={'mb-5'}>
                             <div className="header pt-3 red">
                                 <MDBRow className="mt-2 mb-3 d-flex justify-content-center">
-                                   <img className={'img-fluid'} src={'./images/logo.svg'} />
+                                   <img alt={'Logo'} className={'img-fluid'} src={'./images/logo.svg'} />
                                 </MDBRow>
                                 <MDBRow className="d-flex justify-content-center">
                                     <h3 className="white-text mb-3 pt-3 font-weight-bold">
@@ -89,6 +83,7 @@ export default class Login extends React.Component {
                             </div>
                             <MDBCardBody className="mx-4 mt-4">
                                 <form
+                                    className="grey-text"
                                     onSubmit={this.submitHandler}
                                     noValidate
                                 >
@@ -101,27 +96,29 @@ export default class Login extends React.Component {
                                     ''
                                 }
                                 <MDBInput
-                                    label="Your email"
-                                    group
-                                    type="text"
-                                    validate value={email}
+                                    value={email}
+                                    name="email"
                                     onChange={this.handleChange}
-                                    name={'email'}
+                                    onBlur={() => this.validator.showMessageFor('email')}
+                                    label="Email"
+                                    icon="at"
+                                    group
+                                    type="email"
                                 />
                                 <small>{this.validator.message('email', email, 'required|email')}</small>
                                 <MDBInput
                                     value={password}
+                                    name="password"
                                     onChange={this.handleChange}
-                                    name={'password'}
+                                    onBlur={() => this.validator.showMessageFor('password')}
                                     label="Your password"
+                                    icon="lock"
                                     group
                                     type="password"
-                                    validate
-                                    containerClass="mb-0"
                                 />
                                 <small>{this.validator.message('password', password, 'required')}</small>
-                                <MDBRow className="font-small grey-text">
-                                    <MDBCol sm={6}>
+                                <MDBRow className="font-small grey-text mt-5">
+                                    <MDBCol sm={12} md={6}>
                                         <MDBInput
                                             onChange={this.handleChange}
                                             checked={rememberMe}
@@ -131,7 +128,7 @@ export default class Login extends React.Component {
                                             id="rememberMe"
                                         />
                                     </MDBCol>
-                                    <MDBCol sm={6}>
+                                    <MDBCol sm={12} md={6} className={'mt-5 mt-md-0'}>
                                         Forgot
                                         <a href="#!" className="dark-grey-text ml-1 font-weight-bold">
                                             Password?
@@ -139,7 +136,7 @@ export default class Login extends React.Component {
                                     </MDBCol>
                                 </MDBRow>
                                 <MDBRow className="d-flex align-items-center mb-4 mt-5">
-                                    <MDBCol md={5}>
+                                    <MDBCol sm={12} md={5}>
                                         <div className="text-center">
                                             <MDBBtn
                                                 color="elegant"
@@ -162,7 +159,7 @@ export default class Login extends React.Component {
                                             </MDBBtn>
                                         </div>
                                     </MDBCol>
-                                    <MDBCol md="7" className="text-center">
+                                    <MDBCol sm={12} md={7} className="text-center">
                                         <p className="font-small grey-text mt-3">
                                             Don't have an account?
                                             <Link

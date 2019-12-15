@@ -20,6 +20,7 @@ abstract class BaseController extends AbstractController
         return $user;
     }
 
+
     public function getErrorMessages(FormInterface $form) {
         $errors = [];
         foreach ($form->getErrors(true, true) as $error) {

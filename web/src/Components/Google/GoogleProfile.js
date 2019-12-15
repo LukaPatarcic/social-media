@@ -1,5 +1,6 @@
 import * as React from "react";
-import {Col, Container, Image, ListGroup, Row} from "react-bootstrap";
+import {MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDBRow} from "mdbreact";
+import GoogleLogout from "./GoogleLogout";
 
 export default class GoogleProfile extends React.Component{
 
@@ -8,27 +9,34 @@ export default class GoogleProfile extends React.Component{
     }
 
     render() {
-        const {given_name,family_name,picture,email,} = this.props.googleData;
+        const {given_name,family_name,picture,email} = this.props.googleData;
         return (
-            <Container>
-                <Row>
-                    <Col sm={12}>
-                        <ListGroup>
-                            <ListGroup.Item>
-                                <Image src={picture}/>
-                            </ListGroup.Item>
+            <MDBContainer>
+                <MDBRow>
+                    <MDBCol sm={12}>
+                        <MDBCard className={'mt-5'}>
+                            <MDBCardHeader className={'text-center text-danger'}>
+                                <h3>Google Profile</h3>
+                            </MDBCardHeader>
+                            <MDBCardBody>
+                                <MDBRow center>
+                                    <MDBCol sm={12} md={4}>
+                                        <img className={'img-fluid rounded-circle z-depth-3'} src={picture}/>
+                                    </MDBCol>
+                                    <MDBCol sm={12} md={4}>
+                                        Name: {given_name + ' ' + family_name}<br/>
+                                        Email: {email}<br/>
+                                    </MDBCol>
+                                </MDBRow>
+                                <MDBRow end>
+                                    <GoogleLogout />
+                                </MDBRow>
+                            </MDBCardBody>
+                        </MDBCard>
+                    </MDBCol>
+                </MDBRow>
 
-                            <ListGroup.Item>
-                                Name: {given_name} {family_name}
-                            </ListGroup.Item>
-
-                            <ListGroup.Item>
-                                Email: {email}
-                            </ListGroup.Item>
-                        </ListGroup>
-                    </Col>
-                </Row>
-            </Container>
+            </MDBContainer>
         );
     }
 }

@@ -14,7 +14,7 @@ export default class About extends React.Component{
                 <MDBCardBody>
                     <h2>About</h2>
                     <MDBRow className={'mt-5'}>
-                        <MDBCol lg={6} md={12} className="px-4">
+                        <MDBCol lg={6} md={12} className="px-4 mt-5">
                             <AboutListItem
                                 icon={'fas fa-user'}
                                 iconColor={'text-indigo'}
@@ -43,8 +43,8 @@ export default class About extends React.Component{
                                 }
                             />
                         </MDBCol>
-                        <MDBCol lg={6} md={12} className="px-4 pt-5">
-                            <img  src={'./images/banner.png'} width={400} alt={'Banner'} className={'z-depth-3 img-fluid'}/>
+                        <MDBCol lg={6} md={12} className="px-4">
+                            <img  src={'./images/spaceman.svg'} width={300} alt={'Banner'} className={'img-fluid'}/>
                         </MDBCol>
                     </MDBRow>
                 </MDBCardBody>

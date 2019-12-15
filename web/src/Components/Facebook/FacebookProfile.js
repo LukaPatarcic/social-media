@@ -1,50 +1,51 @@
 import * as React from "react";
-import {Col, Container, Image, ListGroup, Row} from "react-bootstrap";
+import {MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDBRow} from "mdbreact";
+import FacebookLogout from "./FacebookLogout";
 
 export default class FacebookProfile extends React.Component{
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-
-        const {first_name,last_name,gender,age_range,picture,birthday,friends} = this.props.facebookData;
+        const {first_name,last_name,gender,age_range,picture,birthday,friends,hometown} = this.props.facebookData;
         return (
-            <Container>
-                <Row>
-                    <Col sm={12}>
-                        <ListGroup>
-                            <ListGroup.Item>
-                                <Image src={picture.data.url}/>
-                            </ListGroup.Item>
-
-                            <ListGroup.Item>
-                                Name: {first_name} {last_name} ({gender})
-                            </ListGroup.Item>
-
-                            <ListGroup.Item>
-                                Born: {birthday} ({age_range.min})
-                            </ListGroup.Item>
-                        </ListGroup>
-                    </Col>
-                    <Col sm={12}>
-                        {/*{friends in this.state.facebookData*/}
-                        {/*    ?*/}
-                        <ListGroup>
-                            {friends.data.map(friend => {
-                                console.log(friend);
-                                return(<ListGroup.Item key={friend.id}><Image src={friend.picture.data.url}/>{friend.name}</ListGroup.Item>)
-                            })}
-                        </ListGroup>
-                        {/*    `Total firends: <span className={'text-secondary'}>{friends.summary.total_count}</span>`*/}
-                        {/*    :*/}
-                        {/*    "No Friends"*/}
-                        {/*}*/}
-
-                    </Col>
-                </Row>
-            </Container>
+            <MDBContainer>
+                <MDBRow>
+                    <MDBCol sm={12}>
+                        <MDBCard className={'mt-5'}>
+                            <MDBCardHeader className={'text-center text-danger'}>
+                                <h3>Facebook Profile</h3>
+                            </MDBCardHeader>
+                            <MDBCardBody>
+                                <MDBRow center>
+                                    <MDBCol sm={12} md={4}>
+                                        <img className={'img-fluid rounded-circle z-depth-3'} src={picture.data.url}/>
+                                    </MDBCol>
+                                    <MDBCol sm={12} md={4}>
+                                        Name: {first_name + ' ' + last_name} ({gender})<br/>
+                                        Birthday: {birthday} ({age_range.min})<br/>
+                                        From: {hometown.name}<br/>
+                                        Friends (total: {friends.summary.total_count}):
+                                        {friends.data.map((friend,index) => {
+                                            return (
+                                                <MDBRow key={index} className={'mb-2'}>
+                                                    <MDBCol sm={12} md={2}>
+                                                        <img className={'img-fluid rounded-circle'} src={friend.picture.data.url}/>
+                                                    </MDBCol>
+                                                    <MDBCol sm={12} md={10}>
+                                                        {friend.name}
+                                                    </MDBCol>
+                                                </MDBRow>
+                                            );
+                                        })}
+                                    </MDBCol>
+                                </MDBRow>
+                                <MDBRow end>
+                                    <FacebookLogout />
+                                </MDBRow>
+                            </MDBCardBody>
+                        </MDBCard>
+                    </MDBCol>
+                </MDBRow>
+            </MDBContainer>
 
         );
     }

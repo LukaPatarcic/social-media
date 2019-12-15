@@ -1,16 +1,24 @@
 import * as React from "react";
 import cookie from 'react-cookies'
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import {Col, Container, Image, ListGroup, Row} from "react-bootstrap";
 import {Redirect} from "react-router-dom";
 import FacebookProfile from "../Components/Facebook/FacebookProfile";
+// import GoogleProfile from "../Components/Google/GoogleProfile";
+import {MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBRow} from "mdbreact";
+import FacebookAuthLogin from "../Components/Facebook/FacebookAuthLogin";
 import GoogleProfile from "../Components/Google/GoogleProfile";
+import GoogleAuthLogin from "../Components/Google/GoogleAuthLogin";
 
 export default class Profile extends React.Component{
 
     constructor(props) {
         super(props);
         this.state = {
+            userData: {
+                firstName: '',
+                lastName: '',
+                profileName: '',
+                email: ''
+            },
             facebookData: null,
             googleData: null,
             hasGoogleAccount: false,
@@ -19,68 +27,111 @@ export default class Profile extends React.Component{
     }
 
     componentDidMount() {
-        if(cookie.load('facebook-access-token')) {
-            this.setState({
-                hasFacebookAccount: true
-            });
-            fetch('http://localhost:8000/connect/facebook/get/user',{
-                method: "POST",
-                body: JSON.stringify({'facebook-access-token': cookie.load('facebook-access-token')})
-
+        if(!cookie.load('access-token')) {
+            this.props.history.push('/');
+            return;
+        } else {
+            fetch('https://api.allshak.lukaku.tech/get/user',{
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-AUTH-TOKEN': cookie.load('access-token')
+                }
             })
                 .then(response => response.json())
-                .then(data => {this.setState({facebookData: data})})
-                .catch(err => {
+                .then(data => {
                     this.setState({
-                        redirectToLogin: true
-                    })
-                });
+                        userData: {
+                            firstName: data.firstName,
+                            lastName: data.lastName,
+                            profileName: data.profileName,
+                            email: data.email,
+                        }
+                    });
+                })
+        }
+        if(cookie.load('facebook-access-token')) {
+            fetch('https://api.allshak.lukaku.tech/connect/facebook/get/user',{
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-AUTH-TOKEN': cookie.load('access-token'),
+                    'facebook-access-token': cookie.load('facebook-access-token')
+                }
 
+            })
+                .then(response => {
+                    if(response.status > 400 && response.status < 500) {
+                        throw Error('Invalid credentials please log in again');
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    this.setState({facebookData: data})
+                })
+                .catch(err => {
+                    alert(err);
+                });
         }
 
-        if(cookie.load('facebook-access-token')) {
-            this.setState({
-                hasGoogleAccount: true
-            });
+        if(cookie.load('google-access-token')) {
             let url = new URL('https://www.googleapis.com/oauth2/v1/userinfo');
             let params = {'access_token': cookie.load('google-access-token')};
             url.search = new URLSearchParams(params).toString();
 
             fetch(url)
                 .then(response => response.json())
-                .then(data => {this.setState({googleData: data})})
+                .then(data => {
+                    this.setState({googleData: data})
+                })
                 .catch(err => {
                 });
-
 
         }
 
     }
 
     render() {
-        if(this.state.facebookData === null) {
-            return null;
-        }
+        const {firstName,lastName,profileName,email} = this.state.userData;
 
         if(this.state.redirectToLogin) {
             return (<Redirect to='/login'/>)
         }
 
-        const {first_name,last_name,gender,age_range,picture,birthday,friends} = this.state.facebookData;
         return (
-            <Container>
-                <Row>
-                    <Col sm={6}>
-                        <h1>Facebook Profile</h1>
-                        <FacebookProfile facebookData={this.state.facebookData}/>
-                    </Col>
-                    <Col sm={6}>
+            <MDBContainer>
+                <MDBRow className={'mt-5'}>
+                    <MDBCol sm={12} className={'px-0 border-top border-left border-right'}>
+                        <img alt={'Banner'} className={'img-fluid'} style={{height: 400,width: '100%'}} src={'images/profile_banner.png'}/>
+                    </MDBCol>
+                    <MDBCol sm={12} className={'px-0'}>
+                        <MDBCard>
+                            <MDBCardBody>
+                                <img className={'img-fluid'} style={{position: "relative", bottom: 60}} src={'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+firstName+'+'+lastName} />
+                                <p>{firstName+' '+lastName}({profileName})</p>
+                                {email}
+                            </MDBCardBody>
+                        </MDBCard>
+                    </MDBCol>
+                    <MDBCol className={'mt-5'} sm={12}>
+                        {(!this.state.facebookData || !this.state.googleData) &&
+                        <MDBCard>
+                            <MDBCardBody>
+                                { !this.state.facebookData && <FacebookAuthLogin />}
+                                { !this.state.googleData && <GoogleAuthLogin />}
+                            </MDBCardBody>
+                        </MDBCard>}
+                        { this.state.facebookData &&
+                            <FacebookProfile facebookData={this.state.facebookData} />
+                        }
+                        { this.state.googleData &&
+                            <GoogleProfile googleData={this.state.googleData} />
+                        }
 
-                        <h1>Google Profile</h1>
-                        <GoogleProfile googleData={this.state.googleData}/>
-                    </Col>
-                </Row>
-            </Container>
+                    </MDBCol>
+                </MDBRow>
+            </MDBContainer>
 
         );
     }
