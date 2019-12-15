@@ -5,18 +5,22 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Services\Mailer;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Mobile_Detect;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class SecurityController extends AbstractController
+class SecurityController extends BaseController
 {
     /**
      * @Route("/test")
@@ -30,7 +34,7 @@ class SecurityController extends AbstractController
      * @Route("/register", name="app_register")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param \Swift_Mailer $mailer
+     * @param Mailer $mailer
      * @return Response
      * @throws Exception
      */
@@ -88,7 +92,7 @@ class SecurityController extends AbstractController
         $token = hash('sha256',$user->getEmail().bin2hex(random_bytes(64)));
         $user->setToken($token);
         $time = $data['rememberMe'] ? '+1 month' : '+8 hours';
-        $user->setExpiresAt(new \DateTime($time));
+        $user->setExpiresAt(new DateTime($time));
         $entityManager->flush();
 
         return $this->json([
@@ -107,6 +111,8 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/email/verify/{verificationCode}", methods={"GET"})
+     * @param User $user
+     * @return RedirectResponse|Response
      */
     public function emailVerification(User $user)
     {
@@ -115,15 +121,35 @@ class SecurityController extends AbstractController
             ->setVerificationCode(null);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->redirect('http://localhost:3000/login');
-    }
-
-    private function getErrorMessages(FormInterface $form) {
-        $errors = [];
-        foreach ($form->getErrors(true, true) as $error) {
-            $errors[] = $error->getMessage();
+        $detect = new Mobile_Detect;
+        if($detect->isMobile() or $detect->isTablet()) {
+            return $this->render('redirectToMobile.html.twig');
         }
-
-        return $errors;
+        return $this->redirect('https://allshak.lukaku.tech/login');
     }
+
+    /**
+     * @Route("/password/forgotten", name="forgotten_password")
+     * @throws Exception
+     */
+    public function forgottenPassword(Request $request, Mailer $mailer)
+    {
+        $data = json_decode($request->getContent(),true);
+        $sendMail = $mailer->forgottenPasswordEmail($data['email']);
+    }
+
+    /**
+     * @Route("/get/user", name="get_user")
+     * @param Request $request
+     * @return object|void|null
+     * @throws Exception
+     * @IsGranted("ROLE_USER")
+     */
+    public function fetchUser(Request $request)
+    {
+        $user = $this->getApiUser($request);
+        return $this->json($user,Response::HTTP_OK);
+    }
+
+
 }

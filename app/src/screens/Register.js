@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Content, CardItem, Body, Form, Item, Input, Label, Icon} from 'native-base';
+import {Card, Item, Input} from 'native-base';
 import {ActivityIndicator, Button, StyleSheet, Text} from "react-native";
 
 const styles = StyleSheet.create({
@@ -17,12 +17,12 @@ export default class Register extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstName: 'Luka',
-            lastName: 'Patarcic',
-            profileName: 'Khallion',
-            email: 'patarcic98@gmail.com',
-            password: 'punopetica98',
-            confirmPassword: 'punopetica98',
+            firstName: '',
+            lastName: '',
+            profileName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
             error: '',
             serverError: [],
             loading: ''
@@ -34,7 +34,7 @@ export default class Register extends React.Component {
         const {firstName,lastName,email,profileName,password,confirmPassword,error,loading} = this.state;
         this.setState({loading: true});
         let json = {firstName,lastName,profileName,email,'password' :{'first':password,'second':confirmPassword}};
-        fetch('http://api.allshak.lukaku.tech/register', {
+        fetch('https://api.allshak.lukaku.tech/register', {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -79,7 +79,6 @@ export default class Register extends React.Component {
             <Card style={{padding: 50}}>
                 <Text style={{textAlign: 'center',fontWeight: 'bold',fontSize: 40,marginBottom: 20}}>Register</Text>
                 <Item>
-                    <Icon active name='' />
                     <Input
                         value={firstName}
                         onChangeText={(firstName) => this.setState({ firstName })}
@@ -87,7 +86,6 @@ export default class Register extends React.Component {
                     />
                 </Item>
                 <Item>
-                    <Icon active name='' />
                     <Input
                         value={lastName}
                         onChangeText={(lastName) => this.setState({ lastName })}
@@ -96,16 +94,15 @@ export default class Register extends React.Component {
                 </Item>
 
                 <Item>
-                    <Icon active name='' />
                     <Input
                         value={email}
                         onChangeText={(email) => this.setState({ email })}
                         placeholder={'Email'}
+                        autoCompleteType={'email'}
                     />
                 </Item>
 
                 <Item>
-                    <Icon active name='' />
                     <Input
                         value={profileName}
                         onChangeText={(profileName) => this.setState({ profileName })}
@@ -114,20 +111,20 @@ export default class Register extends React.Component {
                 </Item>
 
                 <Item>
-                    <Icon active name='' />
                     <Input
                         value={password}
                         onChangeText={(password) => this.setState({ password })}
                         placeholder={'Password'}
+                        secureTextEntry={true}
                     />
                 </Item>
 
                 <Item>
-                    <Icon active name='' />
                     <Input
                         value={confirmPassword}
                         onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
                         placeholder={'Confirm Password'}
+                        secureTextEntry={true}
                     />
                 </Item>
 

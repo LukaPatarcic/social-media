@@ -27,7 +27,7 @@ export default class Login extends React.Component {
             })
         } else {
             this.setState({loading: true});
-            fetch('http://api.allshak.lukaku.tech/login',{
+            fetch('https://api.allshak.lukaku.tech/login',{
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'

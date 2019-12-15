@@ -26,18 +26,31 @@ class Mailer
         $this->twig = $twig;
     }
 
-    public function verificationEmail(string $email, string  $verificationCode): bool
+    public function verificationEmail(string $email, string  $verificationCode)
     {
-        $message = (new \Swift_Message('Account Verification'))
+        return $this->mailTemplate(
+            'Account Verification',
+            'emails/registration.html.twig',
+            ['email' => $email,'verificationCode' => $verificationCode]
+        );
+    }
+
+    public function forgottenPasswordEmail(string $email)
+    {
+        return $this->mailTemplate(
+            'Forgotten Password',
+            'forgottenPassword.html.twig',
+            ['email' => $email]
+        );
+    }
+
+    private function mailTemplate(string $subject, string $twigTemplate, array $data): bool
+    {
+        $message = (new \Swift_Message($subject))
             ->setFrom('luka@lukaku.tech','noreply')
-            ->setTo($email)
+            ->setTo($data['email'])
             ->setBody(
-                $this->twig->render(
-                    'emails/registration.html.twig', [
-                        'email' => $email,
-                        'verificationCode' => $verificationCode
-                    ]
-                ),
+                $this->twig->render($twigTemplate, $data),
                 'text/html'
             );
 

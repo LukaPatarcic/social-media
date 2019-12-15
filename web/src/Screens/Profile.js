@@ -3,8 +3,8 @@ import cookie from 'react-cookies'
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import {Col, Container, Image, ListGroup, Row} from "react-bootstrap";
 import {Redirect} from "react-router-dom";
-import FacebookProfile from "./FacebookProfile";
-import GoogleProfile from "./GoogleProfile";
+import FacebookProfile from "../Components/Facebook/FacebookProfile";
+import GoogleProfile from "../Components/Google/GoogleProfile";
 
 export default class Profile extends React.Component{
 

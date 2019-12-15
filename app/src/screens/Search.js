@@ -20,7 +20,7 @@ export default class Profile extends React.Component {
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
-                source={{uri: 'http://allshak.lukaku.tech/images/background.png'}}>
+                source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
                 <View>
                     <Searchbar
                         placeholder="Search"

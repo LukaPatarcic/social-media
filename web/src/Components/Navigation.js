@@ -1,13 +1,12 @@
 import * as React from "react";
 import {
-    MDBCollapse,
+    MDBCollapse, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBIcon,
     MDBNavbar, MDBNavbarBrand,
     MDBNavbarNav, MDBNavbarToggler,
     MDBNavItem, MDBNavLink,
 } from "mdbreact";
-import { BrowserRouter as Router } from 'react-router-dom';
-import {withRouter} from 'react-router'
 import cookie from "react-cookies";
+import {Link} from "react-router-dom";
 
 export default class Navigation extends React.Component{
 
@@ -17,7 +16,7 @@ export default class Navigation extends React.Component{
     }
     state = {
         isOpen: false,
-        isLoggedIn: !!cookie.load('access-token')
+        auth: !!cookie.load('access-token')
     };
 
     toggleCollapse = () => {
@@ -25,48 +24,39 @@ export default class Navigation extends React.Component{
     }
 
     render() {
-        const background = {
-            backgroundColor: '#ebe9e9'
-        }
+        const { auth } = this.state;
 
         return (
             <MDBNavbar color="red" dark expand="md">
-                <MDBNavbarBrand className={'text-dark font-weight-bold'}>
-                    Allshak
+                <MDBNavbarBrand>
+                    <strong><Link className={'text-white mr-2'} to='/'>Allshak</Link></strong>
                 </MDBNavbarBrand>
                 <MDBNavbarToggler onClick={this.toggleCollapse} />
                 <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
-                    <MDBNavbarNav left>
-                        <MDBNavItem active>
-                            <MDBNavLink to="/">Home</MDBNavLink>
-                        </MDBNavItem>
-                        {this.state.isLoggedIn == true ?
+                    <MDBNavbarNav right className={'mr-md-5'}>
+                        {auth
+                            ?
                             <MDBNavItem>
-                                <MDBNavLink href="/profile">Profile</MDBNavLink>
+                                <MDBDropdown>
+                                    <MDBDropdownToggle nav caret>
+                                        <MDBIcon icon="user" />
+                                    </MDBDropdownToggle>
+                                    <MDBDropdownMenu className="dropdown-default">
+                                        <MDBDropdownItem href="/profile">Profile</MDBDropdownItem>
+                                        <MDBDropdownItem href="/settings">Settings</MDBDropdownItem>
+                                        <MDBDropdownItem href="/logout">Logout</MDBDropdownItem>
+                                    </MDBDropdownMenu>
+                                </MDBDropdown>
                             </MDBNavItem>
-                            :''
-                        }
-                        <MDBNavItem>
-                            <MDBNavLink to="/about">About</MDBNavLink>
-                        </MDBNavItem>
-                        <MDBNavItem>
-                            <MDBNavLink to="/contact">Contact</MDBNavLink>
-                        </MDBNavItem>
-                    </MDBNavbarNav>
-                    <MDBNavbarNav right>
-                        {this.state.isLoggedIn == false ?
-                            <>
-                                <MDBNavItem>
-                                    <MDBNavLink to={'/register'}>Register</MDBNavLink>
-                                </MDBNavItem>
-                                <MDBNavItem>
-                                    <MDBNavLink to={'/login'}>Login</MDBNavLink>
-                                </MDBNavItem>
-                            </>
                             :
-                            <MDBNavItem>
-                                <MDBNavLink to={'/logout'}>Logout</MDBNavLink>
-                            </MDBNavItem>
+                            <React.Fragment>
+                                <MDBNavItem>
+                                    <Link className={'text-white mr-2'} to='/register'>Register</Link>
+                                </MDBNavItem>
+                                <MDBNavItem>
+                                    <Link className={'text-white mr-2'} to='/login'>Login</Link>
+                                </MDBNavItem>
+                            </React.Fragment>
                         }
                     </MDBNavbarNav>
                 </MDBCollapse>

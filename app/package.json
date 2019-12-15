@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.7.0",
+    "@react-native-community/netinfo": "^5.0.0",
     "native-base": "^2.13.8",
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-chart-kit": "^4.1.0",
+    "react-native-deep-linking": "^2.2.0",
     "react-native-elements": "^1.2.7",
     "react-native-fbsdk": "^1.1.1",
     "react-native-gesture-handler": "^1.5.2",
