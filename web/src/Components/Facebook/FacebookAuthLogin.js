@@ -31,6 +31,7 @@ export default class FacebookAuthLogin extends React.Component{
                 cssClass={'btn btn-primary'}
                 appId="1189985861185629"
                 fields="email,picture"
+                disableMobileRedirect={true}
                 scope="
                     public_profile,email,user_photos,
                     user_age_range,user_birthday,

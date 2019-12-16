@@ -5,7 +5,8 @@ import FacebookLogout from "./FacebookLogout";
 export default class FacebookProfile extends React.Component{
 
     render() {
-        const {first_name,last_name,gender,age_range,picture,birthday,friends,hometown} = this.props.facebookData;
+        const {first_name,last_name,gender,age_range,picture,birthday,friends} = this.props.facebookData;
+        console.log(this.props);
         return (
             <MDBContainer>
                 <MDBRow>
@@ -22,7 +23,6 @@ export default class FacebookProfile extends React.Component{
                                     <MDBCol sm={12} md={4}>
                                         Name: {first_name + ' ' + last_name} ({gender})<br/>
                                         Birthday: {birthday} ({age_range.min})<br/>
-                                        From: {hometown.name}<br/>
                                         Friends (total: {friends.summary.total_count}):
                                         {friends.data.map((friend,index) => {
                                             return (
