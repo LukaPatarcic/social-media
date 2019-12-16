@@ -1,3 +1,5 @@
+import cookie from "react-cookies";
+
 export const setBackground = () => {
     document.querySelector('body').style.backgroundImage = 'url(../images/background.svg)';
     document.querySelector('body').style.backgroundSize = 'cover';
@@ -5,8 +7,7 @@ export const setBackground = () => {
     document.querySelector('body').style.backgroundColor = '#091318';
 }
 
-export const auth = (token) => {
-    var isAuth = false;
+export function auth(token) {
     fetch('https://api.allshak.lukaku.tech/auth',{
         headers: {
             'Accept': 'application/json',
@@ -16,15 +17,18 @@ export const auth = (token) => {
     })
         .then(response => {
             if(response.status === 403 || response.status === 500) {
-                return null;
+                cookie.remove('access-token');
+                return '/';
             }
          return response.json();
         })
         .then(data => {
-            if(data.success) {
-                isAuth = true;
+            if(!data.success) {
+                cookie.remove('access-token');
+                return '/';
             }
         })
-    console.log(isAuth)
-    return isAuth;
+        .catch(err => {
+            cookie.remove('access-token');
+        })
 }

@@ -81,13 +81,13 @@ react-native run-android or react-native run-ios
 
 ## Deployment
 
-###For React
+### For React
 
 ```
 yarn build
 ```
 
-###For React-Native
+### For React-Native
 
 Setup Keystore
 ```
@@ -103,19 +103,10 @@ cd android && ./gradlew assembleRelease
 * [Symfony](https://symfony.com/doc/current/index.html) - API backend
 * [React](https://reactjs.org/docs/getting-started.html) - Frontend
 * [React-Native](https://facebook.github.io/react-native/docs/getting-started) - Mobile app
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [Git](http://git-scm.com/) for versioning.  
-
 ## Authors
 
 * **Luka Patarčić** - *web developer* - [LukaPatarcic](https://github.com/LukaPatarcic)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This``` project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

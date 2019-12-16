@@ -58,9 +58,9 @@ export default class Footer extends React.Component{
                                 </MDBRow>
                             </form>
                         </MDBCol>
-                        <MDBCol md="3">
-                            <h5 className="title">Links</h5>
-                            <ul>
+                        <MDBCol md="3" className={'text-center'}>
+                            <h5 className="title text-center">Links</h5>
+                            <ul className={'pl-0'}>
                                 <li className="list-unstyled">
                                     <Link to={'/'}>Home</Link>
                                 </li>
@@ -80,7 +80,7 @@ export default class Footer extends React.Component{
                         </MDBCol>
                         <MDBCol md="3">
                             <h5 className="title">Social Media</h5>
-                            <ul>
+                            <ul className={'pl-0'}>
                                 <li className="list-unstyled">
                                     <Link to={'/'}>Facebook</Link>
                                 </li>

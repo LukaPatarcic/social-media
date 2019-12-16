@@ -33,6 +33,19 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 
+
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function findExpiredTokens()
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.expiresAt < :now')
+            ->setParameter('now', new \DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
+            ->getQuery()
+            ->getResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?User
     {

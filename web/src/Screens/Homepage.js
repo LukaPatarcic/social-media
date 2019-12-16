@@ -27,7 +27,7 @@ export default class Homepage extends React.Component{
                     ?
                     <Profile/>
                     :
-                    <MDBContainer className={'text-center p-5'}>
+                    <MDBContainer className={'text-center pt-5'}>
                         <Banner/>
                         <About/>
                         <Contact/>

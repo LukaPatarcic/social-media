@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class DeleteUsersCommand extends Command
+class DeleteUserCommand extends Command
 {
     protected static $defaultName = 'app:delete-users';
     /**
@@ -52,7 +52,7 @@ class DeleteUsersCommand extends Command
         }
         $this->entityManager->flush();
 
-        $io->success('All non verified users were deleted');
+        $io->success(count($users).' non verified users were deleted');
         return true;
     }
 }

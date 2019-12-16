@@ -1,8 +1,6 @@
 import * as React from "react";
 import cookie from 'react-cookies'
-import {Redirect} from "react-router-dom";
 import FacebookProfile from "../Components/Facebook/FacebookProfile";
-// import GoogleProfile from "../Components/Google/GoogleProfile";
 import {MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import FacebookAuthLogin from "../Components/Facebook/FacebookAuthLogin";
 import GoogleProfile from "../Components/Google/GoogleProfile";
@@ -27,10 +25,12 @@ export default class Profile extends React.Component{
     }
 
     componentDidMount() {
+
         if(!cookie.load('access-token')) {
-            this.props.history.push('/');
-            return;
-        } else {
+            this.props.history.push('/login')
+        }
+
+        if(cookie.load('access-token')) {
             fetch('https://api.allshak.lukaku.tech/get/user',{
                 headers: {
                     'Accept': 'application/json',
@@ -50,6 +50,7 @@ export default class Profile extends React.Component{
                     });
                 })
         }
+
         if(cookie.load('facebook-access-token')) {
             fetch('https://api.allshak.lukaku.tech/connect/facebook/get/user',{
                 method: "GET",
@@ -71,7 +72,7 @@ export default class Profile extends React.Component{
                     this.setState({facebookData: data})
                 })
                 .catch(err => {
-                    alert(err);
+                    cookie.remove('facebook-access-token');
                 });
         }
 
@@ -94,10 +95,6 @@ export default class Profile extends React.Component{
 
     render() {
         const {firstName,lastName,profileName,email} = this.state.userData;
-
-        if(this.state.redirectToLogin) {
-            return (<Redirect to='/login'/>)
-        }
 
         return (
             <MDBContainer>

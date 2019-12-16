@@ -51,7 +51,7 @@ class SecurityController extends BaseController
 
         $password = $passwordEncoder->encodePassword($user, $data['password']['first']);
         $user->setPassword($password)
-            ->setDeletesIn()
+            ->setDeletesIn(new DateTime('+ 1 day'))
             ->setVerificationCode(hash('sha256',$user->getEmail().bin2hex(random_bytes(32))));
 
         $sendMail = $mailer->verificationEmail($user->getEmail(),$user->getVerificationCode());
@@ -80,6 +80,7 @@ class SecurityController extends BaseController
             return $this->json(['error' => 'Empty username or password'], Response::HTTP_BAD_REQUEST);
         }
         $userRepo = $entityManager->getRepository(User::class);
+        /** @var User $user */
         $user = $userRepo->findOneBy(['email' => $data['email'],'isVerified' => 1]);
         if(!$user) {
             return $this->json(['error' => 'Invalid username'],Response::HTTP_BAD_REQUEST);
@@ -89,14 +90,19 @@ class SecurityController extends BaseController
         if (!$passwordEncoder->isPasswordValid($user, $data['password'])) {
             return $this->json(['error' => 'Invalid password'], Response::HTTP_BAD_REQUEST);
         }
-        $token = hash('sha256',$user->getEmail().bin2hex(random_bytes(64)));
-        $user->setToken($token);
+
+        $token = $user->getToken();
+        if(!$user->getToken()) {
+            $token = hash('sha256',$user->getEmail().bin2hex(random_bytes(64)));
+            $user->setToken($token);
+        }
+
         $time = $data['rememberMe'] ? '+1 month' : '+8 hours';
         $user->setExpiresAt(new DateTime($time));
         $entityManager->flush();
 
         return $this->json([
-            'token' => $token
+            'token' => $token,'error' => ''
         ]);
     }
 
