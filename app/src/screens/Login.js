@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, StyleSheet, ActivityIndicator, View,} from 'react-native';
+import {Button, StyleSheet, ActivityIndicator, View, TouchableOpacity,} from 'react-native';
 import { Item, Input, Icon, Card, Content, Text, ListItem, Body } from 'native-base';
 import { Checkbox } from 'react-native-paper';
 import AsyncStorage from "@react-native-community/async-storage";
@@ -58,7 +58,7 @@ export default class Login extends React.Component {
         return (
             <View style={styles.container}>
                 <Card style={{padding: 50}}>
-                    <Text style={{textAlign: 'center',fontWeight: 'bold',fontSize: 40,marginBottom: 20}}>Login</Text>
+                    <Text style={{textAlign: 'center',fontSize: 40,marginBottom: 20,fontFamily: "font"}}>Login</Text>
                     <Item>
                         <Icon active name='mail' />
                         <Input
@@ -66,6 +66,7 @@ export default class Login extends React.Component {
                             onChangeText={(email) => this.setState({ email })}
                             placeholder={'Email'}
                             autoCompleteType={'email'}
+                            style={{fontFamily: "font"}}
                         />
                     </Item>
                     <Item>
@@ -75,15 +76,17 @@ export default class Login extends React.Component {
                             onChangeText={(password) => this.setState({ password })}
                             placeholder={'Password'}
                             secureTextEntry={true}
+                            style={{fontFamily: "font"}}
                         />
                     </Item>
                     <CheckBox
                         checked={!!rememberMe}
                         checkedColor={'#f00'}
-                        title={'Remember me'}
-                        onPress={() => { this.setState({ rememberMe: !rememberMe }); }}
+                        title={<Text style={{fontFamily: 'font'}}>Remember Me!</Text>}
+                        onPress={() => { this.setState({ rememberMe: !rememberMe });}}
+                        containerStyle={{backgroundColor: '#fff',borderColor: '#fff'}}
                     />
-                    <Text style={{color: color}}>
+                    <Text style={{color: color,fontFamily: "font"}}>
                         {error ? error : ''}
                     </Text>
 
@@ -91,14 +94,14 @@ export default class Login extends React.Component {
                         ?
                         <ActivityIndicator size="small" color="#f00" />
                         :
-                        <Button
-                            title={'Login'}
-                            style={styles.input}
-                            color={'#f00'}
+                        <TouchableOpacity
+                            style={styles.btn}
                             onPress={this.onLogin.bind(this)}
-                        />
+                        >
+                            <Text style={styles.btnText}>Login</Text>
+                        </TouchableOpacity>
                     }
-                    <Text style={{marginTop: 20}}>Don't have an account? <Text style={{color:'red',fontWeight: 'bold'}} onPress={() => history.push('/register')}>Register now!</Text></Text>
+                    <Text style={{marginTop: 20,fontFamily: "font"}}>Don't have an account? <Text style={{color:'red',fontFamily: "font"}} onPress={() => history.push('/register')}>Register now!</Text></Text>
                 </Card>
             </View>
         );
@@ -110,5 +113,30 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    input: {
+        width: 300,
+        height: 44,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: 'black',
+        marginBottom: 10,
+        fontFamily: "font"
+    },
+    btn: {
+        backgroundColor: '#f00',
+        width: 300,
+        height: 44,
+        padding: 10,
+        borderRadius: 2,
+        marginBottom: 10,
+        fontFamily: "font"
+    },
+    btnText: {
+        fontFamily: 'font',
+        textAlign: 'center',
+        color: '#fff',
+        fontSize: 18
     }
 });
+

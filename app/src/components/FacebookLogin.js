@@ -1,6 +1,5 @@
 import  {LoginButton} from "react-native-fbsdk";
 import AsyncStorage from "@react-native-community/async-storage";
-import {View} from "react-native";
 import FBSDK from 'react-native-fbsdk';
 import React from "react";
 
@@ -31,7 +30,7 @@ export default class FacebookLogin extends React.Component{
                     }
                 }
                 onLogoutFinished={() => {
-                    alert("User logged out")
+                    alert("User logged out");
                     AsyncStorage.removeItem('facebook-access-token');
                 }}/>
         );

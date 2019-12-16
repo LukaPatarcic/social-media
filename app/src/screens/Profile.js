@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, Alert,} from 'react-native';
+import {View, StyleSheet, ImageBackground, Alert, TouchableOpacity,} from 'react-native';
 import { Text } from 'native-base';
 import AsyncStorage from "@react-native-community/async-storage";
 import FacebookLogin from "../components/FacebookLogin";
@@ -55,7 +55,7 @@ export default class Profile extends React.Component {
    }
 
    logout() {
-       AsyncStorage.removeItem('access-token')
+       AsyncStorage.removeItem('access-token');
        NativeModules.DevSettings.reload();
    }
 
@@ -73,18 +73,18 @@ export default class Profile extends React.Component {
                         <View style={{bottom: 35}}>
                             <Avatar.Image size={150} source={{uri: 'https://i.pinimg.com/originals/53/3c/18/533c18ff0df87fbbdf58b11e0048a199.jpg'}}/>
                         </View>
-                        <Text style={{color: '#000', textAlign: 'center', fontSize: 30}}>{firstName + " " + lastName}{"\n"}</Text>
-                        <Text style={{color: '#000', textAlign: 'center', fontSize: 30}}>{profileName}</Text>
+                        <Text style={{color: '#000', textAlign: 'center', fontSize: 30,fontFamily: 'font'}}>{firstName + " " + lastName}{"\n"}</Text>
+                        <Text style={{color: '#000', textAlign: 'center', fontSize: 30,fontFamily: 'font'}}>{profileName}</Text>
                         <View style={{marginBottom: 30}}>
                             <FacebookLogin/>
                         </View>
                         <View>
-                            <Button
-                                title={'Logout'}
-                                style={styles.input}
-                                color={'#f00'}
+                            <TouchableOpacity
+                                style={styles.btn}
                                 onPress={this.logout}
-                            />
+                            >
+                                <Text style={styles.btnText}>Logout</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
@@ -102,5 +102,20 @@ const styles = StyleSheet.create({
         shadowOffset:{  width: 10,  height: 10,  },
         shadowColor: 'black',
         shadowOpacity: 1.0,
+    },
+    btn: {
+        backgroundColor: '#f00',
+        width: 150,
+        height: 44,
+        padding: 10,
+        borderRadius: 2,
+        marginBottom: 10,
+        fontFamily: "font"
+    },
+    btnText: {
+        fontFamily: 'font',
+        textAlign: 'center',
+        color: '#fff',
+        fontSize: 18
     }
 });

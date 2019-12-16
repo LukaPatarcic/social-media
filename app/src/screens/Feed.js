@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, ScrollView,} from 'react-native';
+import {View, StyleSheet, ImageBackground, ScrollView, Text,} from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import AsyncStorage from "@react-native-community/async-storage";
 
@@ -20,7 +20,7 @@ export default class Profile extends React.Component {
     }
 
     randomName() {
-        return this.state.card[Math.floor(Math.random()*this.state.card.length)];
+        return <Text style={{fontFamily: 'font'}}>{this.state.card[Math.floor(Math.random()*this.state.card.length)]}</Text>;
     }
 
     render() {
@@ -29,13 +29,13 @@ export default class Profile extends React.Component {
                 style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
                 source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
                 <ScrollView style={{paddingHorizontal: 20, paddingTop: 20}}>
-                    {this.state.card.map(card => {
+                    {this.state.card.map((card,index) => {
                         return (
-                            <Card style={{marginBottom: 30}}>
+                            <Card style={{marginBottom: 30}} key={index}>
                                 <Card.Title title={this.randomName()}  left={(props) => <Avatar.Image size={50} source={{uri: 'https://robohash.org/' + this.randomName()}}/>} />
                                 <Card.Content>
-                                    <Title>Card title</Title>
-                                    <Paragraph>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores excepturi in iste labore placeat quam quos ratione reiciendis repudiandae vitae?</Paragraph>
+                                    <Title  style={{fontFamily: 'font'}}>Card title</Title>
+                                    <Paragraph  style={{fontFamily: 'font'}}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores excepturi in iste labore placeat quam quos ratione reiciendis repudiandae vitae?</Paragraph>
                                 </Card.Content>
                             </Card>
                         )

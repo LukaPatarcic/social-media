@@ -1,17 +1,6 @@
 import React from 'react';
 import {Card, Item, Input} from 'native-base';
-import {ActivityIndicator, Button, StyleSheet, Text} from "react-native";
-
-const styles = StyleSheet.create({
-    input: {
-        width: 300,
-        height: 44,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: 'black',
-        marginBottom: 10,
-    },
-});
+import {ActivityIndicator, Button, ScrollView, StyleSheet, Text, TouchableOpacity} from "react-native";
 
 export default class Register extends React.Component {
     constructor(props) {
@@ -77,80 +66,106 @@ export default class Register extends React.Component {
         const {firstName,lastName,email,profileName,password,confirmPassword,error,loading,serverError} = this.state;
         return (
             <Card style={{padding: 50}}>
-                <Text style={{textAlign: 'center',fontWeight: 'bold',fontSize: 40,marginBottom: 20}}>Register</Text>
-                <Item>
-                    <Input
-                        value={firstName}
-                        onChangeText={(firstName) => this.setState({ firstName })}
-                        placeholder={'First Name'}
-                    />
-                </Item>
-                <Item>
-                    <Input
-                        value={lastName}
-                        onChangeText={(lastName) => this.setState({ lastName })}
-                        placeholder={'Last Name'}
-                    />
-                </Item>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <Text style={{textAlign: 'center',fontFamily: 'font',fontSize: 40,marginBottom: 20}}>Register</Text>
+                    <Item>
+                        <Input
+                            value={firstName}
+                            onChangeText={(firstName) => this.setState({ firstName })}
+                            placeholder={'First Name'}
+                            style={{fontFamily: 'font'}}
+                        />
+                    </Item>
+                    <Item>
+                        <Input
+                            value={lastName}
+                            onChangeText={(lastName) => this.setState({ lastName })}
+                            placeholder={'Last Name'}
+                            style={{fontFamily: 'font'}}
+                        />
+                    </Item>
 
-                <Item>
-                    <Input
-                        value={email}
-                        onChangeText={(email) => this.setState({ email })}
-                        placeholder={'Email'}
-                        autoCompleteType={'email'}
-                    />
-                </Item>
+                    <Item>
+                        <Input
+                            value={email}
+                            onChangeText={(email) => this.setState({ email })}
+                            placeholder={'Email'}
+                            autoCompleteType={'email'}
+                            style={{fontFamily: 'font'}}
+                        />
+                    </Item>
 
-                <Item>
-                    <Input
-                        value={profileName}
-                        onChangeText={(profileName) => this.setState({ profileName })}
-                        placeholder={'Username'}
-                    />
-                </Item>
+                    <Item>
+                        <Input
+                            value={profileName}
+                            onChangeText={(profileName) => this.setState({ profileName })}
+                            placeholder={'Username'}
+                            style={{fontFamily: 'font'}}
+                        />
+                    </Item>
 
-                <Item>
-                    <Input
-                        value={password}
-                        onChangeText={(password) => this.setState({ password })}
-                        placeholder={'Password'}
-                        secureTextEntry={true}
-                    />
-                </Item>
+                    <Item>
+                        <Input
+                            value={password}
+                            onChangeText={(password) => this.setState({ password })}
+                            placeholder={'Password'}
+                            secureTextEntry={true}
+                            style={{fontFamily: 'font'}}
+                        />
+                    </Item>
 
-                <Item>
-                    <Input
-                        value={confirmPassword}
-                        onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
-                        placeholder={'Confirm Password'}
-                        secureTextEntry={true}
-                    />
-                </Item>
+                    <Item>
+                        <Input
+                            value={confirmPassword}
+                            onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+                            placeholder={'Confirm Password'}
+                            secureTextEntry={true}
+                            style={{fontFamily: 'font'}}
+                        />
+                    </Item>
 
-                <Text style={{color: 'red'}}>
-                    {error ? error : ''}
-                    {serverError.length > 0
+                    <Text style={{color: 'red',fontFamily: 'font'}}>
+                        {error ? error : ''}
+                        {serverError.length > 0
+                            ?
+                            serverError.map(err => err)
+                            :
+                            ""
+                        }
+                    </Text>
+
+                    {loading
                         ?
-                        serverError.map(err => err)
+                        <ActivityIndicator size="small" color="#f00" />
                         :
-                        ""
-                    }
-                </Text>
-
-                {loading
-                    ?
-                    <ActivityIndicator size="small" color="#f00" />
-                    :
-                    <Button
-                        title={'Register'}
-                        style={styles.input}
-                        color={'#f00'}
+                        <TouchableOpacity
+                        style={styles.btn}
                         onPress={this.onRegister.bind(this)}
-                    />
-                }
-                <Text style={{marginTop: 20}}>Already have an account? <Text style={{color:'red',fontWeight: 'bold'}} onPress={() => history.push('/login')}>Log in now!</Text></Text>
+                        >
+                        <Text style={styles.btnText}>Register</Text>
+                        </TouchableOpacity>
+                    }
+                    <Text style={{marginTop: 20,fontFamily: 'font'}}>Already have an account? <Text style={{color:'red',fontFamily: 'font'}} onPress={() => history.push('/login')}>Log in now!</Text></Text>
+                </ScrollView>
             </Card>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    btn: {
+        backgroundColor: '#f00',
+        width: 300,
+        height: 44,
+        padding: 10,
+        borderRadius: 2,
+        marginBottom: 10,
+        fontFamily: "font"
+    },
+    btnText: {
+        fontFamily: 'font',
+        textAlign: 'center',
+        color: '#fff',
+        fontSize: 18
+    }
+});

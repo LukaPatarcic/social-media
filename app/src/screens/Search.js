@@ -23,6 +23,7 @@ export default class Profile extends React.Component {
                 source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
                 <View>
                     <Searchbar
+                        inputStyle={{fontFamily: 'font'}}
                         placeholder="Search"
                         onChangeText={query => { this.setState({ search: query }); }}
                         value={search}
@@ -34,11 +35,11 @@ export default class Profile extends React.Component {
                     <View>
                         <View style={styles.card}>
                             <View>
-                                <Text>Search results:</Text>
+                                <Text  style={{fontFamily: 'font'}}>Search results:</Text>
                             </View>
                         </View>
                         <View style={styles.card}>
-                            <Text>{search}</Text>
+                            <Text  style={{fontFamily: 'font'}}>{search}</Text>
                         </View>
                     </View>
                     :

@@ -10,10 +10,10 @@ export default class Router extends React.Component {
     state = {
         index: 1,
         routes: [
-            { key: 'feed', title: 'Feed', icon: 'home', color: '#ff101f' },
-            { key: 'search', title: 'Search', icon: 'magnify', color: '#ff101f' },
-            { key: 'stats', title: 'Stats', icon: 'chart-line', color: '#ff101f' },
-            { key: 'profile', title: 'Profile', icon: 'account', color: '#ff101f' },
+            { key: 'feed', icon: 'home', color: '#ff101f' },
+            { key: 'search', icon: 'magnify', color: '#ff101f' },
+            { key: 'stats', icon: 'chart-line', color: '#ff101f' },
+            { key: 'profile', icon: 'account', color: '#ff101f' },
         ],
     };
 
