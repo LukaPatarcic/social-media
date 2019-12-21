@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface
 {
+    use TimestampableEntity;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -84,11 +86,6 @@ class User implements UserInterface
     private $expiresAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Chat", mappedBy="fromUser")
-     */
-    private $chats;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isVerified = 0;
@@ -103,9 +100,20 @@ class User implements UserInterface
      */
     private $deletesIn;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="user")
+     */
+    private $friends;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="friend")
+     */
+    private $friendsWithMe;
+
     public function __construct()
     {
-        $this->chats = new ArrayCollection();
+        $this->friends = new ArrayCollection();
+        $this->friendsWithMe = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -246,37 +254,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Chat[]
-     */
-    public function getChats(): Collection
-    {
-        return $this->chats;
-    }
-
-    public function addChat(Chat $chat): self
-    {
-        if (!$this->chats->contains($chat)) {
-            $this->chats[] = $chat;
-            $chat->setFromUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChat(Chat $chat): self
-    {
-        if ($this->chats->contains($chat)) {
-            $this->chats->removeElement($chat);
-            // set the owning side to null (unless already changed)
-            if ($chat->getFromUser() === $this) {
-                $chat->setFromUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getIsVerified(): ?bool
     {
         return $this->isVerified;
@@ -309,6 +286,68 @@ class User implements UserInterface
     public function setDeletesIn(?\DateTimeInterface $deletesIn = null): self
     {
         $this->deletesIn = $deletesIn ? new \DateTime('+ 1 day') : null;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Friendship[]
+     */
+    public function getFriends(): Collection
+    {
+        return $this->friends;
+    }
+
+    public function addFriend(Friendship $friend): self
+    {
+        if (!$this->friends->contains($friend)) {
+            $this->friends[] = $friend;
+            $friend->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriend(Friendship $friend): self
+    {
+        if ($this->friends->contains($friend)) {
+            $this->friends->removeElement($friend);
+            // set the owning side to null (unless already changed)
+            if ($friend->getUser() === $this) {
+                $friend->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Friendship[]
+     */
+    public function getFriendsWithMe(): Collection
+    {
+        return $this->friendsWithMe;
+    }
+
+    public function addFriendsWithMe(Friendship $friendsWithMe): self
+    {
+        if (!$this->friendsWithMe->contains($friendsWithMe)) {
+            $this->friendsWithMe[] = $friendsWithMe;
+            $friendsWithMe->setFriend($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriendsWithMe(Friendship $friendsWithMe): self
+    {
+        if ($this->friendsWithMe->contains($friendsWithMe)) {
+            $this->friendsWithMe->removeElement($friendsWithMe);
+            // set the owning side to null (unless already changed)
+            if ($friendsWithMe->getFriend() === $this) {
+                $friendsWithMe->setFriend(null);
+            }
+        }
 
         return $this;
     }

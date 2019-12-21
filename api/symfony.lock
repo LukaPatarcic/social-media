@@ -1,4 +1,7 @@
 {
+    "behat/transliterator": {
+        "version": "v1.2.0"
+    },
     "cboden/ratchet": {
         "version": "v0.4.1"
     },
@@ -98,6 +101,9 @@
     },
     "facebook/graph-sdk": {
         "version": "5.7.0"
+    },
+    "gedmo/doctrine-extensions": {
+        "version": "v2.4.38"
     },
     "gos/pubsub-router-bundle": {
         "version": "v1.3.0"
@@ -211,6 +217,18 @@
         },
         "files": [
             "config/packages/sensio_framework_extra.yaml"
+        ]
+    },
+    "stof/doctrine-extensions-bundle": {
+        "version": "1.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.2",
+            "ref": "6c1ceb662f8997085f739cd089bfbef67f245983"
+        },
+        "files": [
+            "./config/packages/stof_doctrine_extensions.yaml"
         ]
     },
     "swiftmailer/swiftmailer": {
