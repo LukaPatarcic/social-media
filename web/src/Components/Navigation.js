@@ -1,12 +1,13 @@
 import * as React from "react";
 import {
-    MDBCollapse, MDBContainer, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBIcon,
+    MDBCollapse, MDBContainer, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBFormInline, MDBIcon,
     MDBNavbar, MDBNavbarBrand,
     MDBNavbarNav, MDBNavbarToggler,
-    MDBNavItem
+    MDBNavItem, MDBNavLink
 } from "mdbreact";
 import cookie from "react-cookies";
 import {Link} from "react-router-dom";
+import Search from "./Search";
 
 export default class Navigation extends React.Component{
 
@@ -38,6 +39,11 @@ export default class Navigation extends React.Component{
                             {auth
                                 ?
                                 <React.Fragment>
+                                    <MDBNavItem>
+                                        <Link to={'#'}>
+                                            <Search />
+                                        </Link>
+                                    </MDBNavItem>
                                     <MDBNavItem>
                                         <Link className={'text-white mr-2'} to='/profile'>Profile</Link>
                                     </MDBNavItem>
