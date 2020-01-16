@@ -7,7 +7,7 @@ import MobileAppModal from "../Components/MobileAppModal";
 import CookieConsent, { Cookies } from "react-cookie-consent";
 import {Link} from "react-router-dom";
 import cookie from "react-cookies";
-import Profile from "../Components/Feed";
+import Feed from "../Components/Feed";
 
 export default class Homepage extends React.Component{
     constructor(props) {
@@ -25,7 +25,7 @@ export default class Homepage extends React.Component{
             <React.Fragment>
                 {auth
                     ?
-                    <Profile/>
+                    <Feed/>
                     :
                     <MDBContainer className={'text-center pt-5'}>
                         <Banner/>

@@ -154,7 +154,9 @@ class SecurityController extends BaseController
     public function fetchUser(Request $request)
     {
         $user = $this->getApiUser($request);
-        return $this->json($user,Response::HTTP_OK);
+        return $this->json($user,Response::HTTP_OK,[],[
+            'groups' => ['user_info']
+        ]);
     }
 
     /**

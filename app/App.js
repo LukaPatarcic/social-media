@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, ImageBackground, ToastAndroid} from 'react-native';
+import {Alert, ImageBackground, PushNotificationIOSStatic as PushNotificationIOS, ToastAndroid} from 'react-native';
 import { NativeRouter, Switch, Route } from "react-router-native";
 
 import Login from "./src/screens/Login";
@@ -25,10 +25,30 @@ export default class App extends React.Component {
                 ToastAndroid.show('No Internet Connection',50)
             }
         });
+        var PushNotification = require("react-native-push-notification");
 
+        PushNotification.configure({
+            // (optional) Called when Token is generated (iOS and Android)
+            onRegister: function(token) {
+                console.log("TOKEN:", token);
+            },
+
+            // (required) Called when a remote or local notification is opened or received
+            onNotification: function(notification) {
+                console.log("NOTIFICATION:", notification);
+
+                notification.finish(PushNotificationIOS.FetchResult.NoData);
+
+            },
+
+            // ANDROID ONLY: GCM or FCM Sender ID (product_number) (optional - not required for local notifications, but is need to receive remote push notifications)
+            senderID: "292960777305",
+
+        });
     }
 
     render() {
+
         return (
             <NativeRouter>
                 <ImageBackground

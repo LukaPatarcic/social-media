@@ -21,29 +21,33 @@ class FriendshipRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $userId
-     * @param int $friendId
+     * @param User $user
      * @return Friendship[] Returns an array of Friendship objects
      */
-    public function findUsersFriends()
+    public function findUsersFriends(User $user)
     {
         return $this->createQueryBuilder('f')
-            ->join('f.user','u')
-            ->join('f.friend','uf')
+            ->join('f.friend','ff')
+            ->join('f.user','fu')
+            ->select('ff.firstName, ff.lastName, ff.profileName, ff.createdAt')
+            ->where('f.user = :user')
+            ->setParameter(':user',$user)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getArrayResult()
+            ;
     }
 
-    /*
-    public function findOneBySomeField($value): ?Friendship
+    public function findUsersRequests(int $userId)
     {
         return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
+            ->join('f.friend','u')
+            ->addSelect('u')
+            ->andWhere('f.friend = :user')
+            ->andWhere('f.status = 0')
+            ->setParameter(':user',$userId)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getArrayResult()
+            ;
     }
-    */
+
 }

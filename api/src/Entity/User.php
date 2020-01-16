@@ -8,11 +8,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields={"email"}, message="That email is already registered")
+ * @UniqueEntity(fields={"profileName"}, message="That username is already registered")
  */
 class User implements UserInterface
 {
@@ -28,6 +30,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank(message="Please enter an email address")
      * @Assert\Email(message="Please enter a valid email address")
+     * @Groups("user_info")
      */
     private $email;
 
@@ -50,6 +53,7 @@ class User implements UserInterface
      *     min="2",
      *     minMessage="Your first name should be at least 2 characters"
      * )
+     * @Groups("user_info")
      */
     private $firstName;
 
@@ -61,6 +65,7 @@ class User implements UserInterface
      *     min="2",
      *     minMessage="Your last name should be at least 2 characters"
      * )
+     * @Groups("user_info")
      */
     private $lastName;
 
@@ -72,6 +77,8 @@ class User implements UserInterface
      *     min="2",
      *     minMessage="Your username should be at least 2 characters"
      * )
+     * @Assert\Regex(pattern="/^[a-zA-Z0-9]+$/", message="The profile name may only contain letters and numbers.")
+     * @Groups("user_info")
      */
     private $profileName;
 
@@ -101,19 +108,31 @@ class User implements UserInterface
     private $deletesIn;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="user", orphanRemoval=true)
      */
     private $friends;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="friend")
+     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="friend", orphanRemoval=true)
      */
     private $friendsWithMe;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FriendshipRequest", mappedBy="fromUser")
+     */
+    private $fromUser;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FriendshipRequest", mappedBy="toUser")
+     */
+    private $toUser;
 
     public function __construct()
     {
         $this->friends = new ArrayCollection();
         $this->friendsWithMe = new ArrayCollection();
+        $this->fromUser = new ArrayCollection();
+        $this->toUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -346,6 +365,68 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($friendsWithMe->getFriend() === $this) {
                 $friendsWithMe->setFriend(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FriendshipRequest[]
+     */
+    public function getFromUser(): Collection
+    {
+        return $this->fromUser;
+    }
+
+    public function addFromUser(FriendshipRequest $fromUser): self
+    {
+        if (!$this->fromUser->contains($fromUser)) {
+            $this->fromUser[] = $fromUser;
+            $fromUser->setFromUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFromUser(FriendshipRequest $fromUser): self
+    {
+        if ($this->fromUser->contains($fromUser)) {
+            $this->fromUser->removeElement($fromUser);
+            // set the owning side to null (unless already changed)
+            if ($fromUser->getFromUser() === $this) {
+                $fromUser->setFromUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FriendshipRequest[]
+     */
+    public function getToUser(): Collection
+    {
+        return $this->toUser;
+    }
+
+    public function addToUser(FriendshipRequest $toUser): self
+    {
+        if (!$this->toUser->contains($toUser)) {
+            $this->toUser[] = $toUser;
+            $toUser->setToUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeToUser(FriendshipRequest $toUser): self
+    {
+        if ($this->toUser->contains($toUser)) {
+            $this->toUser->removeElement($toUser);
+            // set the owning side to null (unless already changed)
+            if ($toUser->getToUser() === $this) {
+                $toUser->setToUser(null);
             }
         }
 

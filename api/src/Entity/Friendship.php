@@ -4,16 +4,12 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FriendshipRepository")
- * @UniqueEntity(fields={"user","friend"}, message="Already following that person")
  */
 class Friendship
 {
-
-    use TimestampableEntity;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -23,18 +19,22 @@ class Friendship
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="friends")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="friendsWithMe")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $friend;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $status = false;
+    private $status = true;
+
+    use TimestampableEntity;
 
     public function getId(): ?int
     {

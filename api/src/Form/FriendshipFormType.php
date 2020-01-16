@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Friendship;
+use App\Entity\FriendshipRequest;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -14,19 +15,15 @@ class FriendshipFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('user',EntityType::class, [
-                'class' => User::class,
-            ])
-            ->add('friend',EntityType::class, [
-                'class' => User::class,
-            ])
+            ->add('fromUser')
+            ->add('toUser')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Friendship::class,
+            'data_class' => FriendshipRequest::class,
             'csrf_protection' => false
         ]);
     }

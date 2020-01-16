@@ -23,7 +23,7 @@ export default class Main extends React.Component{
 
         return (
             <Router>
-                <Navigation/>
+                <Navigation search={this.props.search}/>
                 <Switch>
                     {/* SECURITY */}
                     <Route exact={true} path="/register" component={Register}/>
@@ -34,7 +34,9 @@ export default class Main extends React.Component{
                     <Route exact={true} path="/legal/privacy" component={PrivacyPolicy} />
                     <Route exact={true} path="/legal/tos" component={TermsOfService} />
                     {/* USER */}
-                    <Route exact={true} path="/" component={Homepage} />
+                    <Route exact={true} path="/" component={() =>(
+                        <Homepage search={this.props.search} />
+                    )} />
                     <Route exact={true} path="/profile" component={Profile} />
                 </Switch>
                 <Footer/>
