@@ -46,6 +46,16 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByQuery(string $q)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.firstName,u.lastName,u.profileName')
+            ->andWhere('u.firstName LIKE :q OR u.lastName LIKE :q OR u.profileName LIKE :q')
+            ->setParameter('q','%'.$q.'%')
+            ->getQuery()
+            ->getResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?User
     {

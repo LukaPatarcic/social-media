@@ -3,10 +3,11 @@ import {
     MDBCollapse, MDBContainer, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBFormInline, MDBIcon,
     MDBNavbar, MDBNavbarBrand,
     MDBNavbarNav, MDBNavbarToggler,
-    MDBNavItem
+    MDBNavItem, MDBNavLink
 } from "mdbreact";
 import cookie from "react-cookies";
 import {Link} from "react-router-dom";
+import Search from "./Search";
 
 import Select from 'react-select';
 
@@ -54,20 +55,11 @@ export default class Navigation extends React.Component{
                                 ?
                                 <React.Fragment>
                                     <MDBNavItem>
-                                        <MDBFormInline waves>
-                                            <div className="md-form my-0">
-                                                <input
-                                                    className="form-control mr-sm-2"
-                                                    type="text"
-                                                    placeholder="Search"
-                                                    name="search"
-                                                    aria-label="Search"
-                                                    onChange={(e) => this.handleChange(e)}
-                                                />
-                                            </div>
-                                        </MDBFormInline>
+                                        <Link to={'#'}>
+                                            <Search />
+                                        </Link>
                                     </MDBNavItem>
-                                    <MDBNavItem className={'mt-2'}>
+                                    <MDBNavItem>
                                         <Link className={'text-white mr-2'} to='/profile'>Profile</Link>
                                     </MDBNavItem>
                                     <MDBNavItem className={'mt-2'}>
