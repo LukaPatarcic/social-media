@@ -34,7 +34,7 @@ class FriendRequestController extends BaseController
         $requests = $this->getDoctrine()->getRepository(FriendshipRequest::class)->findUsersFriends($user);
 //        dd($requests);
         if(!$requests) {
-            return  $this->json([], Response::HTTP_NO_CONTENT);
+            return  $this->json([], Response::HTTP_OK);
         }
 
         return  $this->json($requests,Response::HTTP_OK);
@@ -50,7 +50,7 @@ class FriendRequestController extends BaseController
         /** @var User $user */
         $user = $this->getApiUser($request);
         $data = json_decode($request->getContent(),true);
-        $friend = $this->getDoctrine()->getRepository(User::class)->findOneBy(['profileName' => $data['profileName']]);
+        $friend = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $data['id']]);
         $friendship = new FriendshipRequest();
         $friendship->setFromUser($user)
             ->setToUser($friend);
@@ -59,7 +59,7 @@ class FriendRequestController extends BaseController
             ->getRepository(FriendshipRequest::class)
             ->findBy(['fromUser' => $user->getId(), 'toUser' => $friend->getId()]);
         if($friendRequest) {
-            return $this->json([], Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Friend Request Already Sent'], Response::HTTP_BAD_REQUEST);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -99,7 +99,7 @@ class FriendRequestController extends BaseController
         /** @var User $user */
         $user = $this->getApiUser($request);
         $data = json_decode($request->getContent(),true);
-        if(!$data['id']) {
+        if(!isset($data['id'])) {
             return  $this->json([],Response::HTTP_BAD_REQUEST);
         }
 

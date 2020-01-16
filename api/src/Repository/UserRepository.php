@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\AbstractQuery;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -46,16 +47,39 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByQuery(string $q)
+    public function findByQuery(string $q, User $user)
     {
+
         return $this->createQueryBuilder('u')
-            ->select('u.firstName,u.lastName,u.profileName')
-            ->andWhere('u.firstName LIKE :q OR u.lastName LIKE :q OR u.profileName LIKE :q')
+            ->select('u.id,u.profileName,u.firstName,u.lastName')
+            ->orWhere('u.firstName LIKE :q')
+            ->orWhere('u.lastName LIKE :q')
+            ->orWhere('u.profileName LIKE :q')
+            ->andWhere('u.id != :userId')
             ->setParameter('q','%'.$q.'%')
+            ->setParameter('userId', $user->getId())
+            ->orderBy('u.firstName','ASC')
+            ->orderBy('u.lastName','ASC')
             ->getQuery()
-            ->getResult();
+            ->getResult(AbstractQuery::HYDRATE_OBJECT);
     }
 
+
+    public function findIfFriendWithMe($me,$userId)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.id,u.profileName,u.firstName,u.lastName')
+            ->orWhere('u.firstName LIKE :q')
+            ->orWhere('u.lastName LIKE :q')
+            ->orWhere('u.profileName LIKE :q')
+            ->andWhere('u.id != :userId')
+            ->setParameter('q','%'.$q.'%')
+            ->setParameter('userId', $user->getId())
+            ->orderBy('u.firstName','ASC')
+            ->orderBy('u.lastName','ASC')
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_OBJECT);
+    }
     /*
     public function findOneBySomeField($value): ?User
     {

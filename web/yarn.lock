@@ -8953,6 +8953,13 @@ react-modal@^3.6.1:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
+react-notifications-component@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/react-notifications-component/-/react-notifications-component-2.2.4.tgz#f4730bb84e2a770757f8b9e408c1dc40b4261f0e"
+  integrity sha512-OhK9dnjeOv/EVtsKdYTE8fhTQNjTWQoVhovPu8Mda3rCbG6ArkonENdyVd1PmSYo279y8RCBfkKmCIaws4QZPw==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-numeric-input@2.2.3:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/react-numeric-input/-/react-numeric-input-2.2.3.tgz#4bf5918c3eafed851a80df1eb992d941002bb552"
@@ -9102,6 +9109,11 @@ react-text-mask@^5.4.3:
   integrity sha1-mR77QpnjDC5sLEbRP2FxaUY+DS0=
   dependencies:
     prop-types "^15.5.6"
+
+react-timeago@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-4.4.0.tgz#4520dd9ba63551afc4d709819f52b14b9343ba2b"
+  integrity sha512-Zj8RchTqZEH27LAANemzMR2RpotbP2aMd+UIajfYMZ9KW4dMcViUVKzC7YmqfiqlFfz8B0bjDw2xUBjmcxDngA==
 
 react-toastify@5.1.0:
   version "5.1.0"

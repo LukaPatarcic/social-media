@@ -7,10 +7,11 @@ import {
     MDBModalHeader,
     MDBModalFooter,
     MDBIcon,
-    MDBInput
+    MDBInput, MDBRow
 } from 'mdbreact';
 import cookie from 'react-cookies'
 import {ClipLoader} from "react-spinners";
+import FriendItem from "./FriendItem";
 
 export default class Search extends Component {
 
@@ -18,12 +19,14 @@ export default class Search extends Component {
         super(props);
         this.state = {
             modal: false,
+            q: '',
             searchQuery: [],
             loading: false,
             error: ''
         }
 
         this.toggle = this.toggle.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     toggle() {
@@ -32,15 +35,20 @@ export default class Search extends Component {
         });
     }
 
-    handleChange(e) {
-        let value = e.target.value;
-        this.setState({loading:true});
-        if(value === '') {
+    getFriends(loading = false) {
+        const {q} = this.state;
+        const controller = new AbortController();
+        const signal = controller.signal;
+        if(loading) {
+            this.setState({loading:true});
+        }
+        if(q === '') {
             this.setState({error: 'No Results...',loading:false});
             return;
         }
+
         let url = new URL('https://api.allshak.lukaku.tech/search');
-        let params = {search:value};
+        let params = {search:q};
         url.search = new URLSearchParams(params).toString();
 
         fetch(url,{
@@ -49,11 +57,13 @@ export default class Search extends Component {
                 'Content-Type': 'application/json',
                 'X-AUTH-TOKEN': cookie.load('access-token')
             },
-            method: "GET"
+            signal: signal,
+            method: "GET",
         })
             .then((response => response.json()))
             .then((data => {
                 this.setState({searchQuery: data,loading: false});
+
                 if(data) {
                     this.setState({error: ''});
                 } else {
@@ -68,8 +78,10 @@ export default class Search extends Component {
             })
     }
 
-    sendFriendRequest() {
-
+    handleChange(e) {
+        this.setState({ [e.target.name] : e.target.value },() => {
+            this.getFriends(true);
+        });
     }
 
     render() {
@@ -77,10 +89,17 @@ export default class Search extends Component {
         return (
             <MDBContainer>
                 <MDBIcon onClick={this.toggle} fas={'true'} icon="search" className={'text-white mr-2'} />
-                <MDBModal className={'text-dark'} isOpen={this.state.modal} toggle={this.toggle}>
+                <MDBModal className={'text-dark'} size={'lg'} isOpen={this.state.modal} toggle={this.toggle}>
                     <MDBModalHeader toggle={this.toggle}>Search for friends</MDBModalHeader>
                     <MDBModalBody className={'text-center'}>
-                        <MDBInput className={'text-justify'} label="Search for friends" icon="search" onChange={(e) => {this.handleChange(e)}} />
+                        <span className={'text-left'}>
+                            <MDBInput
+                                label="Search for friends"
+                                icon="search"
+                                name={'q'}
+                                onChange={(e) => this.handleChange(e)}
+                                value={this.state.q} />
+                        </span>
                         {loading
                             ?
                             <ClipLoader
@@ -95,11 +114,8 @@ export default class Search extends Component {
                                     error
                                     :
                                     searchQuery.map((value, index) =>
-                                        <div className={'d-flex justify-content-end'}  key={index}>
-                                            <p className={'text-left'}>
-                                                {value.firstName} {value.lastName} ({value.profileName}) <span><MDBBtn color={'grey'} size={'sm'} outline={'true'} onClick={this.sendFriendRequest()}>Add Friend</MDBBtn></span></p>
-                                            <hr/>
-                                        </div>
+                                            <FriendItem key={index} friend={value} change={this.state.change} getFriends={this.getFriends.bind(this)} />
+
                                     )
                             )
                         }

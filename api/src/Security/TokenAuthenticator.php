@@ -60,9 +60,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        if($user->getExpiresAt() < new \DateTime()) {
-            throw new CredentialsExpiredException();
-        }
         return true;
     }
 

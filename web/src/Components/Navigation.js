@@ -10,6 +10,7 @@ import {Link} from "react-router-dom";
 import Search from "./Search";
 
 import Select from 'react-select';
+import DesktopNotification from "./DesktopNotification";
 
 export default class Navigation extends React.Component{
 
@@ -62,8 +63,11 @@ export default class Navigation extends React.Component{
                                     <MDBNavItem>
                                         <Link className={'text-white mr-2'} to='/profile'>Profile</Link>
                                     </MDBNavItem>
-                                    <MDBNavItem className={'mt-2'}>
+                                    <MDBNavItem>
                                         <Link className={'text-white mr-2'} to='/logout'>Logout</Link>
+                                    </MDBNavItem>
+                                    <MDBNavItem>
+                                        <DesktopNotification />
                                     </MDBNavItem>
                                 </React.Fragment>
                                 :

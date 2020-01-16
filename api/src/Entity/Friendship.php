@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FriendshipRepository")
@@ -20,12 +21,14 @@ class Friendship
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="friends")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"search"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="friendsWithMe")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"search","myFriends"})
      */
     private $friend;
 

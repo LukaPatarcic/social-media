@@ -97,8 +97,6 @@ class SecurityController extends BaseController
             $user->setToken($token);
         }
 
-        $time = $data['rememberMe'] ? '+1 month' : '+8 hours';
-        $user->setExpiresAt(new DateTime($time));
         $entityManager->flush();
 
         return $this->json([

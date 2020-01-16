@@ -23,6 +23,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"search","user_info","myFriends"})
      */
     private $id;
 
@@ -53,7 +54,7 @@ class User implements UserInterface
      *     min="2",
      *     minMessage="Your first name should be at least 2 characters"
      * )
-     * @Groups("user_info")
+     * @Groups({"user_info","search","myFriends"})
      */
     private $firstName;
 
@@ -65,7 +66,7 @@ class User implements UserInterface
      *     min="2",
      *     minMessage="Your last name should be at least 2 characters"
      * )
-     * @Groups("user_info")
+     * @Groups({"user_info","search","myFriends"})
      */
     private $lastName;
 
@@ -78,7 +79,7 @@ class User implements UserInterface
      *     minMessage="Your username should be at least 2 characters"
      * )
      * @Assert\Regex(pattern="/^[a-zA-Z0-9]+$/", message="The profile name may only contain letters and numbers.")
-     * @Groups("user_info")
+     * @Groups({"user_info","search","myFriends"})
      */
     private $profileName;
 
@@ -86,11 +87,6 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true, unique=true)
      */
     private $token;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $expiresAt;
 
     /**
      * @ORM\Column(type="boolean")
@@ -108,12 +104,14 @@ class User implements UserInterface
     private $deletesIn;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="user")
+     * @Groups({"search"})
      */
     private $friends;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="friend", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Friendship", mappedBy="friend")
+     * @Groups({"search"})
      */
     private $friendsWithMe;
 
@@ -127,12 +125,18 @@ class User implements UserInterface
      */
     private $toUser;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PushNotification", mappedBy="user")
+     */
+    private $pushNotifications;
+
     public function __construct()
     {
         $this->friends = new ArrayCollection();
         $this->friendsWithMe = new ArrayCollection();
         $this->fromUser = new ArrayCollection();
         $this->toUser = new ArrayCollection();
+        $this->pushNotifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,18 +261,6 @@ class User implements UserInterface
     public function setToken(?string $token): self
     {
         $this->token = $token;
-
-        return $this;
-    }
-
-    public function getExpiresAt(): ?\DateTimeInterface
-    {
-        return $this->expiresAt;
-    }
-
-    public function setExpiresAt(?\DateTimeInterface $expiresAt): self
-    {
-        $this->expiresAt = $expiresAt;
 
         return $this;
     }
@@ -431,5 +423,44 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|PushNotification[]
+     */
+    public function getPushNotifications(): Collection
+    {
+        return $this->pushNotifications;
+    }
+
+    public function addPushNotification(PushNotification $pushNotification): self
+    {
+        if (!$this->pushNotifications->contains($pushNotification)) {
+            $this->pushNotifications[] = $pushNotification;
+            $pushNotification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePushNotification(PushNotification $pushNotification): self
+    {
+        if ($this->pushNotifications->contains($pushNotification)) {
+            $this->pushNotifications->removeElement($pushNotification);
+            // set the owning side to null (unless already changed)
+            if ($pushNotification->getUser() === $this) {
+                $pushNotification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isFriendWithMe(User $me)
+    {
+        if($me->getId() == $this->getId()) {
+            return true;
+        }
+        return false;
     }
 }

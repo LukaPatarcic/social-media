@@ -23,6 +23,7 @@
         "symfony/form": "4.3.*",
         "symfony/framework-bundle": "4.3.*",
         "symfony/orm-pack": "^1.0",
+        "symfony/property-info": "4.3.*",
         "symfony/security-bundle": "4.3.*",
         "symfony/serializer": "4.3.*",
         "symfony/swiftmailer-bundle": "^3.4",
