@@ -11,6 +11,7 @@ import TermsOfService from "../Legal/TermsOfService";
 import PrivacyPolicy from "../Legal/PrivacyPolicy";
 import {setBackground} from "../services/Services";
 import Profile from "../Screens/Profile";
+import NotificationList from "../Components/NotificationList";
 
 export default class Main extends React.Component{
 
@@ -37,6 +38,7 @@ export default class Main extends React.Component{
                     <Route exact={true} path="/" component={() =>(
                         <Homepage search={this.props.search} />
                     )} />
+                    <Route exact={true} path="/notification/list" component={NotificationList} />
                     <Route exact={true} path="/profile" component={Profile} />
                 </Switch>
                 <Footer/>

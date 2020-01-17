@@ -51,19 +51,19 @@ export default class Navigation extends React.Component{
                     </MDBNavbarBrand>
                     <MDBNavbarToggler onClick={this.toggleCollapse} />
                     <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
-                        <MDBNavbarNav right className={'mr-md-5'}>
+                        <MDBNavbarNav right className={'mr-md-5 mt-1'}>
                             {auth
                                 ?
                                 <React.Fragment>
-                                    <MDBNavItem>
+                                    <MDBNavItem className={'mt-2'}>
                                         <Link to={'#'}>
                                             <Search />
                                         </Link>
                                     </MDBNavItem>
-                                    <MDBNavItem>
+                                    <MDBNavItem className={'mt-2'}>
                                         <Link className={'text-white mr-2'} to='/profile'>Profile</Link>
                                     </MDBNavItem>
-                                    <MDBNavItem>
+                                    <MDBNavItem className={'mt-2'}>
                                         <Link className={'text-white mr-2'} to='/logout'>Logout</Link>
                                     </MDBNavItem>
                                     <MDBNavItem>

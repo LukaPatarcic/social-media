@@ -8,6 +8,7 @@ use App\Entity\FriendshipRequest;
 use App\Entity\User;
 use App\Form\FriendRequestType;
 use App\Form\FriendshipFormType;
+use App\Services\PushNotification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,6 +63,9 @@ class FriendRequestController extends BaseController
             return $this->json(['error' => 'Friend Request Already Sent'], Response::HTTP_BAD_REQUEST);
         }
 
+        $notification = new PushNotification();
+        $notification->setMessage('')
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($friendship);
         $em->flush();
@@ -83,10 +87,15 @@ class FriendRequestController extends BaseController
         $friendRequest = $this->getDoctrine()
             ->getRepository(FriendshipRequest::class)
             ->findOneBy(['id' => $data['id']]);
+
+        if(!$friendRequest) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+
         $this->getDoctrine()->getManager()->remove($friendRequest);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->json(['success' => 1], Response::HTTP_OK);
+        return $this->json(['success' => 1],Response::HTTP_OK);
     }
 
     /**
