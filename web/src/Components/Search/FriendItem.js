@@ -4,6 +4,7 @@ import cookie from "react-cookies";
 import {ClipLoader} from "react-spinners";
 import ReactNotification from 'react-notifications-component'
 import { store } from 'react-notifications-component';
+import {Link} from "react-router-dom";
 export default class FriendItem extends React.Component{
     constructor(props) {
         super(props);
@@ -77,7 +78,9 @@ export default class FriendItem extends React.Component{
                         <MDBBadge color="red" className={'mr-3'}>
                              <MDBIcon className={'text-white'} icon={'user'} />
                         </MDBBadge>
-                        {friend.firstName} {friend.lastName} ({friend.profileName})
+                        <Link className={'text-dark'} to={'/profile/' + friend.profileName} onClick={() => this.props.toggle()}>
+                            {friend.firstName} {friend.lastName} ({friend.profileName})
+                        </Link>
                         <MDBBtn
                             className={'float-right'}
                             disabled={friend.requested ? true : (friend.following ? true : false)}

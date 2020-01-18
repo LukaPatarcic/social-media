@@ -12,7 +12,7 @@ import {facebookData} from "../services/Facebook";
 import Followers from "../Components/Profile/Followers";
 import Following from "../Components/Profile/Following";
 
-export default class Profile extends React.Component{
+export default class FriendProfile extends React.Component{
 
     constructor(props) {
         super(props);
@@ -27,13 +27,15 @@ export default class Profile extends React.Component{
             googleData: null,
             hasGoogleAccount: false,
             hasFacebookAccount: false,
-            loading: false
+            loading: false,
+            error: false,
+            username: this.props.match.params.username
         }
     }
 
     getUser() {
         this.setState({loading: true});
-        fetch('https://api.allshak.lukaku.tech/user',{
+        fetch('https://api.allshak.lukaku.tech/search/user/' + this.state.username,{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -41,7 +43,12 @@ export default class Profile extends React.Component{
             },
             method: "GET"
         })
-            .then((response => response.json()))
+            .then((response => {
+                if(response.status == 404) {
+                    throw new Error()
+                }
+                return response.json()
+            }))
             .then((data => {
                 this.setState({userData: data,loading: false});
             }))
@@ -50,30 +57,30 @@ export default class Profile extends React.Component{
             })
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.match.params.username !== this.props.match.params.username) {
+            this.setState({username: nextProps.match.params.username},()=>
+                this.getUser()
+            )
+        }
+    }
+
     componentDidMount() {
         this.getUser();
 
         if(!cookie.load('access-token')) {
             this.props.history.push('/login')
         }
-
-        if(cookie.load('facebook-access-token')) {
-            facebookData();
-        }
-
-        if(cookie.load('google-access-token')) {
-            googleData();
-        }
-
     }
 
     render() {
         const {user,following,followers,posts} = this.state.userData;
-        const {loading} = this.state;
+        const {loading,error} = this.state;
 
-        if(loading) {
+        if(error) {
+            this.props.history.push('/notfound')
             return (
-                <div></div>
+                <></>
             )
         }
 
@@ -83,7 +90,7 @@ export default class Profile extends React.Component{
                     <MDBCol sm={12} className={'px-0 border-top border-left border-right'}>
                         <MDBCard className={'p-0'}>
                             <MDBCardBody className={'p-0'}>
-                                <img alt={'Banner'} className={'img-fluid'} style={{height: 400,width: '100%'}} src={'images/profile_banner.png'}/>
+                                <img alt={'Banner'} className={'img-fluid'} style={{height: 400,width: '100%'}} src={'../images/profile_banner.png'}/>
                                 <img
                                     className={'img-fluid'}
                                     style={{position: "relative", bottom: 60}}
@@ -114,14 +121,13 @@ export default class Profile extends React.Component{
                                 <Followers followers={followers} />
                             </MDBCol>
                             <MDBCol sm={12} className={'mt-3'}>
-                                <Following following={following} />
+                               <Following following={following} />
                             </MDBCol>
                         </MDBRow>
                     </MDBCol>
                     <MDBCol sm={12} md={8}>
                         <MDBRow>
                             <MDBCol sm={12}>
-                                <PostCreate size={12}/>
                                 {posts.length
                                     ?
                                     posts.map((post,index) =>
@@ -140,24 +146,8 @@ export default class Profile extends React.Component{
                         </MDBRow>
                     </MDBCol>
                 </MDBRow>
-                <MDBRow>
-                    <MDBCol className={'mt-5'} sm={12}>
-                        {(!this.state.facebookData || !this.state.googleData) &&
-                        <MDBCard>
-                            <MDBCardBody>
-                                { !this.state.facebookData && <FacebookAuthLogin />}
-                                { !this.state.googleData && <GoogleAuthLogin />}
-                            </MDBCardBody>
-                        </MDBCard>}
-                        { this.state.facebookData &&
-                            <FacebookProfile facebookData={this.state.facebookData} />
-                        }
-                        { this.state.googleData &&
-                            <GoogleProfile googleData={this.state.googleData} />
-                        }
-                    </MDBCol>
-                </MDBRow>
             </MDBContainer>
+
         );
     }
 }

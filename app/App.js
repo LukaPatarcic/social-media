@@ -19,17 +19,22 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        NetInfo.addEventListener(state => {
-            if(state.isConnected) {
-                ToastAndroid.show('Connected to Internet',50)
-            } else {
-                ToastAndroid.show('No Internet Connection',50)
-            }
-        });
+        // NetInfo.addEventListener(state => {
+        //     if(state.isConnected) {
+        //         ToastAndroid.show('Connected to Internet',50)
+        //     } else {
+        //         ToastAndroid.show('No Internet Connection',50)
+        //     }
+        // });
         var PushNotification = require("react-native-push-notification");
 
         PushNotification.configure({
             // (optional) Called when Token is generated (iOS and Android)
+            largeIcon: 'notification_icon',
+            smallIcon: 'notification_icon',
+            icon: 'notification_icon',
+            actions: '["Yes", "No"]',
+            color: '#ff0000',
             onRegister: function(token) {
                 console.log("TOKEN:", token.token);
                 AsyncStorage.setItem('notification-key',token.token)

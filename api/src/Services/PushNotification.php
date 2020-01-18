@@ -57,10 +57,10 @@ class PushNotification
     public function setBody($message)
     {
         $this->fields['notification']['body'] = $message;
-        $this->fields['notification']['actions'] = ['Accept','Decline'];
-        $this->fields['notification']['largeIcon'] = 'notification_icon';
+        $this->fields['notification']['action'] = ['Accept','Decline'];
         $this->fields['notification']['icon'] = 'notification_icon';
-        $this->fields['notification']['smallIcon'] = 'notification_icon';
+        $this->fields['notification']['color'] = '#ff0000';
+        $this->fields['notification']['actions'] = '["Yes", "No"]';
 
         return $this;
     }

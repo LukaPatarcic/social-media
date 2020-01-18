@@ -12,6 +12,8 @@ import PrivacyPolicy from "../Legal/PrivacyPolicy";
 import {setBackground} from "../services/Services";
 import Profile from "../Screens/Profile";
 import NotificationList from "../Components/NotificationList";
+import FriendProfile from "../Screens/FriendProfile";
+import Notfound from "../Components/Notfound";
 
 export default class Main extends React.Component{
 
@@ -35,11 +37,12 @@ export default class Main extends React.Component{
                     <Route exact={true} path="/legal/privacy" component={PrivacyPolicy} />
                     <Route exact={true} path="/legal/tos" component={TermsOfService} />
                     {/* USER */}
-                    <Route exact={true} path="/" component={() =>(
-                        <Homepage search={this.props.search} />
-                    )} />
+                    <Route exact={true} path="/" component={Homepage}/>
+                    <Route exact={true} path="/profile/:username" component={FriendProfile}/>
                     <Route exact={true} path="/notification/list" component={NotificationList} />
                     <Route exact={true} path="/profile" component={Profile} />
+                    {/* NOT FOUND */}
+                    <Route exact={true} path="/notFound" component={Notfound} />
                 </Switch>
                 <Footer/>
             </Router>

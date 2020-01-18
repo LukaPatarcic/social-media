@@ -2,12 +2,15 @@ import React from 'react';
 import {View, StyleSheet, ImageBackground, ScrollView, Text,} from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import AsyncStorage from "@react-native-community/async-storage";
+import PostItem from "../components/PostItem";
 
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
+        super(props);
         this.state = {
-            card : ['Miguel Duncan','Rhiannan Seymour','Amir Delacruz','Rajveer Carpenter','Armaan Lowery','Anne Morse','Shanon Newton']
+            posts: [],
+            loading: false
         }
     }
 
@@ -15,12 +18,24 @@ export default class Profile extends React.Component {
         AsyncStorage.getItem('access-token', (err, val) => {
             if (!val) {
                 this.props.history.push('/login');
+            } else {
+                fetch('https://api.allshak.lukaku.tech/post',{
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-AUTH-TOKEN': val
+                    },
+                    method: "GET"
+                })
+                    .then((response => response.json()))
+                    .then((data => {
+                        this.setState({loading: false, posts: data});
+                    }))
+                    .catch(err => {
+                        this.setState({error: true,loading: false});
+                    })
             }
         });
-    }
-
-    randomName() {
-        return <Text style={{fontFamily: 'font'}}>{this.state.card[Math.floor(Math.random()*this.state.card.length)]}</Text>;
     }
 
     render() {
@@ -29,18 +44,9 @@ export default class Profile extends React.Component {
                 style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
                 source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
                 <ScrollView style={{paddingHorizontal: 20, paddingTop: 20}}>
-                    {this.state.card.map((card,index) => {
-                        return (
-                            <Card style={{marginBottom: 30}} key={index}>
-                                <Card.Title title={this.randomName()}  left={(props) => <Avatar.Image size={50} source={{uri: 'https://robohash.org/' + this.randomName()}}/>} />
-                                <Card.Content>
-                                    <Title  style={{fontFamily: 'font'}}>Card title</Title>
-                                    <Paragraph  style={{fontFamily: 'font'}}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores excepturi in iste labore placeat quam quos ratione reiciendis repudiandae vitae?</Paragraph>
-                                </Card.Content>
-                            </Card>
-                        )
-                    })}
-
+                    {this.state.posts.map((post,index) =>
+                        <PostItem post={post} key={index} />
+                    )}
                 </ScrollView>
             </ImageBackground>
         );

@@ -4771,6 +4771,11 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
+moment@^2.24.0:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
+
 morgan@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.1.tgz#0a8d16734a1d9afbc824b99df87e738e58e2da59"
@@ -5702,6 +5707,11 @@ react-native-svg@^9.13.6:
   dependencies:
     css-select "^2.0.2"
     css-tree "^1.0.0-alpha.37"
+
+react-native-timeago@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-timeago/-/react-native-timeago-0.5.0.tgz#1b08057e3473dbb5b6720ee5cde4e544a7c250f0"
+  integrity sha512-GYrV36FK8ttkl7BIAdh77OlYLYGIKLGNviJqzPUtKaO8ANEtI8ph7UkSTRv9oMKfvDnA5VKV9hVX7GtYoAztRg==
 
 react-native-vector-icons@^6.6.0:
   version "6.6.0"

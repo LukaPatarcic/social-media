@@ -115,7 +115,13 @@ export default class Search extends Component {
                                     :
                                     (searchQuery.length ?
                                             searchQuery.map((value, index) =>
-                                                <FriendItem key={index} friend={value} change={this.state.change} getFriends={this.getFriends.bind(this)} />
+                                                <FriendItem
+                                                    key={index}
+                                                    friend={value}
+                                                    change={this.state.change}
+                                                    toggle={this.toggle.bind(this)}
+                                                    getFriends={this.getFriends.bind(this)}
+                                                />
 
                                             )
                                             :

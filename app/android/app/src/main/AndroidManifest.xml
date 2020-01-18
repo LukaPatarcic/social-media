@@ -48,6 +48,7 @@
                    android:resource="@android:color/white"/>
 
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/red" />
         <!-- < Only if you're using GCM or localNotificationSchedule() > -->
         <receiver
                 android:name="com.google.android.gms.gcm.GcmReceiver"

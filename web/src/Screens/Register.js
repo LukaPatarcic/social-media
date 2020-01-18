@@ -95,12 +95,9 @@ export default class Register extends React.Component{
         return (
             <MDBContainer>
                 <MDBRow center>
-                    <MDBCol md={8} sm={12} className={'mt-5'}>
+                    <MDBCol md={8} sm={12} className={'my-5'}>
                         <MDBCard>
                             <div className="header pt-3 red">
-                                <MDBRow className="mt-2 mb-3 d-flex justify-content-center">
-                                    <img alt={'Logo'} className={'img-fluid'} src={'./images/logo.svg'} />
-                                </MDBRow>
                                 <MDBRow className="d-flex justify-content-center">
                                     <h3 className="white-text mb-3 pt-3 font-weight-bold">
                                         Registration
@@ -122,7 +119,7 @@ export default class Register extends React.Component{
                                                     label="First Name"
                                                     group
                                                 />
-                                                <small>{this.validator.message('firstName', firstName, 'alpha|min:2|max:255')}</small>
+                                                <small>{this.validator.message('firstName', firstName, 'required|alpha|min:2|max:255')}</small>
                                             </MDBCol>
                                             <MDBCol sm={12} md={6}>
                                                 <MDBInput
@@ -132,11 +129,8 @@ export default class Register extends React.Component{
                                                     label="Last Name"
                                                     group
                                                     type="text"
-                                                    validate
-                                                    error="wrong"
-                                                    success="right"
                                                 />
-                                                <small>{this.validator.message('lastName', lastName, 'alpha|min:2|max:255')}</small>
+                                                <small>{this.validator.message('lastName', lastName, 'required|alpha|min:2|max:255')}</small>
                                             </MDBCol>
                                         </MDBRow>
                                         <MDBRow>

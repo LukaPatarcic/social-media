@@ -1,88 +1,29 @@
 <?php
 
+
 namespace App\Controller;
+
 
 use App\Entity\LikePost;
 use App\Entity\Post;
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
-class SearchController extends BaseController
+class ProfileController extends BaseController
 {
     /**
-     * @Route("/search", name="search")
+     * @Route("/user", name="user_profile", methods={"GET"})
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function user(Request $request)
     {
-        $user = $this->getApiUser($request);
-        $data = $request->query->get('search');
-
-        $q = $this->getDoctrine()->getRepository(User::class)->findByQuery($data,$user);
-
-        if(!$q) {
-            return  $this->json([],Response::HTTP_OK);
-        }
-
-        $friends = $user->getFriends()->toArray();
-        $requests = $user->getFromUser()->toArray();
-
-        foreach ($q as $k=>$value) {
-            if(!$friends) {
-                $q[$k]['following'] = false;
-            } else {
-                foreach ($friends as $friend) {
-                    if ($friend->getFriend()->getId() == $value['id']) {
-                        $q[$k]['following'] = true;
-                        break;
-                    } else {
-                        $q[$k]['following'] = false;
-                    }
-                }
-            }
-
-            if(!$requests) {
-                $q[$k]['requested'] = false;
-            } else {
-
-                foreach($requests as $request) {
-                    if($request->getToUser()->getId() == $value['id']) {
-                        $q[$k]['requested'] = true;
-                        break;
-                    } else {
-                        $q[$k]['requested'] = false;
-                    }
-                }
-
-            }
-        }
-
-        return $this->json($q,Response::HTTP_OK,[],[
-            ObjectNormalizer::GROUPS => ['search'],
-        ]);
-    }
-
-    /**
-     * @Route("/search/user/{profileName}", name="search_user")
-     * @param Request $request
-     * @param string $profileName
-     * @return JsonResponse
-     */
-    public function searchForUser(Request $request, string $profileName)
-    {
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['profileName' => $profileName]);
-        if(!$user) {
-            return  $this->json([],Response::HTTP_NOT_FOUND);
-        }
         $me = $this->getApiUser($request);
 
-        $followers = $user->getFriendsWithMe()->toArray();
+        $followers = $me->getFriendsWithMe()->toArray();
         $followersArray = [];
         if(!$followers) {
             $followersArray['followers'] = [];
@@ -96,7 +37,7 @@ class SearchController extends BaseController
             ];
         }
 
-        $following = $user->getFriends()->toArray();
+        $following = $me->getFriends()->toArray();
         $followingArray = [];
         if(!$following) {
             $followingArray['following'] = [];
@@ -110,7 +51,7 @@ class SearchController extends BaseController
             ];
         }
 
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findUsersPosts($user);
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findUsersPosts($me);
         $postsArray = [];
         if(!$posts) {
             $postsArray['posts'] = [];
@@ -127,14 +68,15 @@ class SearchController extends BaseController
         }
 
         $userInfo['user'] = [
-            'id' => $user->getId(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
-            'profileName' =>$user->getProfileName(),
+            'id' => $me->getId(),
+            'firstName' => $me->getFirstName(),
+            'lastName' => $me->getLastName(),
+            'profileName' =>$me->getProfileName(),
             'followerCount' => count($followersArray['followers']),
             'followingCount' => count($followingArray['following'])
         ];
 
         return $this->json(array_merge($userInfo,$followersArray,$followingArray,$postsArray),Response::HTTP_OK,[]);
     }
+
 }

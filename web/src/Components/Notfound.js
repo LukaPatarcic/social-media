@@ -1,46 +1,29 @@
 import * as React from "react";
-import {Col, Container, Row} from "react-bootstrap";
+import {MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
+import {Link} from "react-router-dom";
 
 export default class Notfound extends React.Component{
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            col: []
-        }
-        this.renderCol = this.renderCol.bind(this);
-
-    }
-
-    componentDidMount() {
-        this.renderCol();
-    }
-
-    renderCol() {
-        let cols = [];
-        for (let i = 1; i <= 6; i++) {
-            cols.push(<Col sm={12} md={6} xl={4}>
-                <h2>Post Title {i}</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab ea eaque error, est perferendis quae
-                    quam quia quod repellendus voluptatem.</p>
-            </Col>);
-        }
-        console.log(cols);
-        this.setState({
-            col: cols
-        })
-    }
-
     render() {
         return (
-            <Container>
-                <Row>
-                    <h1 className={'text-center'}>My First Bootstrap Website</h1>
-                </Row>
-                <Row>
-                    {this.state.col.map((co) => co)}
-                </Row>
-            </Container>
+            <MDBContainer className={'my-5'}>
+                <MDBRow center className={'my-5'}>
+                    <MDBCol sm={12} md={8} className={'my-5'}>
+                        <MDBCard>
+                            <MDBCardHeader>
+                                <h1 className={'text-center'}>Error 404</h1>
+                            </MDBCardHeader>
+                            <MDBCardBody className={'text-center'}>
+                                <MDBIcon icon={'exclamation-circle'} size={'10x'} className={'text-danger'}/>
+                                <h2>Page not found</h2>
+                                <h3>If you thing this is a mistake please contact customer support</h3>
+                                <p>Click the links below to go to a page</p>
+                                <Link to={'/'}>Go to homepage</Link> <Link to={'/profile'}>Go to profile</Link>
+                            </MDBCardBody>
+                        </MDBCard>
+                    </MDBCol>
+                </MDBRow>
+            </MDBContainer>
         );
     }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import {MDBBadge, MDBBtn, MDBCol, MDBIcon} from "mdbreact";
+import {MDBBadge, MDBBtn, MDBCol, MDBIcon, MDBTooltip} from "mdbreact";
 import cookie from "react-cookies";
 
 export default class LikeButton extends React.Component{
@@ -39,9 +39,12 @@ export default class LikeButton extends React.Component{
         const {heartClicked} = this.state;
 
         return (
+            <MDBTooltip>
             <MDBBtn color={'white'} block={true} style={{boxShadow: 'none'}} onClick={this.handleLike.bind(this)}>
                 <MDBIcon className={'text-danger'} far={heartClicked} icon={'heart'} size={'2x'}/><br/>
             </MDBBtn>
+                <div>{heartClicked ? 'Like':'Liked'}</div>
+            </MDBTooltip>
         );
     }
 }

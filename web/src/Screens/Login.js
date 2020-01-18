@@ -72,11 +72,8 @@ export default class Login extends React.Component {
             <MDBContainer>
                 <MDBRow center>
                     <MDBCol lg={8} md={6} sm={12} className={'mt-5'}>
-                        <MDBCard className={'mb-5'}>
+                        <MDBCard className={'my-5'}>
                             <div className="header pt-3 red">
-                                <MDBRow className="mt-2 mb-3 d-flex justify-content-center">
-                                   <img alt={'Logo'} className={'img-fluid'} src={'./images/logo.svg'} />
-                                </MDBRow>
                                 <MDBRow className="d-flex justify-content-center">
                                     <h3 className="white-text mb-3 pt-3 font-weight-bold">
                                         Log in
@@ -120,16 +117,6 @@ export default class Login extends React.Component {
                                 />
                                 <small>{this.validator.message('password', password, 'required')}</small>
                                 <MDBRow className="font-small grey-text mt-5">
-                                    <MDBCol sm={12} md={6}>
-                                        <MDBInput
-                                            onChange={this.handleChange}
-                                            checked={rememberMe}
-                                            name="rememberMe"
-                                            label="Remember Me"
-                                            type="checkbox"
-                                            id="rememberMe"
-                                        />
-                                    </MDBCol>
                                     <MDBCol sm={12} md={6} className={'mt-5 mt-md-0'}>
                                         Forgot
                                         <a href="#!" className="dark-grey-text ml-1 font-weight-bold">

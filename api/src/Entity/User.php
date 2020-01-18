@@ -54,6 +54,7 @@ class User implements UserInterface
      *     min="2",
      *     minMessage="Your first name should be at least 2 characters"
      * )
+     * @Assert\NotBlank(message="Please enter your first name")
      * @Groups({"user_info","search","myFriends"})
      */
     private $firstName;
@@ -66,6 +67,7 @@ class User implements UserInterface
      *     min="2",
      *     minMessage="Your last name should be at least 2 characters"
      * )
+     * @Assert\NotBlank(message="Please enter your last name")
      * @Groups({"user_info","search","myFriends"})
      */
     private $lastName;

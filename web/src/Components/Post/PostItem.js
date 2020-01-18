@@ -2,6 +2,7 @@ import React from "react";
 import {MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBIcon, MDBRow} from "mdbreact";
 import TimeAgo from "react-timeago";
 import LikeButton from "./LikeButton";
+import {Link} from "react-router-dom";
 
 export default class PostItem extends React.Component{
 
@@ -25,10 +26,13 @@ export default class PostItem extends React.Component{
                     <MDBCard className={'my-3'}>
                         <MDBCardBody>
                             <h2>
-                                <MDBBadge color="red" className={'mr-3'}>
-                                    <MDBIcon className={'text-white'} icon={'user'} />
-                                </MDBBadge>
-                                {post.firstName} {post.lastName}
+                                <p>
+                                    <img
+                                        className={'img-fluid mr-3'}
+                                        src={'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=38&name='+post.firstName+'+'+post.lastName}
+                                    />
+                                    <Link className={'text-dark'} to={'/profile/'+ post.profileName}>{post.firstName} {post.lastName}</Link>
+                                </p>
                             </h2>
                             <small><TimeAgo date={post.createdAt} /></small>
                             <p>{post.text}</p>
