@@ -22,3 +22,10 @@
     border-right: 2px solid #f00;
     border-bottom: 2px solid #f00;
 }
+
+textarea.form-control {
+    border-radius: 5%;
+}
+.form-control :focus {
+    border-color: #f00;
+}

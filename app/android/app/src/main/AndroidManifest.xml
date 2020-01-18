@@ -47,6 +47,7 @@
         <meta-data android:name="com.dieam.reactnativepushnotification.notification_color"
                    android:resource="@android:color/white"/>
 
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
         <!-- < Only if you're using GCM or localNotificationSchedule() > -->
         <receiver
                 android:name="com.google.android.gms.gcm.GcmReceiver"

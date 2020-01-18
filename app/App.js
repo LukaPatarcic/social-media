@@ -1,6 +1,7 @@
 import React from 'react';
 import {Alert, ImageBackground, PushNotificationIOSStatic as PushNotificationIOS, ToastAndroid} from 'react-native';
 import { NativeRouter, Switch, Route } from "react-router-native";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import Login from "./src/screens/Login";
 import Register from "./src/screens/Register";
@@ -30,15 +31,13 @@ export default class App extends React.Component {
         PushNotification.configure({
             // (optional) Called when Token is generated (iOS and Android)
             onRegister: function(token) {
-                console.log("TOKEN:", token);
+                console.log("TOKEN:", token.token);
+                AsyncStorage.setItem('notification-key',token.token)
             },
 
             // (required) Called when a remote or local notification is opened or received
             onNotification: function(notification) {
                 console.log("NOTIFICATION:", notification);
-
-                notification.finish(PushNotificationIOS.FetchResult.NoData);
-
             },
 
             // ANDROID ONLY: GCM or FCM Sender ID (product_number) (optional - not required for local notifications, but is need to receive remote push notifications)

@@ -7,7 +7,7 @@ import {
     MDBModalHeader,
     MDBModalFooter,
     MDBIcon,
-    MDBInput, MDBRow
+    MDBInput, MDBRow, MDBTooltip
 } from 'mdbreact';
 import cookie from 'react-cookies'
 import {ClipLoader} from "react-spinners";
@@ -113,10 +113,15 @@ export default class Search extends Component {
                                     ?
                                     error
                                     :
-                                    searchQuery.map((value, index) =>
-                                            <FriendItem key={index} friend={value} change={this.state.change} getFriends={this.getFriends.bind(this)} />
+                                    (searchQuery.length ?
+                                            searchQuery.map((value, index) =>
+                                                <FriendItem key={index} friend={value} change={this.state.change} getFriends={this.getFriends.bind(this)} />
 
+                                            )
+                                            :
+                                            <p>No results...</p>
                                     )
+
                             )
                         }
                     </MDBModalBody>

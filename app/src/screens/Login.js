@@ -12,15 +12,19 @@ export default class Login extends React.Component {
         this.state = {
             email: '',
             password: '',
-            rememberMe: false,
             error: '',
             token: '',
+            notificationKey: '',
             loading: false,
         };
+        AsyncStorage.getItem('notification-key', (err,val) => {
+            this.setState({notificationKey:val})
+        });
     }
 
     onLogin() {
-        const { email, password, error, rememberMe } = this.state;
+        const { email, password, error, rememberMe,notificationKey } = this.state;
+        console.log(JSON.stringify({email,password,notificationKey}));
         if(email === '' || password === '') {
             this.setState({
                 error: 'Please enter all fields'
@@ -33,7 +37,7 @@ export default class Login extends React.Component {
                     'Content-Type': 'application/json'
                 },
                 method: "POST",
-                body: JSON.stringify({email,password,rememberMe})
+                body: JSON.stringify({email,password,notificationKey})
             })
                 .then((response => response.json()))
                 .then((data => {
@@ -79,13 +83,6 @@ export default class Login extends React.Component {
                             style={{fontFamily: "font"}}
                         />
                     </Item>
-                    <CheckBox
-                        checked={!!rememberMe}
-                        checkedColor={'#f00'}
-                        title={<Text style={{fontFamily: 'font'}}>Remember Me!</Text>}
-                        onPress={() => { this.setState({ rememberMe: !rememberMe });}}
-                        containerStyle={{backgroundColor: '#fff',borderColor: '#fff'}}
-                    />
                     <Text style={{color: color,fontFamily: "font"}}>
                         {error ? error : ''}
                     </Text>

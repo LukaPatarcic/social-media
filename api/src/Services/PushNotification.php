@@ -33,11 +33,18 @@ class PushNotification
             'Authorization: key=' .$this->apiKey,
             'Content-Type: application/json'
         ];
+        $this->fields['dry_run'] = false;
+        $this->fields['priority'] = 'high';
     }
 
-    public function setTo($to)
+    public function setTo(string $to)
     {
         $this->fields['to'] = $to;
+    }
+
+    public function setToMultiple(array $to)
+    {
+        $this->fields['registration_ids'] = $to;
     }
 
     public function setTitle($title)
@@ -47,15 +54,19 @@ class PushNotification
         return $this;
     }
 
-    public function setMessage($message)
+    public function setBody($message)
     {
-        $this->fields['notification']['message'] = $message;
+        $this->fields['notification']['body'] = $message;
+        $this->fields['notification']['actions'] = ['Accept','Decline'];
+        $this->fields['notification']['largeIcon'] = 'notification_icon';
+        $this->fields['notification']['icon'] = 'notification_icon';
+        $this->fields['notification']['smallIcon'] = 'notification_icon';
 
         return $this;
     }
 
 
-    public function message()
+    public function sendNotification()
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->url);

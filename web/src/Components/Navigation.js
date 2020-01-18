@@ -7,7 +7,7 @@ import {
 } from "mdbreact";
 import cookie from "react-cookies";
 import {Link} from "react-router-dom";
-import Search from "./Search";
+import Search from "./Search/Search";
 
 import Select from 'react-select';
 import DesktopNotification from "./DesktopNotification";
@@ -66,9 +66,7 @@ export default class Navigation extends React.Component{
                                     <MDBNavItem className={'mt-2'}>
                                         <Link className={'text-white mr-2'} to='/logout'>Logout</Link>
                                     </MDBNavItem>
-                                    <MDBNavItem>
-                                        <DesktopNotification />
-                                    </MDBNavItem>
+                                    <DesktopNotification />
                                 </React.Fragment>
                                 :
                                 <React.Fragment>

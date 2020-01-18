@@ -5,6 +5,8 @@ import {MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import FacebookAuthLogin from "../Components/Facebook/FacebookAuthLogin";
 import GoogleProfile from "../Components/Google/GoogleProfile";
 import GoogleAuthLogin from "../Components/Google/GoogleAuthLogin";
+import PostItem from "../Components/Post/PostItem";
+import PostCreate from "../Components/Post/PostCreate";
 
 export default class Profile extends React.Component{
 
@@ -17,11 +19,31 @@ export default class Profile extends React.Component{
                 profileName: '',
                 email: ''
             },
+            posts: [],
             facebookData: null,
             googleData: null,
             hasGoogleAccount: false,
-            hasFacebookAccount: false
+            hasFacebookAccount: false,
+            loading: false
         }
+    }
+
+    getPosts() {
+        fetch('https://api.allshak.lukaku.tech/post/user',{
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-AUTH-TOKEN': cookie.load('access-token')
+            },
+            method: "GET"
+        })
+            .then((response => response.json()))
+            .then((data => {
+                this.setState({loading: false, posts: data});
+            }))
+            .catch(err => {
+                this.setState({error: true,loading: false});
+            })
     }
 
     componentDidMount() {
@@ -29,6 +51,8 @@ export default class Profile extends React.Component{
         if(!cookie.load('access-token')) {
             this.props.history.push('/login')
         }
+
+        this.getPosts();
 
         if(cookie.load('access-token')) {
             fetch('https://api.allshak.lukaku.tech/get/user',{
@@ -95,6 +119,7 @@ export default class Profile extends React.Component{
 
     render() {
         const {firstName,lastName,profileName,email} = this.state.userData;
+        const {posts} = this.state;
 
         return (
             <MDBContainer>
@@ -111,6 +136,24 @@ export default class Profile extends React.Component{
                             </MDBCardBody>
                         </MDBCard>
                     </MDBCol>
+                </MDBRow>
+                <PostCreate size={12}/>
+                        {posts.length
+                            ?
+                            posts.map((post,index) =>
+                                <PostItem key={index} post={post} size={12} />
+                            )
+                            :
+                            <MDBCol className={'mt-5'} sm={12}>
+                                <MDBCard>
+                                    <MDBCardBody>
+                                        <h2 className={'text-center'}>No posts yet...</h2>
+                                    </MDBCardBody>
+                                </MDBCard>
+                            </MDBCol>
+
+                        }
+                <MDBRow>
                     <MDBCol className={'mt-5'} sm={12}>
                         {(!this.state.facebookData || !this.state.googleData) &&
                         <MDBCard>
@@ -125,7 +168,6 @@ export default class Profile extends React.Component{
                         { this.state.googleData &&
                             <GoogleProfile googleData={this.state.googleData} />
                         }
-
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>

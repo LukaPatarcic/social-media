@@ -36,7 +36,7 @@ export default class Login extends React.Component {
                     'Content-Type': 'application/json'
                 },
                 method: "POST",
-                body: JSON.stringify({email,password,rememberMe})
+                body: JSON.stringify({email,password})
             })
                 .then((response => response.json()))
                 .then((data => {

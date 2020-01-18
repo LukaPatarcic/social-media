@@ -63,8 +63,15 @@ class FriendRequestController extends BaseController
             return $this->json(['error' => 'Friend Request Already Sent'], Response::HTTP_BAD_REQUEST);
         }
 
+        $devices = $user->getPushNotifications()->getValues();
+        $sendTo = [];
+        foreach ($devices as $device) {
+            $sendTo[] = $device->getPhone();
+        }
         $notification = new PushNotification();
-        $notification->setMessage('')
+        $notification->setTitle('Follower Request');
+        $notification->setBody($user->getFirstName().' '.$user->getLastName().'('.$user->getProfileName().') has sent you a follow request');
+        $notification->setToMultiple($sendTo);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($friendship);

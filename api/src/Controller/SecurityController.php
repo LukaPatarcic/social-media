@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\PushNotification;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Services\Mailer;
@@ -95,6 +96,15 @@ class SecurityController extends BaseController
         if(!$user->getToken()) {
             $token = hash('sha256',$user->getEmail().bin2hex(random_bytes(64)));
             $user->setToken($token);
+        }
+        $notificationKeyExists = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['phone' => $data['notificationKey']]);
+        if(!$notificationKeyExists) {
+            $notificationKey = new PushNotification();
+            $notificationKey->setUser($user)
+                ->setPhone($data['notificationKey']);
+            $user->addPushNotification($notificationKey);
+
+            $entityManager->persist($notificationKey);
         }
 
         $entityManager->flush();

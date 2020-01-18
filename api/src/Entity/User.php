@@ -130,6 +130,16 @@ class User implements UserInterface
      */
     private $pushNotifications;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="user")
+     */
+    private $posts;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\LikePost", mappedBy="user")
+     */
+    private $likePosts;
+
     public function __construct()
     {
         $this->friends = new ArrayCollection();
@@ -137,6 +147,8 @@ class User implements UserInterface
         $this->fromUser = new ArrayCollection();
         $this->toUser = new ArrayCollection();
         $this->pushNotifications = new ArrayCollection();
+        $this->posts = new ArrayCollection();
+        $this->likePosts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -462,5 +474,67 @@ class User implements UserInterface
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->contains($post)) {
+            $this->posts->removeElement($post);
+            // set the owning side to null (unless already changed)
+            if ($post->getUser() === $this) {
+                $post->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LikePost[]
+     */
+    public function getLikePosts(): Collection
+    {
+        return $this->likePosts;
+    }
+
+    public function addLikePost(LikePost $likePost): self
+    {
+        if (!$this->likePosts->contains($likePost)) {
+            $this->likePosts[] = $likePost;
+            $likePost->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLikePost(LikePost $likePost): self
+    {
+        if ($this->likePosts->contains($likePost)) {
+            $this->likePosts->removeElement($likePost);
+            // set the owning side to null (unless already changed)
+            if ($likePost->getUser() === $this) {
+                $likePost->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
