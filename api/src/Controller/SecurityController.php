@@ -97,9 +97,8 @@ class SecurityController extends BaseController
             $token = hash('sha256',$user->getEmail().bin2hex(random_bytes(64)));
             $user->setToken($token);
         }
-        $deviceDetect = new Mobile_Detect();
-        if($deviceDetect->isMobile() or $deviceDetect->isTablet()) {
-            $notificationKeyExists = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['phone' => $data['notificationKey']]);
+        if(isset($data['notificationKey'])) {
+            $notificationKeyExists = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['phone' => $data['notificationKey'],'user' => $user]);
             if(!$notificationKeyExists) {
                 $notificationKey = new PushNotification();
                 $notificationKey->setUser($user)

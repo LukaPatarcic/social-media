@@ -105,18 +105,10 @@ class PostController extends BaseController
         }
         $post->setUser($user);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($post);
-        $em->flush();
-
         $friends = $user->getFriendsWithMe()->toArray();
         $sendTo = [];
         foreach ($friends as $friend) {
-            $user = $friend->getUser();
-            $devices = $user->getPushNotifications();
-            if(!$devices) {
-                continue;
-            }
+            $devices = $friend->getUser()->getPushNotifications()->toArray();;
             foreach ($devices as $device) {
                 $sendTo[] = $device->getPhone();
             }
@@ -126,6 +118,11 @@ class PostController extends BaseController
         $notification->setTitle('Post');
         $notification->setBody($user->getFirstName().' '.$user->getLastName().'('.$user->getProfileName().') has posted on their timeline');
         $notification->setToMultiple($sendTo);
+        $notification->sendNotification();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($post);
+        $em->flush();
 
         return $this->json(['success' => 1],Response::HTTP_OK);
     }

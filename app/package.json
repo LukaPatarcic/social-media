@@ -19,6 +19,7 @@
     "react-native-chart-kit": "^4.1.0",
     "react-native-deep-linking": "^2.2.0",
     "react-native-elements": "^1.2.7",
+    "react-native-emoji-selector": "^0.1.7",
     "react-native-fbsdk": "^1.1.1",
     "react-native-gesture-handler": "^1.5.2",
     "react-native-paper": "^3.3.0",
