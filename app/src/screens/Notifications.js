@@ -16,12 +16,14 @@ export default class Notifications extends React.Component {
         }
     }
 
-    getNotifications() {
+    getNotifications(loading = true) {
         AsyncStorage.getItem('access-token', (err, val) => {
             if (!val) {
                 // this.props.history.push('/login');
             } else {
-                this.setState({loading: true});
+                if(loading) {
+                    this.setState({loading: true});
+                }
                 fetch('https://api.allshak.lukaku.tech/friend/request', {
                     headers: {
                         'Accept': 'application/json',
@@ -77,7 +79,7 @@ export default class Notifications extends React.Component {
                     .catch(err => {
                         this.setState({error: true,loading: false});
                     })
-                this.getNotifications();
+                this.getNotifications(false);
             }
         })
 
@@ -103,12 +105,11 @@ export default class Notifications extends React.Component {
                         if(data.error) {
                             this.setState({error: true})
                         }
-                        this.getNotifications();
                     }))
                     .catch(err => {
                         this.setState({error: true,loading: false});
                     })
-                this.getNotifications();
+                this.getNotifications(false);
             }
         })
     }
@@ -140,53 +141,63 @@ export default class Notifications extends React.Component {
                                             </Card>
                                         </View>
                                         {notifications.map((notification,index) =>
-                                            <Card key={index}>
-                                                <Card.Title
-                                                    subtitleStyle={{fontFamily: 'font'}}
-                                                    titleStyle={{fontFamily: 'font', fontSize: 18}}
-                                                    title={notification.firstName + " " + notification.lastName + ' sent you a follow request'}
-                                                    subtitle={<TimeAgo time={notification.createdAt}/>}
-                                                    left={(props) =>
-                                                        <Avatar.Image
-                                                            size={50}
-                                                            source={{
-                                                                uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+notification.firstName+'+'+notification.lastName
-                                                            }}
-                                                        />
-                                                    }
-                                                />
-                                                <Card.Actions>
-                                                    <TouchableOpacity
-                                                        onPress={() => this.acceptFollow(notification.id)}
-                                                        id={notification.id}
-                                                        activeOpacity={0.8}
-                                                        style={{
-                                                            alignItems:'center',
-                                                            justifyContent:'center',
-                                                            width:55,
-                                                            height:55,
-                                                            backgroundColor:'white',
-                                                            borderRadius:50,
-                                                        }}
-                                                    >
-                                                        <Icon name={'check'} size={20} color={'red'} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity
-                                                        onPress={() => this.declineFollow(notification.id)}
-                                                        id={notification.id}
-                                                        activeOpacity={0.8}
-                                                        style={{
-                                                            alignItems:'center',
-                                                            justifyContent:'center',
-                                                            width:55,
-                                                            height:55,
-                                                            backgroundColor:'white',
-                                                            borderRadius:50,
-                                                        }}
-                                                    >
-                                                        <Icon name={'times'} size={20} color={'grey'} />
-                                                    </TouchableOpacity>
-                                                </Card.Actions>
+                                            <Card key={index} style={{marginBottom: 20}}>
+                                                <Card.Content>
+                                                    <View style={{flex:1, alignContent: 'flex-start',flexDirection: 'row'}}>
+                                                        <View>
+                                                            <Avatar.Image
+                                                                size={50}
+                                                                source={{
+                                                                    uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+notification.firstName+'+'+notification.lastName
+                                                                }}
+                                                            />
+                                                        </View>
+                                                        <View style={{marginLeft: 10, alignContent: 'center',justifyContent: 'center'}}>
+                                                            <View>
+                                                                <Text style={{fontFamily: 'font', fontSize: 16}}>{notification.firstName + " " + notification.lastName + ' sent you a follow request'}</Text>
+                                                            </View>
+                                                            <View>
+                                                                <Text style={{fontFamily: 'font', fontSize: 12, color: 'grey'}}><TimeAgo time={notification.createdAt}/></Text>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{flex:1, flexDirection: 'row', alignContent: 'center'}}>
+                                                        <View>
+                                                            <TouchableOpacity
+                                                                onPress={() => this.acceptFollow(notification.id)}
+                                                                id={notification.id}
+                                                                activeOpacity={0.8}
+                                                                style={{
+                                                                    alignItems:'center',
+                                                                    justifyContent:'center',
+                                                                    width:55,
+                                                                    height:55,
+                                                                    backgroundColor:'white',
+                                                                    borderRadius:50,
+                                                                }}
+                                                            >
+                                                                <Icon name={'check'} size={25} color={'red'} />
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                        <View>
+                                                            <TouchableOpacity
+                                                                onPress={() => this.declineFollow(notification.id)}
+                                                                id={notification.id}
+                                                                activeOpacity={0.8}
+                                                                style={{
+                                                                    alignItems:'center',
+                                                                    justifyContent:'center',
+                                                                    width:55,
+                                                                    height:55,
+                                                                    backgroundColor:'white',
+                                                                    borderRadius:50,
+                                                                }}
+                                                            >
+                                                                <Icon name={'times'} size={25} color={'grey'} />
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    </View>
+                                                </Card.Content>
                                             </Card>
                                         )}
                                     </PTRViewAndroid>

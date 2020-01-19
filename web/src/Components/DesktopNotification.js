@@ -8,6 +8,7 @@ import {
     MDBIcon,
     MDBNavItem, MDBRow
 } from "mdbreact";
+import {isMobile} from "react-device-detect";
 import cookie from "react-cookies";
 import {store} from "react-notifications-component";
 
@@ -108,7 +109,7 @@ export default class DesktopNotification extends React.Component{
                         <MDBBadge color="dark" className="ml-2">{notifications.length}</MDBBadge>
                     </MDBDropdownToggle>
                     {notifications &&
-                    <MDBDropdownMenu basic right onClick={(e) => e.stopPropagation()}>
+                    <MDBDropdownMenu basic right={!isMobile} onClick={(e) => e.stopPropagation()}>
                         <MDBDropdownItem header>Follower Requests ({notifications.length})</MDBDropdownItem>
                         <MDBDropdownItem divider />
                         {notifications.map((value,index) =>
@@ -126,9 +127,7 @@ export default class DesktopNotification extends React.Component{
                             </MDBDropdownItem>
                             <MDBDropdownItem divider />
                             </>
-
                         )}
-
                     </MDBDropdownMenu>
                     }
                 </MDBDropdown>

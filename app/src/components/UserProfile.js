@@ -135,7 +135,7 @@ export default class Profile extends React.Component {
                     }
                 </ImageBackground>
             </Modal>
-            <Text  style={{fontFamily: 'font', marginBottom: 10}} onPress={this._showModal.bind(this)}> {friend.lastName} ({friend.profileName})</Text>
+            <Text  style={{fontFamily: 'font', marginBottom: 10}} onPress={this._showModal.bind(this)}> {friend.firstName} {friend.lastName} ({friend.profileName})</Text>
         </>
         );
     }

@@ -1,7 +1,7 @@
 import React from "react";
 import {MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBIcon, MDBInput, MDBRow, MDBTooltip} from "mdbreact";
 import { Picker as EmojiPicker } from 'emoji-mart'
-import Picker from 'react-giphy-picker'
+import {isMobile} from "react-device-detect";
 import SimpleReactValidator from "simple-react-validator";
 import cookie from "react-cookies";
 import {ClipLoader} from "react-spinners";
@@ -100,10 +100,12 @@ export default class Post extends React.Component{
                             </form>
                             <small className={'float-right ' + textColor}>{text.length}/180</small><br/>
                             <MDBBtn outline={true} circle={true} color={'grey'} size={'sm'}><MDBIcon icon={'image'} size={'2x'} /></MDBBtn>
+                            {!isMobile &&
                             <MDBTooltip placement="top">
-                            <MDBBtn onClick={this.showEmojis.bind(this)} outline={true} circle={true} color={'grey'} size={'sm'}><MDBIcon icon={'laugh-wink'} size={'2x'}/></MDBBtn>
+                                <MDBBtn onClick={this.showEmojis.bind(this)} outline={true} circle={true} color={'grey'} size={'sm'}><MDBIcon icon={'laugh-wink'} size={'2x'}/></MDBBtn>
                                 <div>Select an emoji...</div>
                             </MDBTooltip>
+                            }
                             <MDBTooltip placement="top">
                             <MDBBtn
                                 className={'float-right'}

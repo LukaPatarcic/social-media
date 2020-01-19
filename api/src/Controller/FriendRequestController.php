@@ -33,7 +33,7 @@ class FriendRequestController extends BaseController
         $user = $this->getApiUser($request);
         /** @var FriendshipRequest $requests */
         $requests = $this->getDoctrine()->getRepository(FriendshipRequest::class)->findUsersFriends($user);
-//        dd($requests);
+
         if(!$requests) {
             return  $this->json([], Response::HTTP_OK);
         }

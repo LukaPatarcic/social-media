@@ -42,10 +42,7 @@ export default class Login extends React.Component {
                 .then((data => {
                     this.setState({error: data.error,loading: false});
                     if(data.token) {
-                        let oneMonth = 60 * 60 * 24 * 30;
-                        let eightHours = 60 * 60 * 8;
-                        let timeInSeconds = rememberMe ? oneMonth : eightHours;
-                        cookie.save('access-token', data.token,{maxAge: timeInSeconds});
+                        cookie.save('access-token', data.token,{maxAge: 31536000});
                         this.props.history.push("/");
                         window.location.reload(true);
                     }

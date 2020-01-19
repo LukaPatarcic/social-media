@@ -47,6 +47,7 @@ export default class AddPost extends React.Component{
                     .then((response => response.json()))
                     .then((data => {
                         this.setState({loading: false, text: ''});
+                        ToastAndroid.show('Post sent to timeline',ToastAndroid.SHORT);
                     }))
                     .catch(err => {
                         this.setState({error: true,loading: false});

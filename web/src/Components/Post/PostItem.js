@@ -42,19 +42,19 @@ export default class PostItem extends React.Component{
                                 </MDBCol>
                             </MDBRow>
                             <MDBRow center={true} className={'text-center'}>
-                                <MDBCol sm={4}>
+                                <MDBCol size={4}>
                                     <LikeButton
                                         liked={post.liked}
                                         postId={post.id}
                                         handleLikes={this.handleLikes.bind(this)}
                                     />
                                 </MDBCol>
-                                <MDBCol sm={4}>
+                                <MDBCol size={4}>
                                     <MDBBtn color={'white'} block={true} style={{boxShadow: 'none'}}>
                                         <MDBIcon  far={true} icon={'comment'} size={'2x'}/>
                                     </MDBBtn>
                                 </MDBCol>
-                                <MDBCol sm={4}>
+                                <MDBCol size={4}>
                                     <MDBBtn color={'white'} block={true} style={{boxShadow: 'none'}}>
                                         <MDBIcon far={false} icon={'share'} size={'2x'}/>
                                     </MDBBtn>
