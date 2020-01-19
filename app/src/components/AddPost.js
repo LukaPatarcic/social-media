@@ -1,4 +1,14 @@
-import {ImageBackground, Modal, StyleSheet, Text, TextInput, ToastAndroid, View} from "react-native";
+import {
+    ActivityIndicator,
+    ImageBackground,
+    Modal,
+    StyleSheet,
+    Text,
+    TextInput,
+    ToastAndroid,
+    TouchableOpacity,
+    View
+} from "react-native";
 import {Button} from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {FAB} from "react-native-paper";
@@ -20,7 +30,6 @@ export default class AddPost extends React.Component{
     }
 
     sendPost() {
-        console.log('here')
         AsyncStorage.getItem('access-token', (err, val) => {
             if(!val) {
               this.props.history.push('/login');
@@ -50,7 +59,7 @@ export default class AddPost extends React.Component{
     _hideModal = () => this.setState({ visible: false });
 
     render() {
-        const {visible} = this.state;
+        const {visible,text,loading} = this.state;
         return (
             <>
                 <Modal
@@ -76,34 +85,62 @@ export default class AddPost extends React.Component{
                                     spellCheck={true}
                                     maxLength={180}
                                     style={{fontSize: 20, fontFamily: 'font',color: 'white',borderBottomColor:'red',borderBottomWidth: 2}}
-                                    onChangeText={text => this.setState({ text })}
+                                    onChangeText={(text) => {
+                                        if(text.length >= 180) {
+                                            ToastAndroid.show('Maximum amount of characters is 180', ToastAndroid.SHORT)
+                                        } else {
+                                            this.setState({ text })
+                                        }
+                                    }}
                                 />
                             </View>
-                            <View style={{marginTop: 30, flex: 1, justifyContent: 'flex-start', flexDirection: 'row'}}>
-                                <View style={{width:90,height:100}}>
-                                    <Button
-                                        title={'Images'}
-                                        // title={<Icon name={'image'} color={'white'} size={35} />}
-                                        buttonStyle={{backgroundColor: 'red'}}
-                                        onPress={() => ToastAndroid.show('Photos',ToastAndroid.SHORT)}
-                                    />
+                            <View style={{marginTop: 30, flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
+                                <View style={{width: 300,marginLeft: 10, flex:1, justifyContent:'flex-start',flexDirection:'row'}}>
+                                    <View style={{width:90, height:90}}>
+                                        <Button
+                                            // title={'Images'}
+                                            title={<Icon name={'image'} color={'white'} size={25} />}
+                                            buttonStyle={{backgroundColor: 'red'}}
+                                            onPress={() => ToastAndroid.show('Photos',ToastAndroid.SHORT)}
+                                        />
+                                    </View>
+                                    <View style={{width:90,height:100,marginLeft: 20}}>
+                                        <Button
+                                            title={<Icon name={'camera'} color={'white'} size={25} />}
+                                            // title={'Camera'}
+                                            buttonStyle={{backgroundColor: 'red'}}
+                                            onPress={() => ToastAndroid.show('Camera',ToastAndroid.SHORT)}
+                                        />
+                                    </View>
                                 </View>
-                                <View style={{width:90,height:100,marginLeft: 20}}>
-                                    <Button
-                                        // title={<Icon name={'camera'} color={'white'} size={35} />}
-                                        title={'Camera'}
-                                        buttonStyle={{backgroundColor: 'red'}}
-                                        onPress={() => ToastAndroid.show('Camera',ToastAndroid.SHORT)}
-                                    />
+                                <View style={{width: 100}}>
+                                    <TouchableOpacity
+                                        onPress={this.sendPost.bind(this)}
+                                        activeOpacity={0.8}
+                                        disabled={(!!(text.length > 180 || text.length < 1))}
+                                        style={{
+                                            borderWidth:1,
+                                            alignItems:'center',
+                                            justifyContent:'center',
+                                            width:55,
+                                            height:55,
+                                            backgroundColor:'grey',
+                                            borderRadius:50,
+                                        }}
+                                    >
+                                        {loading
+                                            ?
+                                            <ActivityIndicator size={"small"} color={'white'} />
+                                            :
+                                            (!!(text.length > 180 || text.length < 1)) ?
+                                                <Icon name={'times'} color={'white'} size={25} />
+                                                :
+                                                <Icon name={'plus'} color={'white'} size={25}/>
+                                        }
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
-                        <FAB
-                            style={Object.assign({},styles.fab,styles.fabAdd)}
-                            icon="plus"
-                            color={'white'}
-                            onPress={() => this.sendPost.bind(this)}
-                        />
                     </ImageBackground>
                 </Modal>
                 <FAB

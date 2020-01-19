@@ -1,6 +1,7 @@
 import {Button, StyleSheet, ToastAndroid, View} from "react-native";
 import {Text} from "native-base";
 import React from "react";
+import UserProfile from "./UserProfile";
 
 export default class SendFriendRequest extends React.Component{
     constructor(props) {
@@ -40,7 +41,7 @@ export default class SendFriendRequest extends React.Component{
         const {loading,error} = this.state;
         return (
             <View style={styles.card}>
-                <Text  style={{fontFamily: 'font', marginBottom: 10}}>{friend.firstName} {friend.lastName} ({friend.profileName})</Text>
+                <UserProfile friend={friend} token={this.props.token} />
                 <Button
                     id={friend.id}
                     disabled={friend.requested ? true : (friend.following ? true : false)}

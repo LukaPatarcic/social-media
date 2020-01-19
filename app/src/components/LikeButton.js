@@ -46,7 +46,7 @@ export default class LikeButton extends React.Component{
 
         return (
             <IconButton
-                icon="heart-outline"
+                icon={heartClicked ? 'heart-outline' : 'heart'}
                 color={'red'}
                 size={20}
                 onPress={this.handleLike.bind(this)}

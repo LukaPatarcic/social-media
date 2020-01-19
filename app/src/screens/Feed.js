@@ -13,6 +13,7 @@ import PostItem from "../components/PostItem";
 import {Button} from "react-native-elements";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AddPost from "../components/AddPost";
+import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.android";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -27,12 +28,14 @@ export default class Profile extends React.Component {
         }
     }
 
-    componentDidMount() {
+    getPosts(refreshing = false) {
         AsyncStorage.getItem('access-token', (err, val) => {
             if (!val) {
                 this.props.history.push('/login');
             } else {
-                this.setState({token: val,loading:true})
+                if(!refreshing) {
+                    this.setState({loading:true})
+                }
                 fetch('https://api.allshak.lukaku.tech/post',{
                     headers: {
                         'Accept': 'application/json',
@@ -52,22 +55,31 @@ export default class Profile extends React.Component {
         });
     }
 
+    componentDidMount() {
+        this.getPosts();
+    }
+
     render() {
         const {posts,loading} = this.state;
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
                 source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
-                <ScrollView style={{paddingHorizontal: 20, paddingTop: 20}}>
-                    {loading
-                        ?
-                        <ActivityIndicator size="large" color="#f00" />
-                        :
-                        this.state.posts.map((post,index) =>
-                            <PostItem post={post} key={index} />
-                        )}
-                </ScrollView>
-               <AddPost />
+                        {loading
+                            ?
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',position: 'absolute', width: '100%', height: '100%'}}>
+                                <ActivityIndicator size={70} color="#f00" />
+                            </View>
+                            :
+                            <PTRViewAndroid onRefresh={() => this.getPosts(true)}>
+                                <ScrollView style={{paddingHorizontal: 20, paddingTop: 20}}>
+                                {posts.map((post,index) =>
+                                    <PostItem post={post} key={index} />
+                                )}
+                                </ScrollView>
+                            </PTRViewAndroid>
+                        }
+                <AddPost />
             </ImageBackground>
         );
     }

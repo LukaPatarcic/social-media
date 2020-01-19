@@ -29,7 +29,7 @@ export default class PostItem extends React.Component{
                     </Paragraph>
                     <View style={{flex:1,justifyContent: 'space-between', flexDirection: 'row', marginTop: 15}}>
                         <View>
-                            <Text style={{fontFamily: 'font'}}>Liked by {post.likes} people</Text>
+                            <Text style={{fontFamily: 'font'}}>Liked by {likes} people</Text>
                         </View>
                         <View>
                             <Text style={{fontFamily: 'font'}}>Comments 0</Text>
@@ -37,7 +37,11 @@ export default class PostItem extends React.Component{
                     </View>
                 </Card.Content>
                 <Card.Actions>
-                    <LikeButton />
+                    <LikeButton
+                        liked={post.liked}
+                        postId={post.id}
+                        handleLikes={this.handleLikes.bind(this)}
+                    />
                     <IconButton
                         icon="comment"
                         color={'grey'}

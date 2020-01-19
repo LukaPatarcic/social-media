@@ -1,20 +1,204 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, ScrollView, Button, ActivityIndicator,} from 'react-native';
+import {View, StyleSheet, ImageBackground, ScrollView, Button, ActivityIndicator, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { Text } from 'native-base';
+import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.android";
+import TimeAgo from "react-native-timeago";
+import {Avatar, Card, IconButton} from "react-native-paper";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 export default class Notifications extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            notifications: [],
+            loading: false
+        }
+    }
+
+    getNotifications() {
+        AsyncStorage.getItem('access-token', (err, val) => {
+            if (!val) {
+                // this.props.history.push('/login');
+            } else {
+                this.setState({loading: true});
+                fetch('https://api.allshak.lukaku.tech/friend/request', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-AUTH-TOKEN': val
+                    },
+                    method: "GET",
+                })
+                    .then((response => response.json()))
+                    .then((data => {
+                        console.log(data);
+                        this.setState({notifications: data, loading: false});
+                        // this.props.getFriends();
+                        if (data.error) {
+                            this.setState({error: true})
+                        }
+                    }))
+                    .catch(err => {
+                        this.setState({error: true, loading: false});
+                    })
+            }
+
+            // this.props.getNotifications();
+            // this.props.jumpTo('notifications');
+        })
+    }
+    componentDidMount() {
+        this.getNotifications();
+    }
+
+    acceptFollow(id) {
+        AsyncStorage.getItem('access-token', (err, val) => {
+            if (!val) {
+                // this.props.history.push('/login');
+            } else {
+                fetch('https://api.allshak.lukaku.tech/friend/request',{
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-AUTH-TOKEN': val
+                    },
+                    method: "PATCH",
+                    body: JSON.stringify({id})
+                })
+                    .then((response => response.json()))
+                    .then((data => {
+                        this.setState({loading: false});
+                        if(data.error) {
+                            this.setState({error: true})
+                        }
+
+                    }))
+                    .catch(err => {
+                        this.setState({error: true,loading: false});
+                    })
+                this.getNotifications();
+            }
+        })
+
+    }
+
+    declineFollow(id) {
+        AsyncStorage.getItem('access-token', (err, val) => {
+            if (!val) {
+                // this.props.history.push('/login');
+            } else {
+                fetch('https://api.allshak.lukaku.tech/friend/request',{
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-AUTH-TOKEN': val
+                    },
+                    method: "DELETE",
+                    body: JSON.stringify({id})
+                })
+                    .then((response => response.json()))
+                    .then((data => {
+                        this.setState({loading: false});
+                        if(data.error) {
+                            this.setState({error: true})
+                        }
+                        this.getNotifications();
+                    }))
+                    .catch(err => {
+                        this.setState({error: true,loading: false});
+                    })
+                this.getNotifications();
+            }
+        })
     }
 
     render() {
+        const {notifications,loading} = this.state;
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
                 source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
-                <View>
-                    <Text>Hello World</Text>
-                </View>
+                        {loading
+                            ?
+
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',position: 'absolute', width: '100%', height: '100%'}}>
+                                <ActivityIndicator size={70} color="#f00" />
+                            </View>
+                            :
+                            notifications.length
+                                ?
+                                <ScrollView>
+                                    <PTRViewAndroid onRefresh={this.getNotifications.bind(this)}>
+                                        <View style={{marginBottom: 20}}>
+                                            <Card>
+                                                <Card.Title
+                                                    subtitleStyle={{fontFamily: 'font'}}
+                                                    titleStyle={{fontFamily: 'font'}}
+                                                    title={'Notifications (' + notifications.length + ')'}
+                                                />
+                                            </Card>
+                                        </View>
+                                        {notifications.map((notification,index) =>
+                                            <Card key={index}>
+                                                <Card.Title
+                                                    subtitleStyle={{fontFamily: 'font'}}
+                                                    titleStyle={{fontFamily: 'font', fontSize: 18}}
+                                                    title={notification.firstName + " " + notification.lastName + ' sent you a follow request'}
+                                                    subtitle={<TimeAgo time={notification.createdAt}/>}
+                                                    left={(props) =>
+                                                        <Avatar.Image
+                                                            size={50}
+                                                            source={{
+                                                                uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+notification.firstName+'+'+notification.lastName
+                                                            }}
+                                                        />
+                                                    }
+                                                />
+                                                <Card.Actions>
+                                                    <TouchableOpacity
+                                                        onPress={() => this.acceptFollow(notification.id)}
+                                                        id={notification.id}
+                                                        activeOpacity={0.8}
+                                                        style={{
+                                                            alignItems:'center',
+                                                            justifyContent:'center',
+                                                            width:55,
+                                                            height:55,
+                                                            backgroundColor:'white',
+                                                            borderRadius:50,
+                                                        }}
+                                                    >
+                                                        <Icon name={'check'} size={20} color={'red'} />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity
+                                                        onPress={() => this.declineFollow(notification.id)}
+                                                        id={notification.id}
+                                                        activeOpacity={0.8}
+                                                        style={{
+                                                            alignItems:'center',
+                                                            justifyContent:'center',
+                                                            width:55,
+                                                            height:55,
+                                                            backgroundColor:'white',
+                                                            borderRadius:50,
+                                                        }}
+                                                    >
+                                                        <Icon name={'times'} size={20} color={'grey'} />
+                                                    </TouchableOpacity>
+                                                </Card.Actions>
+                                            </Card>
+                                        )}
+                                    </PTRViewAndroid>
+                                </ScrollView>
+                                :
+                                <PTRViewAndroid onRefresh={this.getNotifications.bind(this)}>
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
+                                    <Text style={{fontFamily: 'font', fontSize: 24, padding: 20, textAlign: 'center', color: '#fff'}}>No notifications...</Text>
+                                    <Icon color={'white'} size={80} name={'sad-tear'} />
+                                </View>
+                                </PTRViewAndroid>
+                        }
             </ImageBackground>
         );
     }

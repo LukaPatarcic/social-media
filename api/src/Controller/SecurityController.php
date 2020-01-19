@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -124,6 +125,26 @@ class SecurityController extends BaseController
     public function logout()
     {
         throw new Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
+
+    /**
+     * @Route("/logout/android", name="app__android_logout", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logoutAndroid(Request $request)
+    {
+        $user = $this->getApiUser($request);
+        $data = json_decode($request->getContent(),true);
+        $phone = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['user' => $user,'phone' => $data['phone']]);
+        if(!$phone) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($phone);
+        $em->flush();
+
+        return $this->json([],Response::HTTP_OK);
     }
 
     /**
