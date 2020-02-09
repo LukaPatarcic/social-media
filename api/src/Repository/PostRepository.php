@@ -2,10 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\Friendship;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method Post|null find($id, $lockMode = null, $lockVersion = null)
@@ -39,8 +42,9 @@ class PostRepository extends ServiceEntityRepository
     public function findFeedPosts(User $user)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.user != :id')
             ->join('p.user','u')
+            ->join('u.friends','uf','ON','uf.friend = u.id')
+            ->andWhere('p.user != :id')
             ->setParameter('id', $user->getId())
             ->orderBy('p.createdAt', 'DESC')
             ->getQuery()

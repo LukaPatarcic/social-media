@@ -12,6 +12,7 @@
         "gedmo/doctrine-extensions": "^2.4",
         "knpuniversity/oauth2-client-bundle": "^1.30",
         "league/oauth2-facebook": "^2.0",
+        "lexik/jwt-authentication-bundle": "^2.6",
         "mobiledetect/mobiledetectlib": "^2.8",
         "nelmio/cors-bundle": "^1.5",
         "sensio/framework-extra-bundle": "^5.5",

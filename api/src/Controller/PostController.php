@@ -24,12 +24,11 @@ class PostController extends BaseController
 {
     /**
      * @Route("/post", name="post_feed_list", methods={"GET"})
-     * @param Request $request
      * @return JsonResponse|Response
      */
-    public function postsFeedList(Request $request)
+    public function postsFeedList()
     {
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
         $posts = $this->getDoctrine()->getRepository(Post::class)->findFeedPosts($user);
         $data = [];
         foreach ($posts as $k => $post) {

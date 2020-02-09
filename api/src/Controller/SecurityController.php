@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\PushNotification;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Security\JwtTokenAuthenticator;
 use App\Services\Mailer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
 use Mobile_Detect;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,10 +75,15 @@ class SecurityController extends BaseController
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param JWTEncoderInterface $encoder
      * @return Response
-     * @throws Exception
+     * @throws \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException
      */
-    public function login(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function login(Request $request,
+                          EntityManagerInterface $entityManager,
+                          UserPasswordEncoderInterface $passwordEncoder,
+                          JWTEncoderInterface $encoder
+    ): Response
     {
         $data = json_decode($request->getContent(),true);
         if (empty($data['email']) || empty($data['password'])) {
@@ -93,11 +101,13 @@ class SecurityController extends BaseController
             return $this->json(['error' => 'Invalid password'], Response::HTTP_BAD_REQUEST);
         }
 
-        $token = $user->getToken();
-        if(!$user->getToken()) {
-            $token = hash('sha256',$user->getEmail().bin2hex(random_bytes(64)));
-            $user->setToken($token);
-        }
+//        $token = $user->getToken();
+//        if(!$user->getToken()) {
+//            $token = hash('sha256',$user->getEmail().bin2hex(random_bytes(64)));
+//            $user->setToken($token);
+//        }
+        $token = $encoder->encode(['id' => $user->getId()]);
+
         if(isset($data['notificationKey'])) {
             $notificationKeyExists = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['phone' => $data['notificationKey'],'user' => $user]);
             if(!$notificationKeyExists) {
@@ -114,7 +124,7 @@ class SecurityController extends BaseController
         $entityManager->flush();
 
         return $this->json([
-            'token' => $token,'error' => ''
+            'token' => $token
         ]);
     }
 
