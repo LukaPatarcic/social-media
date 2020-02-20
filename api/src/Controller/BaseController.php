@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\PushNotification;
 use App\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,19 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class BaseController extends AbstractController
 {
-
-    /**
-     * @param Request $request
-     * @return User|null
-     */
-    public function getApiUser(Request $request)
-    {
-        $token = $request->headers->get('X-AUTH-TOKEN');
-        /** * @var User $user */
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['token' => $token]);
-        return $user;
-    }
-
     /**
      * @param FormInterface $form
      * @return array
@@ -36,6 +24,18 @@ abstract class BaseController extends AbstractController
         }
 
         return $errors;
+    }
+
+    public function saveNotificationKey($notification,$user) {
+        $notificationKeyExists = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['phone' => $notification,'user' => $user]);
+        if(!$notificationKeyExists) {
+            $notificationKey = new PushNotification();
+            $notificationKey->setUser($user)
+                ->setPhone($notification);
+            $user->addPushNotification($notificationKey);
+
+            $this->getDoctrine()->getManager()->persist($notificationKey);
+        }
     }
 
 }

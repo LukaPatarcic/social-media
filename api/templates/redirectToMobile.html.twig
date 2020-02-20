@@ -3,5 +3,8 @@
     <a href="allshak://login"></a>
     <script>
         document.querySelector('a').click();
+        setTimeout(() => {
+            window.open("googlechrome://navigate?url=" + {{ FRONTEND_URL }},"_system");
+        },500)
     </script>
 {% endblock %}

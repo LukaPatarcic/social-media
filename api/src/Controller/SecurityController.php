@@ -87,45 +87,31 @@ class SecurityController extends BaseController
     {
         $data = json_decode($request->getContent(),true);
         if (empty($data['email']) || empty($data['password'])) {
-            return $this->json(['error' => 'Empty username or password'], Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Empty email or password'], Response::HTTP_BAD_REQUEST);
         }
         $userRepo = $entityManager->getRepository(User::class);
         /** @var User $user */
         $user = $userRepo->findOneBy(['email' => $data['email'],'isVerified' => 1]);
         if(!$user) {
-            return $this->json(['error' => 'Invalid username'],Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Invalid email'],Response::HTTP_BAD_REQUEST);
         }
 
         // Check if the password inserted is correct
         if (!$passwordEncoder->isPasswordValid($user, $data['password'])) {
             return $this->json(['error' => 'Invalid password'], Response::HTTP_BAD_REQUEST);
         }
-
-//        $token = $user->getToken();
-//        if(!$user->getToken()) {
-//            $token = hash('sha256',$user->getEmail().bin2hex(random_bytes(64)));
-//            $user->setToken($token);
-//        }
+        //encode JWT
         $token = $encoder->encode(['id' => $user->getId()]);
 
         if(isset($data['notificationKey'])) {
-            $notificationKeyExists = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['phone' => $data['notificationKey'],'user' => $user]);
-            if(!$notificationKeyExists) {
-                $notificationKey = new PushNotification();
-                $notificationKey->setUser($user)
-                    ->setPhone($data['notificationKey']);
-                $user->addPushNotification($notificationKey);
-
-                $entityManager->persist($notificationKey);
-            }
+           $this->saveNotificationKey($data['notificationKey'],$user);
         }
-
 
         $entityManager->flush();
 
         return $this->json([
             'token' => $token
-        ]);
+        ],Response::HTTP_CREATED);
     }
 
     /**
@@ -144,7 +130,7 @@ class SecurityController extends BaseController
      */
     public function logoutAndroid(Request $request)
     {
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
         $data = json_decode($request->getContent(),true);
         $phone = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['user' => $user,'phone' => $data['phone']]);
         if(!$phone) {
@@ -173,7 +159,7 @@ class SecurityController extends BaseController
         if($detect->isMobile() or $detect->isTablet()) {
             return $this->render('redirectToMobile.html.twig');
         }
-        return $this->redirect('https://allshak.lukaku.tech/login');
+        return $this->redirect($_ENV['FRONTEND_URL']);
     }
 
     /**
@@ -185,31 +171,4 @@ class SecurityController extends BaseController
         $data = json_decode($request->getContent(),true);
         $sendMail = $mailer->forgottenPasswordEmail($data['email']);
     }
-
-    /**
-     * @Route("/get/user", name="get_user")
-     * @param Request $request
-     * @return object|void|null
-     * @throws Exception
-     * @IsGranted("ROLE_USER")
-     */
-    public function fetchUser(Request $request)
-    {
-        $user = $this->getApiUser($request);
-        return $this->json($user,Response::HTTP_OK,[],[
-            'groups' => ['user_info']
-        ]);
-    }
-
-    /**
-     * @Route("/auth", name="auth")
-     * @IsGranted("ROLE_USER")
-     */
-    public function auth(Request $request)
-    {
-        return $this->json(['success' => 1],Response::HTTP_OK);
-
-    }
-
-
 }
