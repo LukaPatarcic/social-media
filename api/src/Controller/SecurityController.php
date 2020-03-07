@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Mobile_Detect;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,11 +29,12 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class SecurityController extends BaseController
 {
     /**
-     * @Route("/test")
+     * @Route("/auth")
+     * @IsGranted("ROLE_USER")
      */
-    public function test()
+    public function auth()
     {
-        return $this->json(['message' => 'Hello from API']);
+        return $this->json(['success' => 1]);
     }
 
     /**
@@ -77,7 +79,7 @@ class SecurityController extends BaseController
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param JWTEncoderInterface $encoder
      * @return Response
-     * @throws \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException
+     * @throws JWTEncodeFailureException
      */
     public function login(Request $request,
                           EntityManagerInterface $entityManager,

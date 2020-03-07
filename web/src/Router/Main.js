@@ -1,19 +1,21 @@
 import * as React from "react";
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import Navigation from "../Components/Navigation";
-import Login from "../Screens/Login";
-import Register from "../Screens/Register";
-import Logout from "../Components/Logout";
-import Footer from "../Components/Footer";
-import Homepage from "../Screens/Homepage";
-import CookiePolicy from "../Legal/CookiePolicy";
-import TermsOfService from "../Legal/TermsOfService";
-import PrivacyPolicy from "../Legal/PrivacyPolicy";
-import {setBackground} from "../services/Services";
-import Profile from "../Screens/Profile";
-import NotificationList from "../Components/NotificationList";
-import FriendProfile from "../Screens/FriendProfile";
-import Notfound from "../Components/Notfound";
+import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
+import Navigation from "../Components/Include/Navigation";
+import Login from "../Components/Security/Login";
+import Register from "../Components/Security/Register";
+import Logout from "../Components/Security/Logout";
+import Footer from "../Components/Include/Footer";
+import Homepage from "../Components/Home/Homepage";
+import CookiePolicy from "../Components/Legal/CookiePolicy";
+import TermsOfService from "../Components/Legal/TermsOfService";
+import PrivacyPolicy from "../Components/Legal/PrivacyPolicy";
+import {setBackground} from "../Helpers";
+import Profile from "../Components/Profile/Profile";
+import NotificationList from "../Components/Notification/NotificationList";
+import FriendProfile from "../Components/Profile/FriendProfile";
+import Notfound from "../Components/Error/Notfound";
+import MobileAppModal from "../Components/Mobile/MobileAppModal";
+import CookieConsent from "react-cookie-consent";
 
 export default class Main extends React.Component{
 
@@ -44,6 +46,16 @@ export default class Main extends React.Component{
                     {/* NOT FOUND */}
                     <Route exact={true} path="/notFound" component={Notfound} />
                 </Switch>
+                <MobileAppModal/>
+                <CookieConsent
+                    style={{ background: "#9e9e9e" }}
+                    buttonStyle={{ color: "#fff", backgroundColor: '#f00', marginRight: 30}}
+                >
+                    By using our site, you acknowledge that you have read and understand our
+                    <Link to={'/legal/cookie'}> Cookie Policy</Link>,
+                    <Link to={'/legal/privacy'}> Privacy Policy</Link>,
+                    and our <Link to={'/legal/tos'}> Terms of Service</Link>.
+                </CookieConsent>
                 <Footer/>
             </Router>
         );

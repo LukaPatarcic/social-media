@@ -8,8 +8,8 @@ import {faFacebook,faGoogle} from "@fortawesome/free-brands-svg-icons";
 import FacebookLogin from "react-facebook-login";
 import cookie from 'react-cookies';
 import GoogleLogin from "react-google-login";
-import FacebookAuthLogin from "./Facebook/FacebookAuthLogin";
-import GoogleAuthLogin from "./Google/GoogleAuthLogin";
+import FacebookAuthLogin from "../OAuth/Facebook/FacebookAuthLogin";
+import GoogleAuthLogin from "../OAuth/Google/GoogleAuthLogin";
 
 export default class RegistrationForm extends React.Component{
 

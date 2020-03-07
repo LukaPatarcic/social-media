@@ -4,6 +4,9 @@ import LikeButton from "./LikeButton";
 import cookie from "react-cookies";
 import TimeAgo from "react-timeago";
 import PostItem from "./PostItem";
+import {BASE_URL} from "../../Config";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Loader from "react-spinners/ClipLoader";
 
 export default class PostList extends React.Component{
 
@@ -11,16 +14,18 @@ export default class PostList extends React.Component{
         super(props);
         this.state = {
             posts: [],
-            loading: false
+            loading: false,
+            offset: 1
         }
     }
 
     componentDidMount() {
-        fetch('https://api.allshak.lukaku.tech/post',{
+        const {offset} = this.state;
+        fetch(BASE_URL + '/post?offset='+offset,{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': cookie.load('access-token')
+                'Authorization': 'Bearer '+cookie.load('access-token')
             },
             method: "GET"
         })
@@ -35,12 +40,13 @@ export default class PostList extends React.Component{
 
 
     render() {
+        const {posts} = this.state;
         return (
-            <>
-            {this.state.posts.map((post,index) =>
-                <PostItem key={index} post={post} />
-            )}
-            </>
+            <InfiniteScroll next={this.componentDidMount} hasMore={true} loader={<Loader size={20} color={'red'} />} dataLength={posts.length}>
+                {this.state.posts.map((post,index) =>
+                    <PostItem key={index} post={post} />
+                )}
+            </InfiniteScroll>
         );
     }
 }

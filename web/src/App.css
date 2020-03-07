@@ -1,8 +1,9 @@
-@import "https://fonts.googleapis.com/css?family=Fredoka+One&display=swap";
-@import "~@khallion/md-checkbox/bootstrap-addons.css";
+@import url('https://fonts.googleapis.com/css?family=Poppins:900&display=swap');
+@import "../node_modules/@khallion/md-checkbox/bootstrap-addons.css";
 
 * {
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
 }
 
 .md-form input:not([type]):focus:not([readonly]) + label, .md-form input[type="text"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="password"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="email"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="url"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="time"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="date"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="datetime"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="datetime-local"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="tel"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="number"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="search"]:not(.browser-default):focus:not([readonly]) + label, .md-form input[type="search-md"]:focus:not([readonly]) + label, .md-form textarea.md-textarea:focus:not([readonly]) + label {

@@ -1,7 +1,7 @@
 import React from "react";
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import {Redirect} from "react-router-dom";
-import Profile from "../Feed";
+import Profile from "../../Feed/Feed";
 
 export default class LoginFacebook extends React.Component{
     constructor(props) {

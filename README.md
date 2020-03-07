@@ -1,4 +1,4 @@
-# Allshak
+# Allshack
 
 Have all your social media in one place. One account for everything!
 

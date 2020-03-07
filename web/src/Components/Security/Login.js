@@ -1,9 +1,11 @@
 import React from "react";
 import cookie from "react-cookies";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {MDBAlert, MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBInput, MDBRow} from "mdbreact";
 import {ClipLoader} from "react-spinners";
 import SimpleReactValidator from "simple-react-validator";
+import {BASE_URL} from "../../Config";
+import {AuthContext} from "../../Contexts/AuthContext";
 
 export default class Login extends React.Component {
 
@@ -15,7 +17,7 @@ export default class Login extends React.Component {
             loading: false,
             email: '',
             password: '',
-            rememberMe: false
+            redirect: false
         }
         this.handleChange = this.handleChange.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
@@ -24,13 +26,15 @@ export default class Login extends React.Component {
         document.title = 'Allshak | Login';
     }
 
+    static contextType = AuthContext;
+
     submitHandler(e) {
         e.preventDefault();
-        const {email,password,rememberMe} = this.state;
+        const {email,password} = this.state;
         if (this.validator.allValid()) {
             this.setState({loading: true});
 
-            fetch('https://api.allshak.lukaku.tech/login',{
+            fetch(BASE_URL+'/login',{
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -43,8 +47,10 @@ export default class Login extends React.Component {
                     this.setState({error: data.error,loading: false});
                     if(data.token) {
                         cookie.save('access-token', data.token,{maxAge: 31536000});
-                        this.props.history.push("/");
-                        window.location.reload(true);
+                        this.context.authenticateUser();
+                        this.setState({
+                            redirect: true
+                        })
                     }
                 }))
                 .catch(err => {
@@ -63,7 +69,14 @@ export default class Login extends React.Component {
 
     render() {
         
-        const {error,email,password,loading,rememberMe} = this.state;
+        const {error,email,password,loading,redirect} = this.state;
+        const {authenticated} = this.context;
+
+        if(authenticated || redirect) {
+            return (
+                <Redirect to={'/'} />
+            )
+        }
 
         return (
             <MDBContainer>

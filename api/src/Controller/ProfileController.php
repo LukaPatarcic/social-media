@@ -7,21 +7,29 @@ namespace App\Controller;
 use App\Entity\LikePost;
 use App\Entity\Post;
 use App\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class ProfileController
+ * @package App\Controller
+ * @IsGranted("ROLE_USER")
+ */
 class ProfileController extends BaseController
 {
     /**
      * @Route("/user", name="user_profile", methods={"GET"})
-     * @param Request $request
      * @return JsonResponse
      */
-    public function user(Request $request)
+    public function user()
     {
-        $me = $this->getApiUser($request);
+        /**
+         * User $me
+         */
+        $me = $this->getUser();
 
         $followers = $me->getFriendsWithMe()->toArray();
         $followersArray = [];

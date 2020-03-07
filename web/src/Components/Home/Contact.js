@@ -14,8 +14,7 @@ export default class About extends React.Component{
     }
 
     handleChange(e) {
-        let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
-        this.setState({[e.target.name]: value});
+        this.setState({[e.target.name]: e.target.value});
     }
 
     render() {
@@ -30,33 +29,39 @@ export default class About extends React.Component{
                                 <p className="h5 text-center mb-4">Write to us</p>
                                 <div className="grey-text">
                                     <MDBInput
-                                        label="Your name"
+                                        label="Name"
                                         icon="user"
                                         value={name}
-                                        group
+                                        onChange={this.handleChange.bind(this)}
                                         type="text"
-                                        validate
-                                        error="wrong"
-                                        success="right"
+                                        name="name"
                                     />
                                     <MDBInput
-                                        label="Your email"
+                                        label="Email"
                                         icon="envelope"
-                                        group
+                                        onChange={this.handleChange.bind(this)}
+                                        value={email}
                                         type="email"
+                                        name="email"
                                     />
                                     <MDBInput
                                         label="Subject"
                                         icon="tag"
-                                        group
+                                        value={subject}
+                                        onChange={this.handleChange.bind(this)}
+                                        name="subject"
                                         type="text"
                                     />
                                     <MDBInput
                                         type="textarea"
                                         rows="2"
-                                        label="Your message"
+                                        label="Message..."
+                                        value={message}
+                                        onChange={this.handleChange.bind(this)}
+                                        name="message"
                                         icon="pencil-alt"
                                     />
+                                    <p><small className={'float-right'}>{message.length}/120</small></p>
                                 </div>
                                 <div className="text-center">
                                     <MDBBtn outline color="red">

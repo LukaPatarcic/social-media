@@ -1,16 +1,16 @@
 import * as React from "react";
 import cookie from 'react-cookies'
-import FacebookProfile from "../Components/Facebook/FacebookProfile";
+import FacebookProfile from "../OAuth/Facebook/FacebookProfile";
 import {MDBBadge, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
-import FacebookAuthLogin from "../Components/Facebook/FacebookAuthLogin";
-import GoogleProfile from "../Components/Google/GoogleProfile";
-import GoogleAuthLogin from "../Components/Google/GoogleAuthLogin";
-import PostItem from "../Components/Post/PostItem";
-import PostCreate from "../Components/Post/PostCreate";
-import {googleData} from "../services/Google";
-import {facebookData} from "../services/Facebook";
-import Followers from "../Components/Profile/Followers";
-import Following from "../Components/Profile/Following";
+import FacebookAuthLogin from "../OAuth/Facebook/FacebookAuthLogin";
+import GoogleProfile from "../OAuth/Google/GoogleProfile";
+import GoogleAuthLogin from "../OAuth/Google/GoogleAuthLogin";
+import PostItem from "../Post/PostItem";
+import PostCreate from "../Post/PostCreate";
+import {googleData} from "../OAuth/Facebook/Google";
+import {facebookData} from "../OAuth/Facebook/Facebook";
+import Followers from "./Followers";
+import Following from "./Following";
 
 export default class FriendProfile extends React.Component{
 

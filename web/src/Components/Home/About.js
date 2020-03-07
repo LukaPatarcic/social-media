@@ -33,6 +33,7 @@ export default class About extends React.Component{
                                     'Get friend suggestions from connected social media.'
                                 }
                             />
+                            
                             <AboutListItem
                                 icon={'fas fa-chart-pie'}
                                 iconColor={'text-indigo'}

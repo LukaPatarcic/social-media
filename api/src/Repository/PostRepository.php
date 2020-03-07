@@ -39,18 +39,20 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function findFeedPosts(User $user)
+    public function findFeedPosts(User $user,$limit = 10,$offset = 0)
     {
         return $this->createQueryBuilder('p')
             ->join('p.user','u')
-            ->join('u.friends','uf','ON','uf.friend = u.id')
+//            ->join('u.friends','uf')
             ->andWhere('p.user != :id')
+//            ->andWhere('uf.friend = u.id')
             ->setParameter('id', $user->getId())
             ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
             ->getQuery()
             ->getResult()
             ;
-
     }
 
     public function findUsersPosts(User $user)

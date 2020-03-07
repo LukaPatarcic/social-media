@@ -24,12 +24,14 @@ class PostController extends BaseController
 {
     /**
      * @Route("/post", name="post_feed_list", methods={"GET"})
+     * @param Request $request
      * @return JsonResponse|Response
      */
-    public function postsFeedList()
+    public function postsFeedList(Request $request)
     {
         $user = $this->getUser();
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findFeedPosts($user);
+        $offset = $request->get('offset');
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findFeedPosts($user,10,$offset);
         $data = [];
         foreach ($posts as $k => $post) {
             $data[$k]['id'] = $post->getId();
@@ -47,11 +49,10 @@ class PostController extends BaseController
 
     /**
      * @Route("/post/{$id}", name="post_id", methods={"GET"})
-     * @param Request $request
      * @param Post $post
      * @return JsonResponse|Response
      */
-    public function postShow(Request $request, Post $post)
+    public function postShow(Post $post)
     {
         return $this->json($post,Response::HTTP_OK,[],[
 
@@ -60,12 +61,11 @@ class PostController extends BaseController
 
     /**
      * @Route("/post/user", name="post_feed", methods={"GET"})
-     * @param Request $request
      * @return JsonResponse|Response
      */
-    public function postUser(Request $request)
+    public function postUser()
     {
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
         $posts = $this->getDoctrine()->getRepository(Post::class)->findUsersPosts($user);
         $data = [];
         foreach ($posts as $k => $post) {
