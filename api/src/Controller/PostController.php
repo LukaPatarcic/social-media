@@ -30,7 +30,7 @@ class PostController extends BaseController
     public function postsFeedList(Request $request)
     {
         $user = $this->getUser();
-        $offset = $request->get('offset');
+        $offset = $request->query->getInt('offset') ?? null;
         $posts = $this->getDoctrine()->getRepository(Post::class)->findFeedPosts($user,10,$offset);
         $data = [];
         foreach ($posts as $k => $post) {

@@ -1,12 +1,9 @@
 import React from "react";
-import {MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
-import LikeButton from "./LikeButton";
 import cookie from "react-cookies";
-import TimeAgo from "react-timeago";
 import PostItem from "./PostItem";
 import {BASE_URL} from "../../Config";
-import InfiniteScroll from "react-infinite-scroll-component";
-import Loader from "react-spinners/ClipLoader";
+import debounce from "lodash.debounce";
+import {ClipLoader} from "react-spinners";
 
 export default class PostList extends React.Component{
 
@@ -15,11 +12,15 @@ export default class PostList extends React.Component{
         this.state = {
             posts: [],
             loading: false,
-            offset: 1
+            offset: 0,
+            hasMore: true
         }
+
+        // this.getPosts = this.getPosts().bind(this);
     }
 
-    componentDidMount() {
+    getPosts() {
+        this.setState({loading: true})
         const {offset} = this.state;
         fetch(BASE_URL + '/post?offset='+offset,{
             headers: {
@@ -31,22 +32,41 @@ export default class PostList extends React.Component{
         })
             .then((response => response.json()))
             .then((data => {
-                this.setState({loading: false, posts: data});
+                this.setState((prevState) => {
+                    return {
+                        loading: false,
+                        posts: prevState.posts.concat(data),
+                        offset: prevState.offset + 10,
+                        hasMore: data.length > 0
+                    }
+                });
+
             }))
             .catch(err => {
                 this.setState({error: true,loading: false});
             })
     }
 
+    componentDidMount() {
+        this.getPosts();
+        window.addEventListener('scroll', debounce(this.handleScroll.bind(this),100));
+    }
+
+    handleScroll() {
+        if(window.scrollY+window.innerHeight > document.body.offsetHeight - 200) {
+            this.getPosts();
+        }
+    }
 
     render() {
-        const {posts} = this.state;
+        const {posts,loading,hasMore} = this.state;
         return (
-            <InfiniteScroll next={this.componentDidMount} hasMore={true} loader={<Loader size={20} color={'red'} />} dataLength={posts.length}>
-                {this.state.posts.map((post,index) =>
+            <>
+                {posts.map((post,index) =>
                     <PostItem key={index} post={post} />
                 )}
-            </InfiniteScroll>
+                {hasMore ? (loading &&   <div className={'text-center mt-3'}><ClipLoader sizeUnit={"px"} size={100} color={'#f00'} loading={loading}/></div>) : <p className={'text-center text-white'}>No more posts</p>}
+            </>
         );
     }
 }
