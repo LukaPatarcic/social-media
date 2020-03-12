@@ -39,8 +39,17 @@ class Mailer
     {
         return $this->mailTemplate(
             'Forgotten Password',
-            'forgottenPassword.html.twig',
+            'emails/forgottenPassword.html.twig',
             ['email' => $email]
+        );
+    }
+
+
+    public function contactEmail(array $data)
+    {
+        return $this->mailTemplate(
+            'Contact Message',
+            'emails/contact.html.twig', $data
         );
     }
 

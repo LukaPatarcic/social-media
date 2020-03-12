@@ -12,7 +12,7 @@ export default class About extends React.Component{
         return (
             <MDBCard className={'mt-5'}>
                 <MDBCardBody>
-                    <h2>About</h2>
+                    <h2 className={'homepage'}>About</h2>
                     <MDBRow className={'mt-5'}>
                         <MDBCol lg={6} md={12} className="px-4 mt-5">
                             <AboutListItem

@@ -1,10 +1,10 @@
-h2::before {
+h2.homepage::before {
     position: absolute;
     content: "";
     height: 2px;
     width: 50px;
     background: #343a40;
     left: 50%;
-    top: 14%;
+    top: 60px;
     margin-left: -25px;
 }
