@@ -5,6 +5,7 @@ import {isMobile} from "react-device-detect";
 import SimpleReactValidator from "simple-react-validator";
 import cookie from "react-cookies";
 import {ClipLoader} from "react-spinners";
+import {BASE_URL} from "../../Config";
 
 export default class Post extends React.Component{
 
@@ -22,11 +23,11 @@ export default class Post extends React.Component{
     sendPost() {
         if (this.validator.allValid()) {
             this.setState({loading: true})
-            fetch('https://api.allshak.lukaku.tech/post',{
+            fetch(BASE_URL+'/post',{
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'X-AUTH-TOKEN': cookie.load('access-token')
+                    'Authorization': 'Bearer ' +  cookie.load('access-token')
                 },
                 method: "POST",
                 body: JSON.stringify({text: this.state.text})
@@ -80,7 +81,7 @@ export default class Post extends React.Component{
 
     render() {
         const {text,showEmojis,loading} = this.state;
-        const textColor = text.length > 180 ? 'text-danger' : 'text-dark'
+        const textColor = text.length > 180 ? 'text-danger' : 'text-dark';
         return (
             <MDBRow center className={'mt-3'}>
                 <MDBCol md={this.props.size ? this.props.size : 8} sm={12}>

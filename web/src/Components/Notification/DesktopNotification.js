@@ -11,6 +11,7 @@ import {
 import {isMobile} from "react-device-detect";
 import cookie from "react-cookies";
 import {store} from "react-notifications-component";
+import {BASE_URL} from "../../Config";
 
 export default class DesktopNotification extends React.Component{
     constructor(props) {
@@ -23,11 +24,11 @@ export default class DesktopNotification extends React.Component{
 
     getNotifications() {
         this.setState({loading: false});
-        fetch('https://api.allshak.lukaku.tech/friend/request',{
+        fetch(BASE_URL+'/friend/request',{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': cookie.load('access-token')
+                'Authorization': 'Bearer ' +  cookie.load('access-token')
             },
             method: "GET",
         })

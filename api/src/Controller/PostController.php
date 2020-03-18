@@ -54,9 +54,7 @@ class PostController extends BaseController
      */
     public function postShow(Post $post)
     {
-        return $this->json($post,Response::HTTP_OK,[],[
-
-        ]);
+        return $this->json($post,Response::HTTP_OK);
     }
 
     /**
@@ -93,7 +91,7 @@ class PostController extends BaseController
     public function postsAdd(Request $request)
     {
         $data = json_decode($request->getContent(),true);
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
 
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);

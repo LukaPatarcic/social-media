@@ -1,6 +1,7 @@
 import React from "react";
-import {MDBBadge, MDBBtn, MDBCol, MDBIcon, MDBTooltip} from "mdbreact";
+import {MDBBtn, MDBIcon, MDBTooltip} from "mdbreact";
 import cookie from "react-cookies";
+import {BASE_URL} from "../../Config";
 
 export default class LikeButton extends React.Component{
     constructor(props) {
@@ -16,11 +17,11 @@ export default class LikeButton extends React.Component{
     }
 
     handleLike() {
-        fetch('https://api.allshak.lukaku.tech/like/post',{
+        fetch(BASE_URL + '/like/post',{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': cookie.load('access-token')
+                'Authorization': 'Bearer ' + cookie.load('access-token')
             },
             method: this.state.heartClicked ? 'POST' : 'DELETE',
             body: JSON.stringify({id: this.props.postId})

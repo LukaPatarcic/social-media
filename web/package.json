@@ -21,6 +21,7 @@
     "react-check-auth": "^0.2.0-alpha.2",
     "react-cookie-consent": "^2.5.0",
     "react-cookies": "^0.1.1",
+    "react-debounce-input": "^3.2.2",
     "react-device-detect": "^1.11.14",
     "react-dom": "^16.11.0",
     "react-facebook-login": "^4.1.1",
@@ -34,9 +35,12 @@
     "react-select": "^3.0.8",
     "react-spinners": "^0.6.1",
     "react-timeago": "^4.4.0",
+    "react-toast-notifications": "^2.4.0",
     "reactjs-autobahn": "^1.8.13",
+    "reactjs-toastr": "^1.1.0",
     "simple-react-validator": "^1.3.2",
     "superagent": "^5.2.2",
+    "toastr": "^2.1.4",
     "yup": "^0.27.0"
   },
   "scripts": {

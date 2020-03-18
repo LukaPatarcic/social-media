@@ -3,6 +3,8 @@ import {MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBIcon, MDBInput, MDBRow} from "m
 import {BASE_URL} from "../../Config";
 import SimpleReactValidator from "simple-react-validator";
 import {ClipLoader} from "react-spinners";
+import toastr from 'toastr/build/toastr.min'
+import 'toastr/build/toastr.min.css'
 
 export default class About extends React.Component{
     constructor(props) {
@@ -23,8 +25,8 @@ export default class About extends React.Component{
     submitHandler(e) {
         e.preventDefault();
         const {name,email,subject,message} = this.state;
-        this.setState({loading: true});
         if (this.validator.allValid()) {
+            this.setState({loading: true});
             fetch(BASE_URL+'/contact',{
                 headers: {
                     'Accept': 'application/json',
@@ -36,6 +38,7 @@ export default class About extends React.Component{
                 .then(response => response.json())
                 .then(data => {
                     if(data.success) {
+                        toastr.success('Mail sent successfully!');
                         this.setState({
                             name: '',
                             email: '',
@@ -60,6 +63,7 @@ export default class About extends React.Component{
 
     render() {
         const {name,email,subject,message,loading} = this.state;
+
         return (
             <MDBCard className={'mt-5'}>
                 <MDBCardBody>
@@ -125,12 +129,14 @@ export default class About extends React.Component{
                                     >
                                         {loading
                                             ?
+                                            <>
                                             <ClipLoader
                                                 sizeUnit={"px"}
                                                 size={20}
                                                 color={'#f00'}
                                                 loading={loading}
                                             />
+                                            </>
                                             :
                                             <>Send <MDBIcon far icon="paper-plane" className="ml-1" /></>
                                         }

@@ -12,6 +12,9 @@ import {
 import cookie from 'react-cookies'
 import {ClipLoader} from "react-spinners";
 import FriendItem from "./FriendItem";
+import {BASE_URL} from "../../Config";
+import {DebounceInput} from 'react-debounce-input';
+
 
 export default class Search extends Component {
 
@@ -47,7 +50,7 @@ export default class Search extends Component {
             return;
         }
 
-        let url = new URL('https://api.allshak.lukaku.tech/search');
+        let url = new URL(BASE_URL+'/search');
         let params = {search:q};
         url.search = new URLSearchParams(params).toString();
 
@@ -55,7 +58,7 @@ export default class Search extends Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': cookie.load('access-token')
+                'Authorization': 'Bearer ' + cookie.load('access-token')
             },
             signal: signal,
             method: "GET",
@@ -73,7 +76,6 @@ export default class Search extends Component {
 
             }))
             .catch(err => {
-                console.log(err);
                 this.setState({error: 'Oops... Something went wrong!',loading: false});
             })
     }
@@ -93,12 +95,26 @@ export default class Search extends Component {
                     <MDBModalHeader toggle={this.toggle}>Search for friends</MDBModalHeader>
                     <MDBModalBody className={'text-center'}>
                         <span className={'text-left'}>
-                            <MDBInput
-                                label="Search for friends"
-                                icon="search"
-                                name={'q'}
-                                onChange={(e) => this.handleChange(e)}
-                                value={this.state.q} />
+                            <DebounceInput
+                                type="text"
+                                onChange={this.handleChange}
+                                placeholder="Name"
+                                debounceTimeout={400}
+                                value={this.state.q}
+                                className="user-name" />
+                            {/*<DebounceInput*/}
+                            {/*    element={*/}
+                            {/*        <MDBInput*/}
+                            {/*            label="Search for friends"*/}
+                            {/*            icon="search"*/}
+                            {/*            name={'q'}*/}
+                            {/*        />*/}
+                            {/*        }*/}
+                            {/*    debounceTimeout={400}*/}
+                            {/*    onChange={(e) => this.handleChange(e)}*/}
+                            {/*    value={this.state.q}*/}
+                            {/*/>*/}
+
                         </span>
                         {loading
                             ?

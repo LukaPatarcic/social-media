@@ -6,6 +6,7 @@ use App\Entity\LikePost;
 use App\Entity\Post;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +23,7 @@ class LikePostController extends BaseController
      */
     public function likeAdd(Request $request)
     {
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
         $id = json_decode($request->getContent(),true);
         if(!isset($id['id'])) {
             return $this->json([],Response::HTTP_BAD_REQUEST);
@@ -48,10 +49,12 @@ class LikePostController extends BaseController
 
     /**
      * @Route("/like/post", name="like_post_delete", methods={"DELETE"})
+     * @param Request $request
+     * @return JsonResponse
      */
     public function likeDelete(Request $request)
     {
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
         $id = json_decode($request->getContent(),true);
         if(!isset($id['id'])) {
             return $this->json([],Response::HTTP_BAD_REQUEST);

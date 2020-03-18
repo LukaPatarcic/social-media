@@ -24,13 +24,12 @@ class FriendRequestController extends BaseController
 {
     /**
      * @Route("/friend/request", name="friend_request_list", methods={"GET"})
-     * @param Request $request
      * @return JsonResponse
      */
-    public function listFriendRequests(Request $request)
+    public function listFriendRequests()
     {
         /** @var User $user */
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
         /** @var FriendshipRequest $requests */
         $requests = $this->getDoctrine()->getRepository(FriendshipRequest::class)->findUsersFriends($user);
 
@@ -49,7 +48,7 @@ class FriendRequestController extends BaseController
     public function addFriendRequest(Request $request)
     {
         /** @var User $user */
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
         $data = json_decode($request->getContent(),true);
         $friend = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $data['id']]);
         $friendship = new FriendshipRequest();

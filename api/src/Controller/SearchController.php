@@ -21,7 +21,7 @@ class SearchController extends BaseController
      */
     public function index(Request $request)
     {
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
         $data = $request->query->get('search');
 
         $q = $this->getDoctrine()->getRepository(User::class)->findByQuery($data,$user);
