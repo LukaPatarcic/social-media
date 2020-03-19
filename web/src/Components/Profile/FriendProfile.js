@@ -1,16 +1,10 @@
 import * as React from "react";
 import cookie from 'react-cookies'
-import FacebookProfile from "../OAuth/Facebook/FacebookProfile";
-import {MDBBadge, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
-import FacebookAuthLogin from "../OAuth/Facebook/FacebookAuthLogin";
-import GoogleProfile from "../OAuth/Google/GoogleProfile";
-import GoogleAuthLogin from "../OAuth/Google/GoogleAuthLogin";
+import {MDBBadge, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import PostItem from "../Post/PostItem";
-import PostCreate from "../Post/PostCreate";
-import {googleData} from "../OAuth/Facebook/Google";
-import {facebookData} from "../OAuth/Facebook/Facebook";
 import Followers from "./Followers";
 import Following from "./Following";
+import {BASE_URL} from "../../Config";
 
 export default class FriendProfile extends React.Component{
 
@@ -35,11 +29,11 @@ export default class FriendProfile extends React.Component{
 
     getUser() {
         this.setState({loading: true});
-        fetch('https://api.allshak.lukaku.tech/search/user/' + this.state.username,{
+        fetch(BASE_URL+'/search/user/' + this.state.username,{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': cookie.load('access-token')
+                'Authorization': 'Bearer ' + cookie.load('access-token')
             },
             method: "GET"
         })
@@ -67,10 +61,6 @@ export default class FriendProfile extends React.Component{
 
     componentDidMount() {
         this.getUser();
-
-        if(!cookie.load('access-token')) {
-            this.props.history.push('/login')
-        }
     }
 
     render() {
@@ -78,7 +68,7 @@ export default class FriendProfile extends React.Component{
         const {loading,error} = this.state;
 
         if(error) {
-            this.props.history.push('/notfound')
+            this.props.history.push('/notfound');
             return (
                 <></>
             )

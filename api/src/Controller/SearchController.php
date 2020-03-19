@@ -70,17 +70,16 @@ class SearchController extends BaseController
 
     /**
      * @Route("/search/user/{profileName}", name="search_user")
-     * @param Request $request
      * @param string $profileName
      * @return JsonResponse
      */
-    public function searchForUser(Request $request, string $profileName)
+    public function searchForUser( string $profileName)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['profileName' => $profileName]);
         if(!$user) {
             return  $this->json([],Response::HTTP_NOT_FOUND);
         }
-        $me = $this->getApiUser($request);
+        $me = $this->getUser();
 
         $followers = $user->getFriendsWithMe()->toArray();
         $followersArray = [];

@@ -7,13 +7,13 @@ import {
     MDBModalHeader,
     MDBModalFooter,
     MDBIcon,
-    MDBInput, MDBRow, MDBTooltip
+    MDBInput
 } from 'mdbreact';
 import cookie from 'react-cookies'
 import {ClipLoader} from "react-spinners";
 import FriendItem from "./FriendItem";
 import {BASE_URL} from "../../Config";
-import {DebounceInput} from 'react-debounce-input';
+import { debounce } from "throttle-debounce";
 
 
 export default class Search extends Component {
@@ -30,6 +30,11 @@ export default class Search extends Component {
 
         this.toggle = this.toggle.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeDebounce = debounce(200,this.search);
+    }
+
+    search = qq => {
+        this.getFriends()
     }
 
     toggle() {
@@ -82,7 +87,7 @@ export default class Search extends Component {
 
     handleChange(e) {
         this.setState({ [e.target.name] : e.target.value },() => {
-            this.getFriends(true);
+            this.handleChangeDebounce(this.state.q);
         });
     }
 
@@ -95,26 +100,13 @@ export default class Search extends Component {
                     <MDBModalHeader toggle={this.toggle}>Search for friends</MDBModalHeader>
                     <MDBModalBody className={'text-center'}>
                         <span className={'text-left'}>
-                            <DebounceInput
-                                type="text"
-                                onChange={this.handleChange}
-                                placeholder="Name"
-                                debounceTimeout={400}
+                            <MDBInput
+                                label="Search for friends"
+                                icon="search"
                                 value={this.state.q}
-                                className="user-name" />
-                            {/*<DebounceInput*/}
-                            {/*    element={*/}
-                            {/*        <MDBInput*/}
-                            {/*            label="Search for friends"*/}
-                            {/*            icon="search"*/}
-                            {/*            name={'q'}*/}
-                            {/*        />*/}
-                            {/*        }*/}
-                            {/*    debounceTimeout={400}*/}
-                            {/*    onChange={(e) => this.handleChange(e)}*/}
-                            {/*    value={this.state.q}*/}
-                            {/*/>*/}
-
+                                onChange={this.handleChange}
+                                name={'q'}
+                            />
                         </span>
                         {loading
                             ?
@@ -126,24 +118,23 @@ export default class Search extends Component {
                             />
                             :
                             (error
-                                    ?
-                                    error
-                                    :
-                                    (searchQuery.length ?
-                                            searchQuery.map((value, index) =>
-                                                <FriendItem
-                                                    key={index}
-                                                    friend={value}
-                                                    change={this.state.change}
-                                                    toggle={this.toggle.bind(this)}
-                                                    getFriends={this.getFriends.bind(this)}
-                                                />
+                                ?
+                                error
+                                :
+                                (searchQuery.length ?
+                                    searchQuery.map((value, index) =>
+                                        <FriendItem
+                                            key={index}
+                                            friend={value}
+                                            change={this.state.change}
+                                            toggle={this.toggle.bind(this)}
+                                            getFriends={this.getFriends.bind(this)}
+                                        />
 
-                                            )
-                                            :
-                                            <p>No results...</p>
                                     )
-
+                                    :
+                                    <p>No results...</p>
+                                )
                             )
                         }
                     </MDBModalBody>

@@ -32,6 +32,8 @@ export default class Profile extends React.Component{
             hasFacebookAccount: false,
             loading: false
         }
+
+        document.title = 'Allshack | Profile'
     }
 
     getUser() {
@@ -40,7 +42,7 @@ export default class Profile extends React.Component{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': cookie.load('access-token')
+                'Authorization': 'Bearer ' + cookie.load('access-token')
             },
             method: "GET"
         })

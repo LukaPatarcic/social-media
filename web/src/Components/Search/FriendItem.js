@@ -2,9 +2,12 @@ import React from "react";
 import {MDBBadge, MDBBtn, MDBCol, MDBIcon, MDBRow} from "mdbreact";
 import cookie from "react-cookies";
 import {ClipLoader} from "react-spinners";
-import ReactNotification from 'react-notifications-component'
 import { store } from 'react-notifications-component';
 import {Link} from "react-router-dom";
+import {BASE_URL} from "../../Config";
+import toastr from 'toastr/build/toastr.min'
+
+import 'toastr/build/toastr.min.css'
 export default class FriendItem extends React.Component{
     constructor(props) {
         super(props);
@@ -19,11 +22,11 @@ export default class FriendItem extends React.Component{
 
     sendFriendRequest(e) {
         this.setState({loading: true});
-        fetch('https://api.allshak.lukaku.tech/friend/request',{
+        fetch(BASE_URL+'/friend/request',{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': cookie.load('access-token')
+                'Authorization': 'Bearer ' + cookie.load('access-token')
             },
             method: "POST",
             body: JSON.stringify({id: e.currentTarget.id})
@@ -34,36 +37,12 @@ export default class FriendItem extends React.Component{
                 this.props.getFriends();
                 if(data.error) {
                     this.setState({error: true})
-                    store.addNotification({
-                        title: "Hold up!",
-                        message: "Friend request already sent!",
-                        type: "danger",
-                        insert: "bottom",
-                        container: "bottom-right",
-                        animationIn: ["animated", "fadeIn"],
-                        animationOut: ["animated", "fadeOut"],
-                        dismiss: {
-                            duration: 5000,
-                            onScreen: true
-                        }
-                    });
+                    toastr.info('Friend request already sent!');
                 }
             }))
             .catch(err => {
                 this.setState({error: true,loading: false});
-                store.addNotification({
-                    title: "Hold up!",
-                    message: "Friend request already sent!",
-                    type: "danger",
-                    insert: "bottom",
-                    container: "bottom-right",
-                    animationIn: ["animated", "fadeIn"],
-                    animationOut: ["animated", "fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
-                });
+                toastr.info('Friend request already sent!');
             })
     }
 
@@ -88,9 +67,7 @@ export default class FriendItem extends React.Component{
                             size={'sm'}
                             id={friend.id}
                             outline={'true'}
-                            onClick={(e) =>{
-                                this.sendFriendRequest(e)
-                            }}>
+                            onClick={this.sendFriendRequest.bind(this)}>
                             {loading ?
                                 <ClipLoader
                                     sizeUnit={"px"}
@@ -101,13 +78,11 @@ export default class FriendItem extends React.Component{
                                 :
                                 (friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))
                             }
-
                         </MDBBtn>
                         <div className={'clearfix'}></div>
                     </MDBCol>
                 </MDBRow>
                 <hr/>
-                {/*{error && <ReactNotification />}*/}
             </>
         )
     }
