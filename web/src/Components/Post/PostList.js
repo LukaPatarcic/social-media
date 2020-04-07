@@ -15,8 +15,6 @@ export default class PostList extends React.Component{
             offset: 0,
             hasMore: true
         }
-
-        // this.getPosts = this.getPosts().bind(this);
     }
 
     getPosts() {
@@ -37,7 +35,7 @@ export default class PostList extends React.Component{
                         loading: false,
                         posts: prevState.posts.concat(data),
                         offset: prevState.offset + 10,
-                        hasMore: data.length > 0
+                        hasMore: typeof data !== 'undefined'
                     }
                 });
 

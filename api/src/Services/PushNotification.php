@@ -57,10 +57,11 @@ class PushNotification
     public function setBody($message)
     {
         $this->fields['notification']['body'] = $message;
-        $this->fields['notification']['action'] = ['Accept','Decline'];
         $this->fields['notification']['icon'] = 'notification_icon';
         $this->fields['notification']['color'] = '#ff0000';
-        $this->fields['notification']['actions'] = '["Yes", "No"]';
+        $this->fields['notification']['click_action'] = 'OPEN_ACTIVITY_1';
+        $this->fields['notification']['data'] = ['main_picture' => 'https://allshack.lukaku.tech/images/logo.png'];
+//        $this->fields['notification']['image'] = 'https://allshack.lukaku.tech/images/logo.png';
 
         return $this;
     }

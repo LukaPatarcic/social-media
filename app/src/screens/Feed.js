@@ -4,16 +4,13 @@ import {
     StyleSheet,
     ImageBackground,
     ScrollView,
-    Modal,
-    TextInput, Text, ToastAndroid, ActivityIndicator,
+    ActivityIndicator,
 } from 'react-native';
-import {FAB} from 'react-native-paper';
 import AsyncStorage from "@react-native-community/async-storage";
 import PostItem from "../components/PostItem";
-import {Button} from "react-native-elements";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import AddPost from "../components/AddPost";
 import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.android";
+import {BASE_URL} from "../config";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -31,16 +28,16 @@ export default class Profile extends React.Component {
     getPosts(refreshing = false) {
         AsyncStorage.getItem('access-token', (err, val) => {
             if (!val) {
-                this.props.history.push('/login');
+                // this.props.history.push('/login');
             } else {
                 if(!refreshing) {
                     this.setState({loading:true})
                 }
-                fetch('https://api.allshak.lukaku.tech/post',{
+                fetch(BASE_URL+'/post',{
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'X-AUTH-TOKEN': val
+                        'Authorization': 'Bearer '+ val
                     },
                     method: "GET"
                 })
@@ -63,22 +60,23 @@ export default class Profile extends React.Component {
         const {posts,loading} = this.state;
         return (
             <ImageBackground
-                style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
-                source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
-                        {loading
-                            ?
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',position: 'absolute', width: '100%', height: '100%'}}>
-                                <ActivityIndicator size={70} color="#f00" />
-                            </View>
-                            :
-                            <PTRViewAndroid onRefresh={() => this.getPosts(true)}>
-                                <ScrollView style={{paddingHorizontal: 20, paddingTop: 20}}>
-                                {posts.map((post,index) =>
-                                    <PostItem post={post} key={index} />
-                                )}
-                                </ScrollView>
-                            </PTRViewAndroid>
-                        }
+                style={{width: '100%', height: '100%'}}
+                source={require('../../assets/images/background-01.png')}
+            >
+                {loading
+                    ?
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',position: 'absolute', width: '100%', height: '100%'}}>
+                        <ActivityIndicator size={70} color="#f00" />
+                    </View>
+                    :
+                    <PTRViewAndroid onRefresh={() => this.getPosts(true)}>
+                        <ScrollView style={{paddingHorizontal: 20, paddingTop: 20}}>
+                        {posts.map((post,index) =>
+                            <PostItem post={post} key={index} />
+                        )}
+                        </ScrollView>
+                    </PTRViewAndroid>
+                }
                 <AddPost />
             </ImageBackground>
         );

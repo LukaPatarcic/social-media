@@ -1,11 +1,18 @@
-import React from 'react';
-import {Button, StyleSheet, ActivityIndicator, View, TouchableOpacity,} from 'react-native';
-import { Item, Input, Icon, Card, Content, Text, ListItem, Body } from 'native-base';
-import { Checkbox } from 'react-native-paper';
+import React, { useContext } from 'react';
+import {
+    StyleSheet,
+    ActivityIndicator,
+    View,
+    TouchableOpacity,
+    ImageBackground, ScrollView,
+} from 'react-native';
+import {Card, HelperText, Paragraph, Snackbar, Text, TextInput, Title} from 'react-native-paper'
 import AsyncStorage from "@react-native-community/async-storage";
-import {CheckBox} from "react-native-elements";
+import {BASE_URL} from "../config";
+import {AuthContext} from "../context/AuthProvider";
 
 export default class Login extends React.Component {
+
     constructor(props) {
         super(props);
 
@@ -13,94 +20,184 @@ export default class Login extends React.Component {
             email: '',
             password: '',
             error: '',
-            token: '',
+            errorEmail: false,
+            errorEmailMessage: '',
+            errorPassword: false,
+            errorPasswordMessage: '',
+            token: false,
             notificationKey: '',
             loading: false,
+            visible: false
         };
         AsyncStorage.getItem('notification-key', (err,val) => {
             this.setState({notificationKey:val})
         });
+
+        this.emailRef = React.createRef();
+        this.passwordRef = React.createRef();
+
     }
 
     onLogin() {
-        const { email, password, error, rememberMe,notificationKey } = this.state;
-        console.log(JSON.stringify({email,password,notificationKey}));
-        if(email === '' || password === '') {
+        const { email, password, error, notificationKey, errorPassword, errorEmail } = this.state;
+        this.setState({errorEmail: false,errorPassword: false,errorPasswordMessage: '',errorEmailMessage: '',error: ''});
+        let formHasError = false;
+
+        if(password.trim() === '') {
             this.setState({
-                error: 'Please enter all fields'
-            })
-        } else {
-            this.setState({loading: true});
-            fetch('https://api.allshak.lukaku.tech/login',{
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: "POST",
-                body: JSON.stringify({email,password,notificationKey})
-            })
-                .then((response => response.json()))
-                .then((data => {
-                    this.setState({error: data.error,loading: false});
-                    if(data.token) {
-                        AsyncStorage.setItem('access-token',data.token);
-                        this.props.history.push('/user')
-                    }
-                }))
-                .catch(err => {
-                    this.setState({error: 'Oops... Something went wrong!',loading: false});
-                })
+                errorPassword: password.trim().length < 1,
+                errorPasswordMessage: 'Please enter password field'
+            });
+            formHasError = true;
         }
+        const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(email) === false){
+            this.setState({
+                errorEmail: true,
+                errorEmailMessage: 'Email address is invalid'
+            });
+            formHasError = true;
+        }
+
+        if(formHasError) {
+            return;
+        }
+
+        this.setState({loading: true});
+        fetch(BASE_URL+'/login',{
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({email,password,notificationKey})
+        })
+            .then((response => response.json()))
+            .then((data => {
+                this.setState({error: data.error,loading: false});
+                if(data.token) {
+                    console.log('here');
+                    AsyncStorage.setItem('access-token',data.token);
+                    this.setState({token: true})
+                }
+                if(data.error === 'Invalid password') {
+                    this.passwordRef.current.focus();
+                } else {
+                    this.emailRef.current.focus();
+                }
+            }))
+            .catch(err => {
+                this.setState({error: 'Oops... Something went wrong!',loading: false});
+            })
 
     }
 
     render() {
-        const {error,email,password,token,loading,rememberMe} = this.state;
-        const {history} = this.props;
-        const colorValue = 'red'
-        const color = error === 'Success' ? 'green' : 'red';
-        return (
-            <View style={styles.container}>
-                <Card style={{padding: 50}}>
-                    <Text style={{textAlign: 'center',fontSize: 40,marginBottom: 20,fontFamily: "font"}}>Login</Text>
-                    <Item>
-                        <Icon active name='mail' />
-                        <Input
-                            value={email}
-                            onChangeText={(email) => this.setState({ email })}
-                            placeholder={'Email'}
-                            autoCompleteType={'email'}
-                            style={{fontFamily: "font"}}
-                        />
-                    </Item>
-                    <Item>
-                        <Icon active name='lock' />
-                        <Input
-                            value={password}
-                            onChangeText={(password) => this.setState({ password })}
-                            placeholder={'Password'}
-                            secureTextEntry={true}
-                            style={{fontFamily: "font"}}
-                        />
-                    </Item>
-                    <Text style={{color: color,fontFamily: "font"}}>
-                        {error ? error : ''}
-                    </Text>
+        const {error,email,password,loading,token,focusPasswordInput,errorPassword,errorEmail,errorEmailMessage,errorPasswordMessage} = this.state;
 
-                    {loading
-                        ?
-                        <ActivityIndicator size="small" color="#f00" />
-                        :
-                        <TouchableOpacity
-                            style={styles.btn}
-                            onPress={this.onLogin.bind(this)}
-                        >
-                            <Text style={styles.btnText}>Login</Text>
-                        </TouchableOpacity>
-                    }
-                    <Text style={{marginTop: 20,fontFamily: "font"}}>Don't have an account? <Text style={{color:'red',fontFamily: "font"}} onPress={() => history.push('/register')}>Register now!</Text></Text>
-                </Card>
-            </View>
+        return (
+            <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../../assets/images/background-01.png')}
+            >
+                <AuthContext.Consumer>
+                    {(context) => {
+                        if(token) {
+                            context.setIsAuth();
+                        }
+                    }}
+                </AuthContext.Consumer>
+
+                <ScrollView scrollEnabled={true} contentContainerStyle={{flex: 1,alignContent: 'center',justifyContent: 'center'}}>
+                    <Card style={{marginHorizontal: 10}}>
+                        <Card.Content>
+                            <Title style={{textAlign: 'center',fontFamily: 'font',fontSize: 30,marginBottom: 20,paddingTop: 20}}>Login</Title>
+                            <TextInput
+                                ref={this.emailRef}
+                                mode={'outlined'}
+                                label='Email'
+                                error={errorEmail}
+                                value={email}
+                                selectionColor={'red'}
+                                underlineColor={'red'}
+                                theme={{ fonts: {font: 'font'}, colors: { primary: 'red',underlineColor:'transparent',}}}
+                                autoCompleteType={'email'}
+                                keyboardType={'email-address'}
+                                onSubmitEditing={() =>  this.passwordRef.current.focus()}
+                                autoCapitalize={'none'}
+                                returnKeyType={'next'}
+                                blurOnSubmit={false}
+                                style={{fontSize: 20}}
+                                onChangeText={email => this.setState({ email })}
+                            />
+                            <HelperText
+                                type="error"
+                                visible={errorEmail}
+                            >
+                                {errorEmailMessage}
+                            </HelperText>
+
+                            <TextInput
+                                ref={this.passwordRef}
+                                selectionColor={'red'}
+                                underlineColor={'red'}
+                                error={errorPassword}
+                                theme={{ colors: { primary: 'red',underlineColor:'transparent'}}}
+                                secureTextEntry={true}
+                                blurOnSubmit={false}
+                                mode={'outlined'}
+                                focus={focusPasswordInput}
+                                label='Password'
+                                value={password}
+                                style={{fontSize: 20}}
+                                returnKeyType={'send'}
+                                onSubmitEditing={() =>  this.onLogin()}
+                                onChangeText={password => this.setState({ password })}
+                            />
+                            <HelperText
+                                type="error"
+                                visible={errorPassword}
+                            >
+                                {errorPasswordMessage}
+                            </HelperText>
+
+                            {error ?
+                                <View style={{
+                                    position: 'relative',
+                                    paddingHorizontal: 20,
+                                    paddingVertical: 10,
+                                    marginBottom: 10,
+                                    borderWidth: 1,
+                                    borderRadius: 2,
+                                    color: '#721c24',
+                                    textAlign: 'center',
+                                    backgroundColor: '#f8d7da',
+                                    borderColor: '#f5c6cb'}}
+                                >
+                                    <Text style={{textAlign: 'center',fontFamily: 'font'}}>{error}</Text>
+                                </View>
+                                : null
+                            }
+
+                                <TouchableOpacity
+                                    style={styles.btn}
+                                    activeOpacity={0.76}
+                                    onPress={this.onLogin.bind(this)}
+                                >
+                                    {
+                                        loading
+                                        ?
+                                        <ActivityIndicator size="small" color="#fff" />
+                                        :
+                                        <Text style={styles.btnText}>Login</Text>
+                                    }
+                                </TouchableOpacity>
+                            <Text style={{marginTop: 20,fontFamily: "font",textAlign: 'center'}}>Don't have an account? <Text style={{color:'red',fontFamily: "font"}} onPress={() => this.props.navigation.navigate('Register')}>Register now!</Text></Text>
+                        </Card.Content>
+                    </Card>
+                </ScrollView>
+
+            </ImageBackground>
         );
     }
 }
@@ -122,10 +219,10 @@ const styles = StyleSheet.create({
     },
     btn: {
         backgroundColor: '#f00',
-        width: 300,
         height: 44,
         padding: 10,
         borderRadius: 2,
+        marginTop: 35,
         marginBottom: 10,
         fontFamily: "font"
     },

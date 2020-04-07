@@ -2,16 +2,16 @@ import React from 'react';
 import {View, StyleSheet, ImageBackground, Alert, TouchableOpacity, ScrollView, ActivityIndicator,} from 'react-native';
 import { Text } from 'native-base';
 import AsyncStorage from "@react-native-community/async-storage";
-import FacebookLogin from "../components/FacebookLogin";
+// import FacebookLogin from "../components/FacebookLogin";
 import {Avatar, Card, IconButton, Paragraph} from 'react-native-paper';
 import {Button} from "react-native-elements";
-import { Redirect } from "react-router-native";
-import RNRestart from 'react-native-restart';
 import PostItem from "../components/PostItem";
 import TimeAgo from "react-native-timeago";
 import LikeButton from "../components/LikeButton";
 import AddPost from "../components/AddPost";
 import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.android";
+import {BASE_URL} from "../config";
+import {AuthContext} from "../context/AuthProvider";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -25,7 +25,8 @@ export default class Profile extends React.Component {
             },
             token: null,
             redirect: false,
-            loading: false
+            loading: false,
+            logout: false
         }
     }
 
@@ -43,7 +44,7 @@ export default class Profile extends React.Component {
     getUserData(token) {
 
         this.setState({loading: true});
-        fetch('https://api.allshak.lukaku.tech/user',{
+        fetch(BASE_URL+'/user',{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -63,22 +64,26 @@ export default class Profile extends React.Component {
    logout() {
        AsyncStorage.getItem('notification-key', (err, val) => {
            if (!val) {
-               // this.props.history.push('/login');
+               this.setState({logout:true})
+               AsyncStorage.removeItem('access-token');
+               console.log('here')
            } else {
-               fetch('https://api.allshak.lukaku.tech/logout/android',{
+               console.log('here2')
+               fetch(BASE_URL+'/logout/android',{
                    headers: {
                        'Accept': 'application/json',
                        'Content-Type': 'application/json',
-                       'X-AUTH-TOKEN': this.state.token
+                       'Authorization': 'Bearer '+ this.state.token
                    },
                    method: "POST",
                    body: JSON.stringify({phone: val})
                })
                    .then((response => response.json()))
                    .then((data => {
+                       console.log(data);
+                       this.setState({logout:true})
                        AsyncStorage.removeItem('access-token');
                        AsyncStorage.removeItem('notification-key');
-                       RNRestart.Restart();
                    }))
                    .catch(err => {
                        this.setState({error: true,loading: false});
@@ -89,13 +94,14 @@ export default class Profile extends React.Component {
 
     render() {
         const {user,posts,followers,following} = this.state.userData;
-        const {loading} = this.state;
+        const {loading,logout} = this.state;
 
         if(loading) {
             return (
                 <ImageBackground
-                    style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
-                    source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
+                    style={{width: '100%', height: '100%'}}
+                    source={require('../../assets/images/background-01.png')}
+                >
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',position: 'absolute', width: '100%', height: '100%'}}>
                         <ActivityIndicator color={'red'} size={100} />
                     </View>
@@ -105,16 +111,24 @@ export default class Profile extends React.Component {
 
         return (
             <ImageBackground
-                style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
-                source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
+                style={{width: '100%', height: '100%'}}
+                source={require('../../assets/images/background-01.png')}
+            >
                 <PTRViewAndroid onRefresh={() => this.getUserData(this.state.token)}>
+                    <AuthContext.Consumer>
+                        {(context) => {
+                            if(logout) {
+                                context.setIsAuth();
+                            }
+                        }}
+                    </AuthContext.Consumer>
                     <ScrollView>
                         <Card style={{marginVertical: 30,fontFamily: 'font'}}>
                             <Card.Title subtitleStyle={{fontFamily: 'font'}} titleStyle={{fontFamily: 'font'}}  title={user.profileName} subtitle={user.firstName + " " + user.lastName} left={(props) =><Avatar.Image size={50} source={{uri: 'https://i.pinimg.com/originals/53/3c/18/533c18ff0df87fbbdf58b11e0048a199.jpg'}}/>} />
                             <Card.Content>
                                 <View style={{flex: 1, flexDirection: 'row', alignContent: 'flex-start'}}>
                                     <View style={{marginRight: 10, justifyContent: 'center'}}>
-                                        <FacebookLogin/>
+                                        {/*<FacebookLogin/>*/}
                                     </View>
                                     <View>
                                         <TouchableOpacity

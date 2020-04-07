@@ -1,171 +1,132 @@
 import React from 'react';
-import {Card, Item, Input} from 'native-base';
-import {ActivityIndicator, Button, ScrollView, StyleSheet, Text, TouchableOpacity} from "react-native";
+import {
+    ActivityIndicator,
+    ImageBackground,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
+import {Card, HelperText, TextInput, Title} from "react-native-paper";
+import {styles} from "../style/Registration";
 
 export default class Register extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             firstName: '',
+            errorFirstName: false,
+            errorFirstNameMessage: '',
             lastName: '',
-            profileName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-            error: '',
-            serverError: [],
-            loading: ''
+            errorLastName: false,
+            errorLastNameMessage: '',
         }
+
+        this.firstNameRef = React.createRef();
+        this.lastNameRef = React.createRef();
+        this.onNextPress = this.onNextPress.bind(this)
 
     }
 
-    onRegister() {
-        const {firstName,lastName,email,profileName,password,confirmPassword,error,loading} = this.state;
-        this.setState({loading: true});
-        let json = {firstName,lastName,profileName,email,'password' :{'first':password,'second':confirmPassword}};
-        fetch('https://api.allshak.lukaku.tech/register', {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify(json)
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    this.setState({
-                        serverError: data.error,
-                        loading: false
-                    })
+    onNextPress() {
+        const {firstName,lastName} = this.state;
+        this.setState({errorFirstName: false, errorFirstNameMessage: '', errorLastName: false, errorLastNameMessage: '', error: ''});
+        let error = false;
+        if(firstName.trim().length < 1) {
+            this.setState({errorFirstName: true, errorFirstNameMessage: 'Please enter your first name'})
+            error = true;
+        }
 
-                } else if (data.success) {
-                    this.setState({
-                        successMessage: 'A verification email has been sent to your account',
-                        firstName: '',
-                        lastName: '',
-                        profileName: '',
-                        email: '',
-                        password: '',
-                        confirmPassword: '',
-                        serverError: [],
-                        loading: false
-                    })
-                }
-            })
-            .catch(error => {
-                this.setState({
-                    serverError: ['Oops something went wrong try again later...'],
-                    loading: false
-                })
-            })
+        if(firstName.trim().length > 50) {
+            this.setState({errorFirstName: true, errorFirstNameMessage: 'First name cannot be longer than 50 characters'})
+            error = true;
+        }
+
+        if(lastName.trim().length < 1) {
+            this.setState({errorLastName: true, errorLastNameMessage: 'Please enter your last name'})
+            error = true;
+        }
+
+        if(lastName.trim().length > 50) {
+            this.setState({errorLastName: true, errorLastNameMessage: 'Last name cannot be longer than 50 characters'})
+            error = true;
+        }
+
+        if(error)
+            return;
+
+        this.props.navigation.navigate('RegisterTwo', {name: {firstName,lastName}})
     }
 
     render() {
-        const {history} = this.props;
-        const {firstName,lastName,email,profileName,password,confirmPassword,error,loading,serverError} = this.state;
+
         return (
-            <Card style={{padding: 50}}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <Text style={{textAlign: 'center',fontFamily: 'font',fontSize: 40,marginBottom: 20}}>Register</Text>
-                    <Item>
-                        <Input
-                            value={firstName}
-                            onChangeText={(firstName) => this.setState({ firstName })}
-                            placeholder={'First Name'}
-                            style={{fontFamily: 'font'}}
-                        />
-                    </Item>
-                    <Item>
-                        <Input
-                            value={lastName}
-                            onChangeText={(lastName) => this.setState({ lastName })}
-                            placeholder={'Last Name'}
-                            style={{fontFamily: 'font'}}
-                        />
-                    </Item>
+            <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../../assets/images/background-01.png')}
+            >
+                <View style={{flex: 1,alignContent: 'center',justifyContent: 'center'}}>
+                    <Card style={{marginHorizontal: 10}}>
+                        <Card.Content>
+                            <Title style={{textAlign: 'center',fontFamily: 'font',fontSize: 30,marginBottom: 20,paddingTop: 20}}>Register</Title>
+                            <TextInput
+                                ref={this.firstNameRef}
+                                mode={'outlined'}
+                                label='First Name'
+                                error={this.state.errorFirstName}
+                                value={this.state.firstName}
+                                selectionColor={'red'}
+                                underlineColor={'red'}
+                                theme={{ fonts: {font: 'font'}, colors: { primary: 'red',underlineColor:'transparent',}}}
+                                onSubmitEditing={() =>  this.lastNameRef.current.focus()}
+                                returnKeyType={'next'}
+                                blurOnSubmit={false}
+                                style={{fontSize: 20}}
+                                onChangeText={firstName => this.setState({ firstName })}
+                            />
+                            <HelperText
+                                type="error"
+                                visible={this.state.errorFirstName}
+                            >
+                                {this.state.errorFirstNameMessage}
+                            </HelperText>
 
-                    <Item>
-                        <Input
-                            value={email}
-                            onChangeText={(email) => this.setState({ email })}
-                            placeholder={'Email'}
-                            autoCompleteType={'email'}
-                            style={{fontFamily: 'font'}}
-                        />
-                    </Item>
+                            <TextInput
+                                ref={this.lastNameRef}
+                                mode={'outlined'}
+                                label='Last Name'
+                                error={this.state.errorLastName}
+                                value={this.state.lastName}
+                                selectionColor={'red'}
+                                underlineColor={'red'}
+                                theme={{ fonts: {font: 'font'}, colors: { primary: 'red',underlineColor:'transparent',}}}
+                                onSubmitEditing={this.onNextPress}
+                                returnKeyType={'next'}
+                                blurOnSubmit={false}
+                                style={{fontSize: 20}}
+                                onChangeText={lastName => this.setState({ lastName })}
+                            />
+                            <HelperText
+                                type="error"
+                                visible={this.state.errorLastName}
+                            >
+                                {this.state.errorLastNameMessage}
+                            </HelperText>
 
-                    <Item>
-                        <Input
-                            value={profileName}
-                            onChangeText={(profileName) => this.setState({ profileName })}
-                            placeholder={'Username'}
-                            style={{fontFamily: 'font'}}
-                        />
-                    </Item>
-
-                    <Item>
-                        <Input
-                            value={password}
-                            onChangeText={(password) => this.setState({ password })}
-                            placeholder={'Password'}
-                            secureTextEntry={true}
-                            style={{fontFamily: 'font'}}
-                        />
-                    </Item>
-
-                    <Item>
-                        <Input
-                            value={confirmPassword}
-                            onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
-                            placeholder={'Confirm Password'}
-                            secureTextEntry={true}
-                            style={{fontFamily: 'font'}}
-                        />
-                    </Item>
-
-                    <Text style={{color: 'red',fontFamily: 'font'}}>
-                        {error ? error : ''}
-                        {serverError.length > 0
-                            ?
-                            serverError.map(err => err)
-                            :
-                            ""
-                        }
-                    </Text>
-
-                    {loading
-                        ?
-                        <ActivityIndicator size="small" color="#f00" />
-                        :
-                        <TouchableOpacity
-                        style={styles.btn}
-                        onPress={this.onRegister.bind(this)}
-                        >
-                        <Text style={styles.btnText}>Register</Text>
-                        </TouchableOpacity>
-                    }
-                    <Text style={{marginTop: 20,fontFamily: 'font'}}>Already have an account? <Text style={{color:'red',fontFamily: 'font'}} onPress={() => history.push('/login')}>Log in now!</Text></Text>
-                </ScrollView>
-            </Card>
+                            <TouchableOpacity
+                                style={styles.btn}
+                                activeOpacity={0.76}
+                                onPress={this.onNextPress}
+                            >
+                                <Text style={styles.btnText}>Next</Text>
+                            </TouchableOpacity>
+                            <Text style={{marginTop: 20,fontFamily: "font",textAlign: 'center'}}>Already have an account? <Text style={{color:'red',fontFamily: "font"}} onPress={() => this.props.navigation.navigate('Login')}>Login now!</Text></Text>
+                        </Card.Content>
+                    </Card>
+                </View>
+            </ImageBackground>
         );
     }
 }
 
-const styles = StyleSheet.create({
-    btn: {
-        backgroundColor: '#f00',
-        width: 300,
-        height: 44,
-        padding: 10,
-        borderRadius: 2,
-        marginBottom: 10,
-        fontFamily: "font"
-    },
-    btnText: {
-        fontFamily: 'font',
-        textAlign: 'center',
-        color: '#fff',
-        fontSize: 18
-    }
-});

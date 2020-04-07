@@ -14,7 +14,8 @@ export default class Homepage extends React.Component{
             auth: cookie.load('access-token')
         };
 
-        document.title = 'Welcome to Allshack';
+
+        document.title = this.state.auth ? 'Allshack' : 'Welcome to Allshack';
     }
 
     render() {

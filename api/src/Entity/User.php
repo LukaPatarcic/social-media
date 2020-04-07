@@ -49,7 +49,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(
-     *     max="255",
+     *     max="50",
      *     maxMessage="Max number of characters is 255 characters",
      *     min="2",
      *     minMessage="Your first name should be at least 2 characters"
@@ -62,7 +62,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(
-     *     max="255",
+     *     max="50",
      *     maxMessage="Max number of characters is 255 characters",
      *     min="2",
      *     minMessage="Your last name should be at least 2 characters"
@@ -75,7 +75,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(
-     *     max="255",
+     *     max="20",
      *     maxMessage="Max number of characters is 255 characters",
      *     min="2",
      *     minMessage="Your username should be at least 2 characters"
@@ -137,6 +137,16 @@ class User implements UserInterface
      */
     private $likePosts;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CommentLike", mappedBy="user")
+     */
+    private $commentLikes;
+
     public function __construct()
     {
         $this->friends = new ArrayCollection();
@@ -146,6 +156,8 @@ class User implements UserInterface
         $this->pushNotifications = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->likePosts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->commentLikes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -517,6 +529,68 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($likePost->getUser() === $this) {
                 $likePost->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentLike[]
+     */
+    public function getCommentLikes(): Collection
+    {
+        return $this->commentLikes;
+    }
+
+    public function addCommentLike(CommentLike $commentLike): self
+    {
+        if (!$this->commentLikes->contains($commentLike)) {
+            $this->commentLikes[] = $commentLike;
+            $commentLike->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentLike(CommentLike $commentLike): self
+    {
+        if ($this->commentLikes->contains($commentLike)) {
+            $this->commentLikes->removeElement($commentLike);
+            // set the owning side to null (unless already changed)
+            if ($commentLike->getUser() === $this) {
+                $commentLike->setUser(null);
             }
         }
 

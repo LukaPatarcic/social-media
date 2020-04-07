@@ -15,21 +15,26 @@ const styles = StyleSheet.create({
 
 
 export default class Splash extends React.Component {
+
     constructor(props) {
         super(props);
     }
 
     render() {
-        setTimeout(() => {
-            this.props.history.push('/user')
-        },1000);
         return (
-            <View style={styles.container}>
-                <Image
-                    style={{width: 150, height: 150}}
-                    source={{uri: 'https://allshak.lukaku.tech/images/logo.png'}} />
-                <Text style={{fontSize: 30,color: '#fff', fontFamily: "font"}}>Allshak</Text>
-            </View>
+            <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../../assets/images/background-01.png')}
+            >
+                <View style={styles.container}>
+                    <View>
+                        <Image
+                            style={{width: 150, height: 150}}
+                            source={require('../../assets/images/logo.png')} />
+                    </View>
+                    <Text style={{fontSize: 30,color: '#fff', fontFamily: "font"}}>Allshack</Text>
+                </View>
+            </ImageBackground>
         );
     }
 }

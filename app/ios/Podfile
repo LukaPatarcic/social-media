@@ -1,8 +1,8 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'Allshak' do
-  # Pods for Allshak
+target 'Allshack' do
+  # Pods for Allshack
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -17,7 +17,7 @@ target 'Allshak' do
   pod 'React-RCTImage', :path => '../node_modules/react-native/Libraries/Image'
   pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
   pod 'React-RCTNetwork', :path => '../node_modules/react-native/Libraries/Network'
-  pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Profile'
+  pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
   pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
   pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'
   pod 'React-Core/RCTWebSocket', :path => '../node_modules/react-native/'
@@ -34,13 +34,7 @@ target 'Allshak' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-  pod 'RCTRestart', :path => '../node_modules/react-native-restart'
-
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
-
-  target 'AllshakTests' do
+  target 'AllshackTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -48,10 +42,10 @@ target 'Allshak' do
   use_native_modules!
 end
 
-target 'Allshak-tvOS' do
-  # Pods for Allshak-tvOS
+target 'Allshack-tvOS' do
+  # Pods for Allshack-tvOS
 
-  target 'Allshak-tvOSTests' do
+  target 'Allshack-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

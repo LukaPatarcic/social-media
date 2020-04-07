@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "423393388118",
+    "firebase_url": "https://allshack-8d3ff.firebaseio.com",
+    "project_id": "allshack-8d3ff",
+    "storage_bucket": "allshack-8d3ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423393388118:android:9e2feef2fa8e0e690a3df7",
+        "android_client_info": {
+          "package_name": "com.allshack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "423393388118-1jubsed5tdhf4fnoth43p021gl0m8h9c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjBWhycJyusqv7APzplqOQLJMwW7b2-hs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "423393388118-1jubsed5tdhf4fnoth43p021gl0m8h9c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

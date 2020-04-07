@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\LikePost;
 use App\Entity\Post;
 use App\Entity\User;
@@ -40,8 +41,10 @@ class PostController extends BaseController
             $data[$k]['profileName'] = $post->getUser()->getProfileName();
             $data[$k]['text'] = $post->getText();
             $data[$k]['createdAt'] = $post->getCreatedAt();
-            $data[$k]['likes'] = count($post->getLikePosts());
+            $data[$k]['likes'] = $post->getLikePosts()->count();
             $data[$k]['liked'] = (bool)$this->getDoctrine()->getRepository(LikePost::class)->findIfUserLikedPost($user,$post);
+            $data[$k]['comment'] = $this->getDoctrine()->getRepository(Comment::class)->findByPost($post,$user,1) ?? [];
+            $data[$k]['commentCount'] = $post->getComments()->count();
         }
 
         return $this->json($data,Response::HTTP_OK);

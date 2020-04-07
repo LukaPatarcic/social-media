@@ -127,6 +127,7 @@ class SecurityController extends BaseController
 
     /**
      * @Route("/logout/android", name="app__android_logout", methods={"POST"})
+     * @IsGranted("ROLE_USER")
      * @param Request $request
      * @return JsonResponse
      */
@@ -172,5 +173,21 @@ class SecurityController extends BaseController
     {
         $data = json_decode($request->getContent(),true);
         $sendMail = $mailer->forgottenPasswordEmail($data['email']);
+    }
+
+    /**
+     * @Route("/verify/user", name="verify_user", methods={"POST"})
+     */
+    public function verifyUser(Request $request)
+    {
+        $data = json_decode($request->getContent(),true);
+        if(!isset($data['profileName']) || !isset($data['email']) || (!isset($data['secret']) && $data!='app')) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $profileName = $repository->findOneBy(['profileName' => $data['profileName']]);
+        $email = $repository->findOneBy(['email' => $data['email']]);
+
+        return $this->json(['profileName' => (bool)$profileName, 'email' => (bool)$email]);
     }
 }

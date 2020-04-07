@@ -10,16 +10,8 @@ import {
     Modal,
 } from 'react-native';
 import { Text } from 'native-base';
-import AsyncStorage from "@react-native-community/async-storage";
-import FacebookLogin from "../components/FacebookLogin";
 import {Avatar, Card, IconButton, Paragraph} from 'react-native-paper';
-import {Button} from "react-native-elements";
-import { Redirect } from "react-router-native";
-import RNRestart from 'react-native-restart';
 import PostItem from "../components/PostItem";
-import TimeAgo from "react-native-timeago";
-import LikeButton from "../components/LikeButton";
-import AddPost from "../components/AddPost";
 import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.android";
 
 export default class Profile extends React.Component {
