@@ -1,6 +1,7 @@
 import React from "react";
 import {IconButton} from "react-native-paper";
 import AsyncStorage from "@react-native-community/async-storage";
+import {BASE_URL} from "../config";
 
 export default class LikeButton extends React.Component{
     constructor(props) {
@@ -20,11 +21,11 @@ export default class LikeButton extends React.Component{
             if (!val) {
                 this.props.history.push('/login');
             } else {
-                fetch('https://api.allshak.lukaku.tech/like/post',{
+                fetch(BASE_URL+'/like/post',{
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'X-AUTH-TOKEN': val
+                        'Authorization': 'Bearer '+ val
                     },
                     method: this.state.heartClicked ? 'POST' : 'DELETE',
                     body: JSON.stringify({id: this.props.postId})
@@ -48,7 +49,7 @@ export default class LikeButton extends React.Component{
             <IconButton
                 icon={heartClicked ? 'heart-outline' : 'heart'}
                 color={'red'}
-                size={20}
+                size={30}
                 onPress={this.handleLike.bind(this)}
             />
         );

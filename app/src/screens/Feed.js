@@ -27,28 +27,24 @@ export default class Profile extends React.Component {
 
     getPosts(refreshing = false) {
         AsyncStorage.getItem('access-token', (err, val) => {
-            if (!val) {
-                // this.props.history.push('/login');
-            } else {
-                if(!refreshing) {
-                    this.setState({loading:true})
-                }
-                fetch(BASE_URL+'/post',{
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer '+ val
-                    },
-                    method: "GET"
-                })
-                    .then((response => response.json()))
-                    .then((data => {
-                        this.setState({loading: false, posts: data});
-                    }))
-                    .catch(err => {
-                        this.setState({error: true,loading: false});
-                    })
+            if(!refreshing) {
+                this.setState({loading:true})
             }
+            fetch(BASE_URL+'/post',{
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+ val
+                },
+                method: "GET"
+            })
+                .then((response => response.json()))
+                .then((data => {
+                    this.setState({loading: false, posts: data});
+                }))
+                .catch(err => {
+                    this.setState({error: true,loading: false});
+                })
         });
     }
 
@@ -70,9 +66,9 @@ export default class Profile extends React.Component {
                     </View>
                     :
                     <PTRViewAndroid onRefresh={() => this.getPosts(true)}>
-                        <ScrollView style={{paddingHorizontal: 20, paddingTop: 20}}>
+                        <ScrollView style={{paddingHorizontal: 10, paddingTop: 20}}>
                         {posts.map((post,index) =>
-                            <PostItem post={post} key={index} />
+                            <PostItem navigation={this.props.navigation} post={post} key={index} />
                         )}
                         </ScrollView>
                     </PTRViewAndroid>

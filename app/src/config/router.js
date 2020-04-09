@@ -6,21 +6,53 @@ import Feed from "../screens/Feed";
 import {AuthContext} from "../context/AuthProvider";
 import NavigationContainer from "@react-navigation/native/src/NavigationContainer";
 import {CardStyleInterpolators, createStackNavigator, TransitionPresets} from "@react-navigation/stack";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Profile from "../screens/Profile";
 import RegisterTwo from "../screens/RegisterTwo";
 import RegisterThree from "../screens/RegisterThree";
-import {Easing} from "react-native";
+import {Easing, Linking} from "react-native";
+import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
+import Search from "../screens/Search";
+import Notifications from "../screens/Notifications";
+import Stats from "../screens/Stats";
+import Icon from "react-native-vector-icons/FontAwesome";
+import Comments from "../screens/Comments";
+import {Badge} from "react-native-paper";
 
 
 export default class Router extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            url: null
+        }
+    }
+
+    componentDidMount() {
+        Linking.getInitialURL().then(url => {
+            if(url) {
+                this._handleOpenURL(url)
+            }
+        });
+
+        Linking.addEventListener('url', (e) =>this._handleOpenURL(e.url));
+    }
+
+    componentWillUnmount() {
+        Linking.removeEventListener('url', (e) =>this._handleOpenURL(e.url));
+    }
+
+    _handleOpenURL(url) {
+        console.log(url);
+    }
+
     render() {
+
         return (
             <AuthContext.Consumer>
                 {(context) => {
                     return(
                         <NavigationContainer>
-                            <RootStackScreen state={context.state} />
+                            <RootStackScreen state={{...context.state,...this.state}} />
                         </NavigationContainer>
                     )
                 }}
@@ -35,6 +67,7 @@ const SplashStackScreen = () => (
         <SplashStack.Screen
             name="Splash"
             component={Splash}
+            route={'splash'}
             options={{headerShown: false}}
         />
     </SplashStack.Navigator>
@@ -72,6 +105,7 @@ const AuthStackScreen = () => (
             options={{
                 headerShown: false
             }}
+            path={'login'}
         />
         <AuthStack.Screen
             name="Register"
@@ -86,6 +120,7 @@ const AuthStackScreen = () => (
                     fontFamily: 'font'
                 }
             }}
+            path={'register'}
         />
         <AuthStack.Screen
             name="RegisterTwo"
@@ -99,6 +134,7 @@ const AuthStackScreen = () => (
                     fontWeight: 'bold',
                     fontFamily: 'font'
                 },}}
+            path={'register/account'}
         />
         <AuthStack.Screen
             name="RegisterThree"
@@ -112,12 +148,16 @@ const AuthStackScreen = () => (
                     fontWeight: 'bold',
                     fontFamily: 'font'
                 },}}
+            path={'register/password'}
         />
     </AuthStack.Navigator>
 );
 
 const FeedStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
+const SearchStack = createStackNavigator();
+const StatsStack = createStackNavigator();
+const NotificationStack = createStackNavigator();
 
 const FeedStackScreen = () => (
     <FeedStack.Navigator>
@@ -126,14 +166,41 @@ const FeedStackScreen = () => (
             component={Feed}
             options={{headerShown: false}}
         />
-        {/*<FeedStack.Screen*/}
-        {/*    name="Details"*/}
-        {/*    component={Details}*/}
-        {/*    options={({ route }) => ({*/}
-        {/*        title: route.params.name*/}
-        {/*    })}*/}
-        {/*/>*/}
+        <FeedStack.Screen
+            name="Comments"
+            component={Comments}
+        />
     </FeedStack.Navigator>
+);
+
+const SearchStackScreen = () => (
+    <SearchStack.Navigator>
+        <SearchStack.Screen
+            name="Search"
+            component={Search}
+            options={{headerShown: false}}
+        />
+    </SearchStack.Navigator>
+);
+
+const NotificationStackScreen = () => (
+    <NotificationStack.Navigator>
+        <NotificationStack.Screen
+            name="Notifications"
+            component={Notifications}
+            options={{headerShown: false}}
+        />
+    </NotificationStack.Navigator>
+);
+
+const StatsStackScreen = () => (
+    <StatsStack.Navigator>
+        <StatsStack.Screen
+            name="Stats"
+            component={Stats}
+            options={{headerShown: false}}
+        />
+    </StatsStack.Navigator>
 );
 
 const ProfileStackScreen = () => (
@@ -143,27 +210,85 @@ const ProfileStackScreen = () => (
             component={Profile}
             options={{headerShown: false}}
         />
-        {/*<FeedStack.Screen*/}
-        {/*    name="Details"*/}
-        {/*    component={Details}*/}
-        {/*    options={({ route }) => ({*/}
-        {/*        title: route.params.name*/}
-        {/*    })}*/}
-        {/*/>*/}
     </ProfileStack.Navigator>
 );
 
-const Tabs = createBottomTabNavigator();
+const Tabs = createMaterialBottomTabNavigator();
 const TabsScreen = () => (
-    <Tabs.Navigator>
-        <Tabs.Screen name="Home" component={FeedStackScreen} />
-        <Tabs.Screen name="Search" component={ProfileStackScreen} />
+    <Tabs.Navigator  initialRouteName="Feed"
+                     activeColor="#fff"
+                     backBehavior={'initialRoute'}
+    >
+        <Tabs.Screen
+            name="Feed"
+            options={{
+                tabBarLabel: 'Feed',
+                tabBarColor: '#f00',
+                tabBarIcon: ({ color }) => (
+                    <Icon name="home" color={color} size={26} />
+                ),
+            }}
+            component={FeedStackScreen}
+        />
+        <Tabs.Screen
+            name="Search"
+            options={{
+                tabBarLabel: 'Search',
+                tabBarColor: '#f00',
+                tabBarIcon: ({ color }) => (
+                    <Icon name="search" color={color} size={26} />
+                    )
+            }}
+            component={SearchStackScreen} />
+        <Tabs.Screen
+            name="Notifications"
+            component={NotificationStackScreen}
+            options={{
+                tabBarLabel: 'Notifications',
+                tabBarColor: '#f00',
+                tabBarActiveTextColor: '#000',
+                tabBarBadgeStyle: {color: 'black'},
+                tabBarIcon: ({ color }) => {
+                    return (
+                        <>
+                            <Icon size={26} color={color} name={'bell'} />
+
+                            <Badge
+                                style={{ position: 'absolute', top: -8, right: -8,backgroundColor:'#000' }}
+                            >10</Badge>
+                        </>
+                    )
+                },
+            }}
+        />
+        <Tabs.Screen
+            name="Stats"
+            options={{
+                tabBarLabel: 'Stats',
+                tabBarColor: '#f00',
+                tabBarIcon: ({ color }) => (
+                    <Icon name="pie-chart" color={color} size={26} />
+                ),
+            }}
+            component={StatsStackScreen}
+        />
+        <Tabs.Screen
+            name="Profile"
+            options={{
+                tabBarLabel: 'Profile',
+                tabBarColor: '#f00',
+                tabBarIcon: ({ color }) => (
+                    <Icon name="user" color={color} size={26} />
+                ),
+            }}
+            component={ProfileStackScreen}
+        />
     </Tabs.Navigator>
 );
 
 const RootStack = createStackNavigator();
 const RootStackScreen = ({ state }) => (
-    <RootStack.Navigator headerMode="none">
+    <RootStack.Navigator headerMode="none" path={'register'}>
         {state.isLoading ?
             (
                 <RootStack.Screen
