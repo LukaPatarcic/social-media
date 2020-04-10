@@ -3,6 +3,7 @@ import {Avatar, Card, IconButton, Paragraph, Text, Divider} from "react-native-p
 import {Button, View} from "react-native";
 import TimeAgo from 'react-native-timeago';
 import LikeButton from "./LikeButton";
+import SharePost from "./SharePost";
 
 export default class PostItem extends React.Component{
 
@@ -29,7 +30,7 @@ export default class PostItem extends React.Component{
         const {post,size} = this.props;
         const {likes,comments} = this.state;
         return (
-            <Card style={{marginBottom: 20,fontFamily: 'font'}}>
+            <Card style={{marginBottom: 20,marginHorizontal: 10,fontFamily: 'font'}}>
                 <Card.Title subtitleStyle={{fontFamily: 'font'}} titleStyle={{fontFamily: 'font'}}  title={post.firstName + " " + post.lastName} subtitle={<TimeAgo time={post.createdAt}/>} left={(props) => <Avatar.Image size={50} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+post.firstName+'+'+post.lastName}}/>} />
                 <Card.Content>
                     <Paragraph  style={{fontFamily: 'font', fontSize: 18}}>
@@ -56,11 +57,8 @@ export default class PostItem extends React.Component{
                         size={30}
                         onPress={() => {this.props.navigation.navigate('Comments',{id: this.props.post.id,handleComments: this.handleComments});}}
                     />
-                    <IconButton
-                        icon="share"
-                        color={'grey'}
-                        size={30}
-                        onPress={() => console.log('Pressed')}
+                    <SharePost
+                        id={post.id}
                     />
                 </Card.Actions>
             </Card>

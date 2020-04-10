@@ -44,8 +44,19 @@ class CommentController extends BaseController
         if (!$comments) {
             return $this->json([], Response::HTTP_OK);
         }
+        $data = [];
+        foreach ($comments as $key => $value) {
+            $data[$key]['id'] = $value['id'];
+            $data[$key]['firstName'] = $value['firstName'];
+            $data[$key]['lastName'] = $value['lastName'];
+            $data[$key]['profileName'] = $value['profileName'];
+            $data[$key]['text'] = $value['text'];
+            $data[$key]['createdAt'] = $value['createdAt'];
+            $data[$key]['likes'] = (int)$value['likes'];
+            $data[$key]['liked'] = (bool)$value['liked'];
+        }
 
-        return $this->json($comments, Response::HTTP_OK);
+        return $this->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -87,7 +98,7 @@ class CommentController extends BaseController
         $com['text'] = $comment->getText();
         $com['createdAt'] = $comment->getCreatedAt();
         $com['likes'] = $comment->getLikes()->count();
-        $com['liked'] = $this->getDoctrine()->getRepository(CommentLike::class)->findOneBy(['user' => $user, 'comment' => $comment]) ?? null;
+        $com['liked'] = (bool)$this->getDoctrine()->getRepository(CommentLike::class)->findOneBy(['user' => $user, 'comment' => $comment]) ?? false;
 
         return $this->json(['success' => 1, 'comment' => $com], Response::HTTP_OK);
     }

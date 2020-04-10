@@ -1,9 +1,12 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, ScrollView, Button, ActivityIndicator,} from 'react-native';
+import {View, StyleSheet, ImageBackground, ScrollView, ActivityIndicator, FlatList, ToastAndroid,} from 'react-native';
 import { Text } from 'native-base';
 import { Searchbar } from 'react-native-paper';
 import AsyncStorage from "@react-native-community/async-storage";
 import SendFriendRequest from "../components/SendFriendRequest";
+import {BASE_URL} from "../config";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import {debounce} from 'lodash';
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -16,37 +19,37 @@ export default class Profile extends React.Component {
             token: null,
             searchQuery: []
         };
+
+        this.getFriends = debounce(this.getFriends,400);
     }
 
     componentDidMount() {
         AsyncStorage.getItem('access-token', (err, val) => {
-            if (!val) {
-                // this.props.history.push('/login');
-            } else {
-                this.setState({token: val})
-            }
+            this.setState({token: val})
         });
     }
 
     getFriends() {
-        console.log('here');
         const {q,token} = this.state;
         const controller = new AbortController();
         const signal = controller.signal;
+        if(q.length < 1) {
+            this.setState({searchQuery: []})
+            return;
+        }
         this.setState({loading:true});
 
-        fetch('https://api.allshak.lukaku.tech/search?search='+q,{
+        fetch(BASE_URL+'/search?search='+q,{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': token
+                'Authorization': 'Bearer '+ token
             },
             signal: signal,
             method: "GET",
         })
             .then((response =>response.json()))
             .then((data => {
-                console.log(data);
                 this.setState({searchQuery: data,loading: false});
 
                 if(data) {
@@ -58,8 +61,8 @@ export default class Profile extends React.Component {
 
             }))
             .catch(err => {
-                console.log(err);
                 this.setState({error: 'Oops... Something went wrong!',loading: false});
+                ToastAndroid.show('Oops... Something went wrong!', ToastAndroid.SHORT);
             })
     }
 
@@ -71,40 +74,37 @@ export default class Profile extends React.Component {
         const {q,searchQuery,loading,loadingButton,token} = this.state;
         return (
             <ImageBackground
-                style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
-                source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
-                <View>
+                style={{width: '100%', height: '100%'}}
+                source={require('../../assets/images/background-01.png')}
+            >
+                <View style={{backgroundColor: '#fff'}}>
                     <Searchbar
                         inputStyle={{fontFamily: 'font'}}
                         placeholder="Search"
                         onChangeText={this.updateSearch.bind(this)}
                         value={q}
+                        icon={() => <Icon name={'search'} color={'red'} size={25} />}
                         onIconPress={this.getFriends.bind(this)}
                     />
                 </View>
-                <ScrollView>
-                {q
-                    ?
-                    <View>
-                        <View style={styles.card}>
-                            <View>
-                                {loading ?
-                                    <ActivityIndicator size="small" color="#f00" /> :
-                                    <Text  style={{fontFamily: 'font'}}>Search results:</Text>}
-                            </View>
+                    {loading ?
+                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',position: 'absolute', width: '100%', height: '100%'}}>
+                            <ActivityIndicator size={60} color={'red'} />
                         </View>
-                        {searchQuery.length
-                            ?
-                            searchQuery.map((friend,index) => (
-                            <SendFriendRequest friend={friend} key={index} getFriends={this.getFriends.bind(this)} token={token} />))
-                            :
-                            <Text>No results...</Text>
-                        }
-                    </View>
-                    :
-                    <Text>""</Text>
-                }
-                </ScrollView>
+                        :
+                        <FlatList
+                            data={searchQuery}
+                            ListEmptyComponent={q.length > 0 ?
+                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
+                                    <Text style={{fontFamily: 'font',fontSize: 20,color: '#fff'}}>No comments found...</Text>
+                                </View>
+                                : null
+                            }
+                            renderItem={({item,index}) => (
+                                <SendFriendRequest friend={item} key={index} getFriends={this.getFriends.bind(this)} token={token} />
+                            )}
+                        />
+                    }
             </ImageBackground>
         );
     }

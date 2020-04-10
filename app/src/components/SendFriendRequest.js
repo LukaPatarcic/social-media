@@ -1,7 +1,7 @@
-import {Button, StyleSheet, ToastAndroid, View} from "react-native";
-import {Text} from "native-base";
+import { Image, StyleSheet, ToastAndroid, View} from "react-native";
 import React from "react";
-import UserProfile from "./UserProfile";
+import {Card, IconButton, Avatar, Button} from "react-native-paper";
+import {BASE_URL} from "../config";
 
 export default class SendFriendRequest extends React.Component{
     constructor(props) {
@@ -9,58 +9,72 @@ export default class SendFriendRequest extends React.Component{
         this.state = {
             loading: false
         }
+
+        this.sendFriendRequest = this.sendFriendRequest.bind(this);
     }
 
 
     sendFriendRequest() {
+        const {friend,token} = this.props;
         this.setState({loading: true});
-        fetch('https://api.allshak.lukaku.tech/friend/request',{
+        fetch(BASE_URL+'/friend/request',{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': this.props.token
+                'Authorization': 'Bearer '+ token
             },
             method: "POST",
-            body: JSON.stringify({id: this.props.friend.id})
+            body: JSON.stringify({id: friend.id})
         })
             .then((response => response.json()))
             .then((data => {
                 this.setState({loading: false});
                 this.props.getFriends();
                 if(data.error) {
-                    this.setState({error: true})
+                    ToastAndroid.show('Failed to follow friend...', ToastAndroid.SHORT);
                 }
             }))
             .catch(err => {
-                this.setState({error: true,loading: false});
+                this.setState({loading: false});
+                ToastAndroid.show('Failed to follow friend...', ToastAndroid.SHORT);
             })
     }
 
     render() {
         const {friend} = this.props;
-        const {loading,error} = this.state;
+        const {loading} = this.state;
         return (
-            <View style={styles.card}>
-                <UserProfile friend={friend} token={this.props.token} />
-                <Button
-                    id={friend.id}
-                    disabled={friend.requested ? true : (friend.following ? true : false)}
-                    onPress={this.sendFriendRequest.bind(this)}
-                    color={'#f00'}
-                    title={loading ? "Loading...":(friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))}
+            <Card style={{marginVertical: 5,backgroundColor:'#fff'}}>
+                <Card.Title
+                    title={friend.firstName+' '+friend.lastName}
+                    subtitle={friend.profileName}
+                    left={(props) => <Avatar.Image {...props} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+friend.firstName+'+'+friend.lastName}} />}
+                    right={(props) => <Button onPress={this.sendFriendRequest} {...props} mode={'outlined'} color={'red'} style={{fontSize:10}} uppercase={false} disabled={friend.requested || friend.following}>{loading ? "Loading...":(friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))}</Button>}
                 />
-                {error && ToastAndroid.show('Failed to follow friend...', ToastAndroid.SHORT)}
-            </View>
+            </Card>
         );
     }
 }
 
+// <View style={styles.card}>
+//     {/*<UserProfile friend={friend} token={this.props.token} />*/}
+//     <Image style = {{height: 40, width: 40, margin: 5 }} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+friend.firstName+'+'+friend.lastName}} />
+//     <Text style={{fontFamily: 'font',fontSize: 18}} onLongPress={() => ToastAndroid.show(friend.profileName,ToastAndroid.SHORT)}>{friend.firstName+' '+friend.lastName}</Text>
+//     {/*<Button*/}
+//     {/*    id={friend.id}*/}
+//     {/*    disabled={friend.requested ? true : (friend.following ? true : false)}*/}
+//     {/*    onPress={this.sendFriendRequest.bind(this)}*/}
+//     {/*    color={'#f00'}*/}
+//     {/*    title={loading ? "Loading...":(friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))}*/}
+//     {/*/>*/}
+//     {/**/}
+// </View>
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 70,
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
+        flexDirection: 'row',
         shadowOffset:{  width: 10,  height: 10,  },
         shadowColor: 'black',
         shadowOpacity: 1.0,

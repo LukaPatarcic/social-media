@@ -4,12 +4,11 @@ import {
     StyleSheet,
     ImageBackground,
     ScrollView,
-    ActivityIndicator,
+    ActivityIndicator, FlatList, Text,
 } from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage";
 import PostItem from "../components/PostItem";
 import AddPost from "../components/AddPost";
-import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.android";
 import {BASE_URL} from "../config";
 
 export default class Profile extends React.Component {
@@ -17,43 +16,67 @@ export default class Profile extends React.Component {
         super(props);
         this.state = {
             posts: [],
-            loading: false,
-            disabled: false,
-            visible: false,
-            token: null,
-            text: ''
+            loading: true,
+            loadingMore: false,
+            offset: 0,
+            hasMore: true,
+            refreshing: false
         }
     }
 
-    getPosts(refreshing = false) {
-        AsyncStorage.getItem('access-token', (err, val) => {
-            if(!refreshing) {
-                this.setState({loading:true})
-            }
-            fetch(BASE_URL+'/post',{
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+ val
-                },
-                method: "GET"
+    getPosts(more = false) {
+        const {offset,refreshing,loadingMore,hasMore,token} = this.state;
+        if(loadingMore || !hasMore)
+            return;
+        if(more) {
+            this.setState({loadingMore: true})
+        }
+
+        fetch(BASE_URL+'/post?offset='+offset,{
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+ token
+            },
+            method: "GET"
+        })
+            .then((response => response.json()))
+            .then((data => {
+                if(refreshing) {
+                    this.setState({posts: []});
+                    this.setState({posts: data})
+                } else {
+                    this.setState((prevState) => ({ posts: [...prevState.posts,...data]}))
+                }
+                this.setState((prevState) => ({
+                    loading: false,
+                    loadingMore: false,
+                    offset: prevState.offset + 10,
+                    hasMore: !!data.length,
+                    refreshing: false
+                }));
+            }))
+            .catch(err => {
+                this.setState({error: true,loading: false});
             })
-                .then((response => response.json()))
-                .then((data => {
-                    this.setState({loading: false, posts: data});
-                }))
-                .catch(err => {
-                    this.setState({error: true,loading: false});
-                })
+    }
+
+    handleRefresh() {
+        this.setState({refreshing: true,offset: 0, hasMore: true}, () => {
+            this.getPosts()
         });
     }
 
     componentDidMount() {
-        this.getPosts();
+        AsyncStorage.getItem('access-token', (err, val) => {
+            this.setState({token: val},() => {
+                this.getPosts();
+            })
+        })
     }
 
     render() {
-        const {posts,loading} = this.state;
+        const {posts,loading,refreshing,hasMore,loadingMore} = this.state;
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%'}}
@@ -65,13 +88,26 @@ export default class Profile extends React.Component {
                         <ActivityIndicator size={70} color="#f00" />
                     </View>
                     :
-                    <PTRViewAndroid onRefresh={() => this.getPosts(true)}>
-                        <ScrollView style={{paddingHorizontal: 10, paddingTop: 20}}>
-                        {posts.map((post,index) =>
-                            <PostItem navigation={this.props.navigation} post={post} key={index} />
-                        )}
-                        </ScrollView>
-                    </PTRViewAndroid>
+                    <FlatList
+                        refreshing={refreshing}
+                        onRefresh={() => this.handleRefresh()}
+                        data={posts}
+                        ListEmptyComponent={
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
+                                <Text style={{fontFamily: 'font',fontSize: 20}}>No posts found...</Text>
+                            </View>
+                        }
+                        onEndReachedThreshold={0.5}
+                        style={{marginTop: 5}}
+                        ListFooterComponent={hasMore ?
+                            loadingMore ? <ActivityIndicator size={60} color={'red'} /> : null
+                            :
+                            <Text style={{textAlign: 'center',fontFamily: 'font',fontSize: 16,color: '#fff'}}>No more posts...</Text>}
+                        onEndReached={() => this.getPosts(true)}
+                        keyExtractor={(contact, index) => String(index)}
+                        renderItem={({item}) => (
+                            <PostItem navigation={this.props.navigation} post={item} />
+                        )} />
                 }
                 <AddPost />
             </ImageBackground>

@@ -44,7 +44,8 @@ export default class CommentInput extends React.Component {
                 .then((response => response.json()))
                 .then((data => {
                     this.setState({text: '', loading: false});
-                    this.props.getComments()
+                    this.props.setNewComment(data.comment);
+                    this.props.scrollTopTop();
                 }))
                 .catch(err => {
                     this.setState({error: 'Oops... Something went wrong!', loading: false});
@@ -62,11 +63,8 @@ export default class CommentInput extends React.Component {
                     <TextInput
                         label='Enter comment...'
                         value={this.state.text}
-                        selectionColor={'red'}
                         underlineColor={'#c4c4c4'}
                         theme={{ fonts: {font: 'font'}, colors: { primary: 'red',underlineColor:'transparent',}}}
-                        autoCompleteType={'email'}
-                        keyboardType={'email-address'}
                         onSubmitEditing={this.handleSubmit}
                         returnKeyType={'send'}
                         blurOnSubmit={false}

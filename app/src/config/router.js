@@ -6,10 +6,11 @@ import Feed from "../screens/Feed";
 import {AuthContext} from "../context/AuthProvider";
 import NavigationContainer from "@react-navigation/native/src/NavigationContainer";
 import {CardStyleInterpolators, createStackNavigator, TransitionPresets} from "@react-navigation/stack";
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import Profile from "../screens/Profile";
 import RegisterTwo from "../screens/RegisterTwo";
 import RegisterThree from "../screens/RegisterThree";
-import {Easing, Linking} from "react-native";
+import {Easing, Image, ImageBackground, Linking, Text, View} from "react-native";
 import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
 import Search from "../screens/Search";
 import Notifications from "../screens/Notifications";
@@ -154,7 +155,7 @@ const AuthStackScreen = () => (
 );
 
 const FeedStack = createStackNavigator();
-const ProfileStack = createStackNavigator();
+const ProfileStack = createDrawerNavigator();
 const SearchStack = createStackNavigator();
 const StatsStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
@@ -164,7 +165,21 @@ const FeedStackScreen = () => (
         <FeedStack.Screen
             name="Feed"
             component={Feed}
-            options={{headerShown: false}}
+            options={{
+                headerTitle: props =>
+                    <View style={{flex:1,flexDirection: 'row',alignItems:'center',justifyContent:'center'}}>
+                        <Image  style={{width: 30, height: 30}} source={require('../../assets/images/logo.png')} />
+                        <Text style={{fontSize: 17,fontFamily:'font',marginLeft: 3,marginTop:2}}>Allshack</Text>
+                    </View>,
+                headerRight: () => (
+                    <Icon
+                        onPress={() => alert('This is a button!')}
+                        name={'comments'}
+                        size={30}
+                        style={{marginRight: 10}}
+                    />
+                ),
+            }}
         />
         <FeedStack.Screen
             name="Comments"
@@ -204,11 +219,10 @@ const StatsStackScreen = () => (
 );
 
 const ProfileStackScreen = () => (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator drawerPosition={'right'}>
         <ProfileStack.Screen
             name="Profile"
             component={Profile}
-            options={{headerShown: false}}
         />
     </ProfileStack.Navigator>
 );
