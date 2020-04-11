@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class PostController
@@ -35,16 +36,16 @@ class PostController extends BaseController
         $posts = $this->getDoctrine()->getRepository(Post::class)->findFeedPosts($user,10,$offset);
         $data = [];
         foreach ($posts as $k => $post) {
-            $data[$k]['id'] = $post->getId();
-            $data[$k]['firstName'] = $post->getUser()->getFirstName();
-            $data[$k]['lastName'] = $post->getUser()->getLastName();
-            $data[$k]['profileName'] = $post->getUser()->getProfileName();
-            $data[$k]['text'] = $post->getText();
-            $data[$k]['createdAt'] = $post->getCreatedAt();
-            $data[$k]['likes'] = $post->getLikePosts()->count();
-            $data[$k]['liked'] = (bool)$this->getDoctrine()->getRepository(LikePost::class)->findIfUserLikedPost($user,$post);
-            $data[$k]['comment'] = $this->getDoctrine()->getRepository(Comment::class)->findByPost($post,$user,1) ?? [];
-            $data[$k]['commentCount'] = $post->getComments()->count();
+            $data[$k]['id'] = $post['postId'];
+            $data[$k]['firstName'] = $post['firstName'];
+            $data[$k]['lastName'] =$post['lastName'];
+            $data[$k]['profileName'] =$post['profileName'];
+            $data[$k]['text'] = $post['text'];
+            $data[$k]['createdAt'] = $post['createdAt'];
+            $data[$k]['likes'] = intval($post['likes']);
+            $data[$k]['liked'] = (bool)$post['liked'];
+//            $data[$k]['comment'] = $this->getDoctrine()->getRepository(Comment::class)->findByPost($post,$user,1) ?? [];
+            $data[$k]['commentCount'] = intval($post['commentCount']);
         }
 
         return $this->json($data,Response::HTTP_OK);

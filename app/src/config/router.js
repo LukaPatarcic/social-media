@@ -18,6 +18,7 @@ import Stats from "../screens/Stats";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Comments from "../screens/Comments";
 import {Badge} from "react-native-paper";
+import AddPost from "../components/AddPost";
 
 
 export default class Router extends React.Component{
@@ -161,7 +162,7 @@ const StatsStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
 
 const FeedStackScreen = () => (
-    <FeedStack.Navigator>
+    <FeedStack.Navigator initialRoute={'Post'}>
         <FeedStack.Screen
             name="Feed"
             component={Feed}
@@ -184,6 +185,31 @@ const FeedStackScreen = () => (
         <FeedStack.Screen
             name="Comments"
             component={Comments}
+        />
+        <FeedStack.Screen
+            name="Post"
+            component={AddPost}
+            initialParams={{test: 1}}
+            options={{
+                headerShown: false
+                // headerStyle: {
+                //     backgroundColor: '#fff',
+                // },
+                // headerTintColor: '#fff',
+                // headerTransparent: true,
+                // headerTitle: false,
+                // headerLeft: (e) => (<Icon name={'times'} style={{marginLeft: 10}} size={25} color={'#fff'}  onPress={ () => e.onPress() } />),
+                //
+                // headerRight: () => (
+                //     <Icon
+                //         onPress={() => alert('This is a button!')}
+                //         name={'send'}
+                //         size={30}
+                //         color={'#fff'}
+                //         style={{marginRight: 10}}
+                //     />
+                // ),
+            }}
         />
     </FeedStack.Navigator>
 );

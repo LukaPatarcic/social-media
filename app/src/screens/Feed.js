@@ -10,6 +10,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import PostItem from "../components/PostItem";
 import AddPost from "../components/AddPost";
 import {BASE_URL} from "../config";
+import {FAB} from "react-native-paper";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -77,6 +78,7 @@ export default class Profile extends React.Component {
 
     render() {
         const {posts,loading,refreshing,hasMore,loadingMore} = this.state;
+        console.log('here')
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%'}}
@@ -109,7 +111,12 @@ export default class Profile extends React.Component {
                             <PostItem navigation={this.props.navigation} post={item} />
                         )} />
                 }
-                <AddPost />
+                <FAB
+                    style={styles.fab}
+                    icon="pencil"
+                    color={'white'}
+                    onPress={() => this.props.navigation.navigate('Post')}
+                />
             </ImageBackground>
         );
     }

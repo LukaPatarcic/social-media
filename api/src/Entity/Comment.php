@@ -42,9 +42,15 @@ class Comment
      */
     private $likes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SubComment", mappedBy="comment")
+     */
+    private $subComments;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
+        $this->subComments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,6 +119,37 @@ class Comment
             // set the owning side to null (unless already changed)
             if ($like->getComment() === $this) {
                 $like->setComment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SubComment[]
+     */
+    public function getSubComments(): Collection
+    {
+        return $this->subComments;
+    }
+
+    public function addSubComment(SubComment $subComment): self
+    {
+        if (!$this->subComments->contains($subComment)) {
+            $this->subComments[] = $subComment;
+            $subComment->setComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubComment(SubComment $subComment): self
+    {
+        if ($this->subComments->contains($subComment)) {
+            $this->subComments->removeElement($subComment);
+            // set the owning side to null (unless already changed)
+            if ($subComment->getComment() === $this) {
+                $subComment->setComment(null);
             }
         }
 

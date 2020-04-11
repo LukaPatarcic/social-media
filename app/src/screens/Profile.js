@@ -183,7 +183,7 @@ export default class Profile extends React.Component {
                         </View>
                     </ScrollView>
                 </PTRViewAndroid>
-                <AddPost />
+                {/*<AddPost />*/}
             </ImageBackground>
         );
     }

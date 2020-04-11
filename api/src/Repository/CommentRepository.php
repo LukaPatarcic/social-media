@@ -37,6 +37,7 @@ class CommentRepository extends ServiceEntityRepository
         $q = $this->createQueryBuilder('c')
             ->select('c.id, u.firstName, u.lastName, u.profileName, c.text, c.createdAt, COUNT(l.id) as likes')
             ->addSelect('(SELECT lk.id FROM App\Entity\CommentLike lk WHERE lk.user = :user and lk.comment = c.id) as liked')
+            ->addSelect('(SELECT COUNT(sc.id) FROM App\Entity\SubComment sc WHERE sc.user = :user and sc.comment = c.id) as subCommentCount')
             ->andWhere('c.post = :post')
             ->join('c.user','u')
             ->leftJoin('c.likes','l')

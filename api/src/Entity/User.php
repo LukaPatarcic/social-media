@@ -147,6 +147,11 @@ class User implements UserInterface
      */
     private $commentLikes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SubComment", mappedBy="user")
+     */
+    private $subComments;
+
     public function __construct()
     {
         $this->friends = new ArrayCollection();
@@ -158,6 +163,7 @@ class User implements UserInterface
         $this->likePosts = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->commentLikes = new ArrayCollection();
+        $this->subComments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -591,6 +597,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($commentLike->getUser() === $this) {
                 $commentLike->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SubComment[]
+     */
+    public function getSubComments(): Collection
+    {
+        return $this->subComments;
+    }
+
+    public function addSubComment(SubComment $subComment): self
+    {
+        if (!$this->subComments->contains($subComment)) {
+            $this->subComments[] = $subComment;
+            $subComment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubComment(SubComment $subComment): self
+    {
+        if ($this->subComments->contains($subComment)) {
+            $this->subComments->removeElement($subComment);
+            // set the owning side to null (unless already changed)
+            if ($subComment->getUser() === $this) {
+                $subComment->setUser(null);
             }
         }
 

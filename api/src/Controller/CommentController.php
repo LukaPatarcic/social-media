@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class CommentController
@@ -52,6 +53,8 @@ class CommentController extends BaseController
             $data[$key]['profileName'] = $value['profileName'];
             $data[$key]['text'] = $value['text'];
             $data[$key]['createdAt'] = $value['createdAt'];
+            $data[$key]['subCommentCount'] = (int)$value['subCommentCount'];
+            $data[$key]['subComments'] = [];
             $data[$key]['likes'] = (int)$value['likes'];
             $data[$key]['liked'] = (bool)$value['liked'];
         }
@@ -97,6 +100,8 @@ class CommentController extends BaseController
         $com['profileName'] = $comment->getUser()->getProfileName();
         $com['text'] = $comment->getText();
         $com['createdAt'] = $comment->getCreatedAt();
+        $com['subCommentCount'] = 0;
+        $com['subComments'] = [];
         $com['likes'] = $comment->getLikes()->count();
         $com['liked'] = (bool)$this->getDoctrine()->getRepository(CommentLike::class)->findOneBy(['user' => $user, 'comment' => $comment]) ?? false;
 

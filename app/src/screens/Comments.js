@@ -1,4 +1,4 @@
-import {ActivityIndicator, View, Text, FlatList} from "react-native";
+import {ActivityIndicator, View, Text, FlatList, ToastAndroid} from "react-native";
 import React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import {BASE_URL} from "../config";
@@ -13,16 +13,21 @@ export default class Comments extends React.Component {
             comments: [],
             loading: true,
             loadingMore: false,
+            updateSubComment: false,
             offset: 0,
             hasMore: true,
-            refreshing: false
+            refreshing: false,
+            replyTo: null
         };
 
         this.getComments = this.getComments.bind(this);
         this.setNewComment = this.setNewComment.bind(this);
         this.updateComment = this.updateComment.bind(this);
+        this.setNewSubComment = this.setNewSubComment.bind(this);
         this.handleRefresh = this.handleRefresh.bind(this);
         this.scrollTopTop = this.scrollTopTop.bind(this);
+        this.setReplyTo = this.setReplyTo.bind(this);
+        this.setReplyToToNull = this.setReplyToToNull.bind(this);
         this.flatListRef = React.createRef();
     }
 
@@ -34,11 +39,34 @@ export default class Comments extends React.Component {
         this.flatListRef.scrollToIndex({animated: true, index: 0});
     }
 
+    setReplyTo(replyTo) {
+        this.setState({replyTo})
+    }
+
+    setReplyToToNull() {
+        this.setState({replyTo: null})
+    }
+
     setNewComment(comment) {
         const {comments} = this.state;
         this.setState({comments: []});
         this.setState({comments: [comment, ...comments]});
     }
+
+    setNewSubComment(comment,id) {
+        let comments = this.state.comments;
+        for(let i in comments) {
+            if(comments[i].id === id) {
+                let singleComment = comments[i];
+                let array = singleComment.subComments;
+                singleComment.subComments = [comment,...array];
+                singleComment.subCommentCount = singleComment.subCommentCount+1;
+                comments[i] = singleComment;
+            }
+        }
+        this.setState({comments});
+    }
+
 
     updateComment(comment,index) {
         let comments = this.state.comments;
@@ -47,10 +75,12 @@ export default class Comments extends React.Component {
     }
 
     getComments(more = false) {
-        const {id} = this.props.route.params;
+        const {id,commentCount} = this.props.route.params;
         const {offset,refreshing,loadingMore,hasMore} = this.state;
+
         if(loadingMore || !hasMore)
             return;
+
         if(more) {
             this.setState({loadingMore: true})
         }
@@ -66,7 +96,7 @@ export default class Comments extends React.Component {
                 .then((response => response.json()))
                 .then((data => {
                     if(refreshing) {
-                        this.setState({comments: []})
+                        this.setState({comments: []});
                         this.setState({comments: data})
                     } else {
                         this.setState((prevState) => ({ comments: [...prevState.comments,...data]}))
@@ -75,10 +105,14 @@ export default class Comments extends React.Component {
                         loading: false,
                         loadingMore: false,
                         offset: prevState.offset + 10,
-                        hasMore: !!data.length,
+                        hasMore: commentCount > 10 ? !!data.length : false,
                         refreshing: false
                     }));
                 }))
+                .catch(err => {
+                    this.setState({loading: false,loadingMore: false});
+                    ToastAndroid.show('Something went wrong...',ToastAndroid.SHORT);
+                })
         })
     }
 
@@ -90,7 +124,7 @@ export default class Comments extends React.Component {
 
     render() {
         const {id,handleComments} = this.props.route.params;
-        const {comments,loading,loadingMore,hasMore,refreshing} = this.state;
+        const {comments,loading,loadingMore,hasMore,refreshing,replyTo} = this.state;
 
         return loading ?
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',position: 'absolute', width: '100%', height: '100%'}}>
@@ -116,9 +150,26 @@ export default class Comments extends React.Component {
                                 <Text style={{textAlign: 'center',fontFamily: 'font',fontSize: 16}}>No more comments...</Text>}
                             onEndReached={() => this.getComments(true)}
                             renderItem={({index,item}) => (
-                                <CommentItem key={index} index={index} id={id} comment={item} updateComment={this.updateComment} />
+                                <CommentItem
+                                    id={id}
+                                    key={index}
+                                    index={index}
+                                    comment={item}
+                                    updateComment={this.updateComment}
+                                    setReplyTo={this.setReplyTo}
+                                />
                         )} />
-                    <CommentInput scrollToTop={this.scrollToTop} handleComments={handleComments} id={id} setNewComment={this.setNewComment} scrollTopTop={this.scrollTopTop} />
+                    <CommentInput
+                        id={id}
+                        replyTo={replyTo}
+                        scrollToTop={this.scrollToTop}
+                        handleComments={handleComments}
+                        setNewComment={this.setNewComment}
+                        setNewSubComment={this.setNewSubComment}
+                        setReplyToToNull={this.setReplyToToNull}
+                        updateComment={this.updateComment}
+                        scrollTopTop={this.scrollTopTop}
+                    />
                 </View>
     }
 

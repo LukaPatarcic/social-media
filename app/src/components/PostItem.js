@@ -1,6 +1,6 @@
 import React from "react";
-import {Avatar, Card, IconButton, Paragraph, Text, Divider} from "react-native-paper";
-import {Button, View} from "react-native";
+import {Avatar, Card, IconButton, Paragraph, Text} from "react-native-paper";
+import { ToastAndroid, View} from "react-native";
 import TimeAgo from 'react-native-timeago';
 import LikeButton from "./LikeButton";
 import SharePost from "./SharePost";
@@ -27,11 +27,11 @@ export default class PostItem extends React.Component{
     }
 
     render() {
-        const {post,size} = this.props;
+        const {post} = this.props;
         const {likes,comments} = this.state;
         return (
             <Card style={{marginBottom: 20,marginHorizontal: 10,fontFamily: 'font'}}>
-                <Card.Title subtitleStyle={{fontFamily: 'font'}} titleStyle={{fontFamily: 'font'}}  title={post.firstName + " " + post.lastName} subtitle={<TimeAgo time={post.createdAt}/>} left={(props) => <Avatar.Image size={50} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+post.firstName+'+'+post.lastName}}/>} />
+                <Card.Title subtitleStyle={{fontFamily: 'font'}} titleStyle={{fontFamily: 'font'}}  title={post.profileName} subtitle={<TimeAgo onLongPress={() => ToastAndroid.show(post.createdAt,ToastAndroid.SHORT)} time={post.createdAt}/>} left={(props) => <Avatar.Image size={50} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+post.firstName+'+'+post.lastName}}/>} />
                 <Card.Content>
                     <Paragraph  style={{fontFamily: 'font', fontSize: 18}}>
                         {post.text}
@@ -55,7 +55,7 @@ export default class PostItem extends React.Component{
                         icon="comment"
                         color={'grey'}
                         size={30}
-                        onPress={() => {this.props.navigation.navigate('Comments',{id: this.props.post.id,handleComments: this.handleComments});}}
+                        onPress={() => {this.props.navigation.navigate('Comments',{id: this.props.post.id,handleComments: this.handleComments,commentCount: comments});}}
                     />
                     <SharePost
                         id={post.id}
