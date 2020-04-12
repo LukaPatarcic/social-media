@@ -5,24 +5,18 @@ namespace App\Controller;
 use App\Entity\PushNotification;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\JwtTokenAuthenticator;
 use App\Services\Mailer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Mobile_Detect;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -53,7 +47,7 @@ class SecurityController extends BaseController
         $form->submit($data);
 
         if($errors = $this->getErrorMessages($form)) {
-            return $this->json(['error' => $errors]);
+            return $this->json(['error' => $errors],Response::HTTP_BAD_REQUEST);
         }
 
         $password = $passwordEncoder->encodePassword($user, $data['password']['first']);
@@ -61,19 +55,20 @@ class SecurityController extends BaseController
             ->setDeletesIn(new DateTime('+ 1 day'))
             ->setVerificationCode(hash('sha256',$user->getEmail().bin2hex(random_bytes(32))));
 
-        $sendMail = $mailer->verificationEmail($user->getEmail(),$user->getVerificationCode());
+        $sendMail = $mailer->verificationEmail($user->getEmail(),$user->getFullName(),$user->getVerificationCode());
         if(!$sendMail) {
-            return $this->json(['error' => ['Oops something went wrong please try again later...']]);
+            return $this->json(['error' => ['Oops something went wrong please try again later...']],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->json(['success' => 1]);
+        return $this->json(['success' => 1],Response::HTTP_CREATED);
     }
 
     /**
-     * @Route("/login", name="app_login")
+     * @Route("/login", name="app_login", methods={"POST"})
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $passwordEncoder
@@ -91,16 +86,22 @@ class SecurityController extends BaseController
         if (empty($data['email']) || empty($data['password'])) {
             return $this->json(['error' => 'Empty email or password'], Response::HTTP_BAD_REQUEST);
         }
+
         $userRepo = $entityManager->getRepository(User::class);
         /** @var User $user */
-        $user = $userRepo->findOneBy(['email' => $data['email'],'isVerified' => 1]);
+        $user = $userRepo->findOneBy(['email' => $data['email']]);
+
         if(!$user) {
-            return $this->json(['error' => 'Invalid email'],Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Invalid email or password'],Response::HTTP_BAD_REQUEST);
+        }
+
+        if(!$user->getIsVerified()) {
+            return $this->json(['error' => 'You need to verify your account to log in'],Response::HTTP_BAD_REQUEST);
         }
 
         // Check if the password inserted is correct
         if (!$passwordEncoder->isPasswordValid($user, $data['password'])) {
-            return $this->json(['error' => 'Invalid password'], Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Invalid email or password'], Response::HTTP_BAD_REQUEST);
         }
         //encode JWT
         $token = $encoder->encode(['id' => $user->getId()]);
@@ -148,11 +149,14 @@ class SecurityController extends BaseController
 
     /**
      * @Route("/email/verify/{verificationCode}", methods={"GET"})
-     * @param User $user
      * @return RedirectResponse|Response
      */
-    public function emailVerification(User $user)
+    public function emailVerification(string $verificationCode)
     {
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['verificationCode' => $verificationCode]);
+        if(!$user) {
+            return $this->json(['error' => 'Verification code is invalid'],Response::HTTP_BAD_REQUEST);
+        }
         $user->setIsVerified(1)
             ->setDeletesIn(null)
             ->setVerificationCode(null);
@@ -162,7 +166,7 @@ class SecurityController extends BaseController
         if($detect->isMobile() or $detect->isTablet()) {
             return $this->render('redirectToMobile.html.twig');
         }
-        return $this->redirect($_ENV['FRONTEND_URL']);
+        return $this->redirect($_ENV['FRONTEND_URL'].'login?verified=true');
     }
 
     /**

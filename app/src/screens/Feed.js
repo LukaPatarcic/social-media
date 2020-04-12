@@ -99,8 +99,8 @@ export default class Profile extends React.Component {
                                 <Text style={{fontFamily: 'font',fontSize: 20}}>No posts found...</Text>
                             </View>
                         }
-                        onEndReachedThreshold={0.5}
-                        style={{marginTop: 5}}
+                        onEndReachedThreshold={0.6}
+                        // style={{marginTop: 5}}
                         ListFooterComponent={hasMore ?
                             loadingMore ? <ActivityIndicator size={60} color={'red'} /> : null
                             :

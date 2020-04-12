@@ -32,7 +32,7 @@ class CommentRepository extends ServiceEntityRepository
      * @return mixed
      * @throws NonUniqueResultException
      */
-    public function findByPost(Post $post,User $user,$limit = 10,$offset = 0,$sort = 'ASC')
+    public function findByPost($post,User $user,$limit = 10,$offset = 0,$sort = 'ASC')
     {
         $q = $this->createQueryBuilder('c')
             ->select('c.id, u.firstName, u.lastName, u.profileName, c.text, c.createdAt, COUNT(l.id) as likes')

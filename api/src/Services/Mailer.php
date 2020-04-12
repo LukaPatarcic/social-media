@@ -26,12 +26,16 @@ class Mailer
         $this->twig = $twig;
     }
 
-    public function verificationEmail(string $email, string  $verificationCode)
+    public function verificationEmail(string $email, string $fullName, string  $verificationCode)
     {
         return $this->mailTemplate(
             'Account Verification',
             'emails/registration.html.twig',
-            ['email' => $email,'verificationCode' => $verificationCode]
+            [
+                'fullName' => $fullName,
+                'verification' => $_ENV['BACKEND_URL'].'email/verify/'.$verificationCode,
+                'email' => $email
+            ]
         );
     }
 

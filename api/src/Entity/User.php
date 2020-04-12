@@ -47,7 +47,7 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(
      *     max="50",
      *     maxMessage="Max number of characters is 255 characters",
@@ -60,7 +60,7 @@ class User implements UserInterface
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(
      *     max="50",
      *     maxMessage="Max number of characters is 255 characters",
@@ -73,7 +73,7 @@ class User implements UserInterface
     private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true, unique=true)
      * @Assert\Length(
      *     max="20",
      *     maxMessage="Max number of characters is 255 characters",
@@ -251,7 +251,7 @@ class User implements UserInterface
 
     public function setFirstName(?string $firstName): self
     {
-        $this->firstName = strtoupper(strtolower($firstName));
+        $this->firstName = ucfirst(strtolower($firstName));
 
         return $this;
     }
@@ -263,9 +263,14 @@ class User implements UserInterface
 
     public function setLastName(?string $lastName): self
     {
-        $this->lastName = strtoupper(strtolower($lastName));
+        $this->lastName = ucfirst(strtolower($lastName));
 
         return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->firstName.' '.$this->lastName;
     }
 
     public function getProfileName(): ?string

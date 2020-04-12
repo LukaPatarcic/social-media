@@ -1,5 +1,5 @@
 import React from 'react';
-import Main from "./Router/Main";
+import Routing from "./Router/Routing";
 import './App.css';
 import {BASE_URL} from "./Config";
 import AuthContextProvider from "./Contexts/AuthContext";
@@ -14,7 +14,7 @@ export default class App extends React.Component{
     render() {
         return (
             <AuthContextProvider>
-                <Main/>
+                <Routing/>
             </AuthContextProvider>
         )
     }

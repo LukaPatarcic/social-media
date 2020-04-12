@@ -5,7 +5,7 @@ import {MDBBadge, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDB
 import FacebookAuthLogin from "../OAuth/Facebook/FacebookAuthLogin";
 import GoogleProfile from "../OAuth/Google/GoogleProfile";
 import GoogleAuthLogin from "../OAuth/Google/GoogleAuthLogin";
-import PostItem from "../Post/PostItem";
+import PostList from "../Post/PostList";
 import PostCreate from "../Post/PostCreate";
 import {googleData} from "../OAuth/Facebook/Google";
 import {facebookData} from "../OAuth/Facebook/Facebook";
@@ -120,7 +120,7 @@ export default class Profile extends React.Component{
                                     {posts.length
                                         ?
                                         posts.map((post,index) =>
-                                            <PostItem key={index} post={post} size={12} />
+                                            <PostList key={index} post={post} size={12} />
                                         )
                                         :
                                         <MDBCol className={'mt-5'} sm={12}>

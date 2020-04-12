@@ -144,6 +144,7 @@ export default class Comments extends React.Component {
                             }
                             style={{marginBottom: 60}}
                             onEndReachedThreshold={0.3}
+                            keyExtractor={(contact, index) => String(index)}
                             ListFooterComponent={hasMore ?
                                 loadingMore ? <ActivityIndicator size={60} color={'red'} /> : null
                                     :

@@ -2,18 +2,12 @@ import React from "react";
 import {MDBBtn, MDBIcon, MDBTooltip} from "mdbreact";
 import cookie from "react-cookies";
 import {BASE_URL} from "../../Config";
+import PropTypes from 'prop-types';
 
 export default class LikeButton extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {
-            heartClicked: false,
-        }
 
-    }
-
-    componentDidMount() {
-        this.setState({heartClicked: !this.props.liked})
     }
 
     handleLike() {
@@ -35,17 +29,25 @@ export default class LikeButton extends React.Component{
             }))
     }
 
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return nextProps.liked !== this.props.liked;
+    }
 
     render() {
-        const {heartClicked} = this.state;
-
+        const {liked,onHandlePostLike,id} = this.props;
         return (
             <MDBTooltip>
-            <MDBBtn color={'white'} block={true} style={{boxShadow: 'none'}} onClick={this.handleLike.bind(this)}>
-                <MDBIcon className={'text-danger'} far={heartClicked} icon={'heart'} size={'2x'}/><br/>
+            <MDBBtn color={'white'} block={true} style={{boxShadow: 'none'}} onClick={() => onHandlePostLike(id,liked)}>
+                <MDBIcon className={'text-danger'} far={!liked} icon={'heart'} size={'2x'}/><br/>
             </MDBBtn>
-                <div>{heartClicked ? 'Like':'Liked'}</div>
+                <div>{liked ? 'Liked':'Like'}</div>
             </MDBTooltip>
         );
     }
+}
+
+LikeButton.propTypes = {
+    liked: PropTypes.bool.isRequired,
+    id: PropTypes.number.isRequired,
+    onHandlePostLike: PropTypes.func.isRequired
 }

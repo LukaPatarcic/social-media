@@ -23,14 +23,26 @@ class ContactController extends BaseController
     public function contact(\Swift_Mailer $mailer, Environment $environment, Request $request)
     {
         $data = json_decode($request->getContent(),true);
+
+        if(!$data) {
+            return $this->json(['error' => 'Bad request'],Response::HTTP_BAD_REQUEST);
+        }
+
+        $allowedKeys = ['email','message','name','subject'];
+        foreach ($data as $key => $value) {
+            if(!in_array($key,$allowedKeys)) {
+                return $this->json(['error' => 'Oops... something went wrong please try again later!'],Response::HTTP_BAD_REQUEST);
+            }
+        }
+
         $mail = new Mailer($mailer,$environment);
         $send = $mail->contactEmail($data);
 
         if(!$send) {
-            return $this->json([],Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json(['error' => 'Oops... something went wrong please try again later!'],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->json(['success' => 1], Response::HTTP_OK);
+        return $this->json(['success' => 'Mail sent successfully'], Response::HTTP_OK);
 
     }
 

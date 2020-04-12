@@ -3,7 +3,7 @@ import {View, StyleSheet, ImageBackground, Alert, TouchableOpacity, ScrollView, 
 import { Text } from 'native-base';
 import AsyncStorage from "@react-native-community/async-storage";
 // import FacebookLogin from "../components/FacebookLogin";
-import {Avatar, Card, IconButton, Paragraph} from 'react-native-paper';
+import {Avatar, Card, FAB, IconButton, Paragraph} from 'react-native-paper';
 import {Button} from "react-native-elements";
 import PostItem from "../components/PostItem";
 import TimeAgo from "react-native-timeago";
@@ -183,7 +183,12 @@ export default class Profile extends React.Component {
                         </View>
                     </ScrollView>
                 </PTRViewAndroid>
-                {/*<AddPost />*/}
+                <FAB
+                    style={styles.fab}
+                    icon="pencil"
+                    color={'white'}
+                    onPress={() => this.props.navigation.navigate('Post')}
+                />
             </ImageBackground>
         );
     }

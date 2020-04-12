@@ -54,7 +54,7 @@ export default class Navigation extends React.Component{
                                 <MDBNavItem className={'mt-2'}>
                                 <Link className={'text-white mr-2'} to='/logout'>Logout</Link>
                                 </MDBNavItem>
-                                <DesktopNotification />
+                                {/*<DesktopNotification />*/}
                                 </>
                                 :
                                 <>

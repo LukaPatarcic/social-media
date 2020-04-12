@@ -1,17 +1,23 @@
-import * as React from "react";
+import React,{Component} from "react";
 import cookie from 'react-cookies'
 import {AuthContext} from "../../Contexts/AuthContext";
 
-export default class Logout extends React.Component {
+export default class Logout extends Component {
+    static contextType = AuthContext;
+
     constructor(props) {
         super(props);
     }
-    static contextType = AuthContext;
-    render() {
 
+
+    componentDidMount() {
         cookie.remove('access-token');
         this.context.setAuthenticated(false);
         this.props.history.push('/');
+    }
+
+
+    render() {
         return null;
     }
 

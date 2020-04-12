@@ -1,53 +1,51 @@
-import React,{createContext} from "react";
-import {BASE_URL} from "../Config";
+import React,{createContext,Component} from "react";
 import cookie from 'react-cookies'
+import {authenticateUser} from "../Api/security";
 
-export const AuthContext = createContext();
+export const AuthContext = createContext(true);
 
-export default class AuthContextProvider extends React.Component{
+export default class AuthContextProvider extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            authenticated: false
-        }
+            authenticated: false,
+            token: null
+        };
+
+        this.checkCredentials = this.checkCredentials.bind(this);
+        this.setAuthenticated = this.setAuthenticated.bind(this);
 
     }
 
     componentDidMount() {
-        if(cookie.load('access-token')) {
-            this.authenticateUser();
+        const token = cookie.load('access-token');
+        if(token) {
+            this.setState({token: token,authenticated: true})
+            this.checkCredentials()
         }
     }
 
-    authenticateUser = () => {
-        fetch(BASE_URL + '/auth', {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + cookie.load('access-token')
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                this.setState({
-                    authenticated: !!data.success
-                })
-                if(typeof data.success === 'undefined') {
-                    cookie.remove('access-token')
-                }
-            })
+    checkCredentials() {
+        authenticateUser()
+            .then(data => this.setState({authenticated: true}))
             .catch(err => {
-                cookie.remove('access-token')
+                cookie.remove('access-token');
+                this.setState({authenticated: false})
             })
     }
 
     setAuthenticated = (authenticated = true) => {
-        this.setState({authenticated: authenticated})
-    }
+        this.setState({authenticated})
+    };
 
     render() {
         return (
-            <AuthContext.Provider value={{...this.state, authenticateUser: this.authenticateUser, setAuthenticated: this.setAuthenticated}}>
+            <AuthContext.Provider value={{
+                ...this.state,
+                checkCredentials: this.checkCredentials,
+                setAuthenticated: this.setAuthenticated
+            }}
+            >
                 {this.props.children}
             </AuthContext.Provider>
         )

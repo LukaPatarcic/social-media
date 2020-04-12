@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <a href="allshack://login"></a>
+    <a href="allshack://app"></a>
     <script>
         document.querySelector('a').click();
         setTimeout(() => {
-            window.open("googlechrome://navigate?url=" + {{ FRONTEND_URL }},"_system");
+            window.location.replace("{{ FRONTEND_URL }}login?verified=true");
         },500)
     </script>
 {% endblock %}

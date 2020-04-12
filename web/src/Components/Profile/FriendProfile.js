@@ -1,7 +1,7 @@
 import * as React from "react";
 import cookie from 'react-cookies'
 import {MDBBadge, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDBRow} from "mdbreact";
-import PostItem from "../Post/PostItem";
+import PostList from "../Post/PostList";
 import Followers from "./Followers";
 import Following from "./Following";
 import {BASE_URL} from "../../Config";
@@ -121,7 +121,7 @@ export default class FriendProfile extends React.Component{
                                 {posts.length
                                     ?
                                     posts.map((post,index) =>
-                                        <PostItem key={index} post={post} size={12} />
+                                        <PostList key={index} post={post} size={12} />
                                     )
                                     :
                                     <MDBCol className={'mt-5'} sm={12}>

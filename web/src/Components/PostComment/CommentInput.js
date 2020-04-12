@@ -1,9 +1,9 @@
-import React from "react";
+import React, {createRef,Component} from "react";
 import {MDBBtn, MDBCardBody, MDBCol, MDBIcon, MDBInputGroup, MDBRow} from "mdbreact";
 import {BASE_URL} from "../../Config";
 import cookie from "react-cookies";
 
-export default class CommentInput extends React.Component{
+export default class CommentInput extends Component{
 
     constructor(props) {
         super(props);
@@ -14,8 +14,12 @@ export default class CommentInput extends React.Component{
         this.onChangeHandler = this.onChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
         this.keyPress = this.keyPress.bind(this);
+        this.inputRef = createRef();
     }
 
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return nextProps.inputVisibility !== this.props.inputVisibility
+    }
 
     onChangeHandler(e) {
         this.setState({comment: e.target.value})
@@ -61,11 +65,13 @@ export default class CommentInput extends React.Component{
 
 
     render() {
-        const {commentInput} = this.props;
+        const {inputVisibility} = this.props;
+
         return (
-            <MDBRow className={commentInput ? 'd-block' : 'd-none'}>
+            <MDBRow className={inputVisibility ? 'd-block' : 'd-none'}>
                 <MDBCol>
                     <MDBInputGroup
+                        ref={this.inputRef}
                         material
                         name={'comment'}
                         value={this.state.comment}

@@ -16,8 +16,9 @@ import FriendProfile from "../Components/Profile/FriendProfile";
 import Notfound from "../Components/Error/Notfound";
 import MobileAppModal from "../Components/Mobile/MobileAppModal";
 import CookieConsent from "react-cookie-consent";
+import {LOGIN_URL, REGISTER_URL} from "../Config";
 
-export default class Main extends React.Component{
+export default class Routing extends React.Component{
 
     constructor(props) {
         super(props);
@@ -31,8 +32,8 @@ export default class Main extends React.Component{
                 <Navigation search={this.props.search}/>
                 <Switch>
                     {/* SECURITY */}
-                    <Route exact={true} path="/register" component={Register}/>
-                    <Route exact={true} path="/login" component={Login}/>
+                    <Route exact={true} path={REGISTER_URL} component={Register}/>
+                    <Route exact={true} path={LOGIN_URL} component={Login}/>
                     <Route exact={true} path="/logout" component={Logout}/>
                     {/* LEGAL */}
                     <Route exact={true} path="/legal/cookie" component={CookiePolicy} />
@@ -46,9 +47,9 @@ export default class Main extends React.Component{
                     {/* NOT FOUND */}
                     <Route exact={true} path="/notFound" component={Notfound} />
                 </Switch>
-                <MobileAppModal/>
+                <MobileAppModal />
                 <CookieConsent
-                    style={{ background: "#9e9e9e" }}
+                    style={{ background: "#d9d9d9",color: '#2a2a2a' }}
                     buttonStyle={{ color: "#fff", backgroundColor: '#f00', marginRight: 30}}
                 >
                     By using our site, you acknowledge that you have read and understand our

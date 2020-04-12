@@ -36,7 +36,7 @@ class PostController extends BaseController
         $posts = $this->getDoctrine()->getRepository(Post::class)->findFeedPosts($user,10,$offset);
         $data = [];
         foreach ($posts as $k => $post) {
-            $data[$k]['id'] = $post['postId'];
+            $data[$k]['id'] = +$post['postId'];
             $data[$k]['firstName'] = $post['firstName'];
             $data[$k]['lastName'] =$post['lastName'];
             $data[$k]['profileName'] =$post['profileName'];
@@ -44,7 +44,7 @@ class PostController extends BaseController
             $data[$k]['createdAt'] = $post['createdAt'];
             $data[$k]['likes'] = intval($post['likes']);
             $data[$k]['liked'] = (bool)$post['liked'];
-//            $data[$k]['comment'] = $this->getDoctrine()->getRepository(Comment::class)->findByPost($post,$user,1) ?? [];
+            $data[$k]['comment'] = $this->getDoctrine()->getRepository(Comment::class)->findByPost($post['postId'],$user,1) ?? [];
             $data[$k]['commentCount'] = intval($post['commentCount']);
         }
 
