@@ -33,7 +33,8 @@ class PostController extends BaseController
     {
         $user = $this->getUser();
         $offset = $request->query->getInt('offset') ?? null;
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findFeedPosts($user,10,$offset);
+        $onlyMe = $request->query->getBoolean('onlyMe') ?? false;
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findFeedPosts($user,10,$offset,$onlyMe);
         $data = [];
         foreach ($posts as $k => $post) {
             $data[$k]['id'] = +$post['postId'];
@@ -44,7 +45,22 @@ class PostController extends BaseController
             $data[$k]['createdAt'] = $post['createdAt'];
             $data[$k]['likes'] = intval($post['likes']);
             $data[$k]['liked'] = (bool)$post['liked'];
-            $data[$k]['comment'] = $this->getDoctrine()->getRepository(Comment::class)->findByPost($post['postId'],$user,1) ?? [];
+            $comment = $this->getDoctrine()->getRepository(Comment::class)->findByPost($post['postId'],$user,1,0,'DESC') ?? null;
+            $data[$k]['comment'] = null;
+            if($comment) {
+                $data[$k]['comment'] = [
+                    'id' => intval($comment['id']),
+                    'firstName' => $comment['firstName'],
+                    'lastName' => $comment['lastName'],
+                    'profileName' => $comment['profileName'],
+                    'text' => $comment['text'],
+                    'createdAt' => $comment['createdAt'],
+                    'likes' => intval($comment['likes']),
+                    'liked' => (bool)$comment['liked'],
+                    'subCommentCount' => intval($comment['subCommentCount']),
+                    'subComments' => []
+                ];
+            }
             $data[$k]['commentCount'] = intval($post['commentCount']);
         }
 

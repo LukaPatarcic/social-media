@@ -73,12 +73,13 @@ class SubCommentController extends BaseController
         $form->submit($data);
 
         if ($errors = $this->getErrorMessages($form)) {
-            return $this->json(['error' => $errors], Response::HTTP_OK);
+            return $this->json(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
         $subComment->setUser($user);
 
-        $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(['id' => $data['comment']]);
+
+//        $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(['id' => $data['id']]);
 //        $sendTo = $post->getUser()->getPushNotifications()->toArray();
 //
 //        $notification = new PushNotification();

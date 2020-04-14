@@ -8,13 +8,14 @@ import CommentInput from "../PostComment/CommentInput";
 import LikeButton from "./LikeButton";
 import PostShare from "./PostShare";
 import PropTypes from 'prop-types';
+import CommentList from "../PostComment/CommentList";
 
 export default class PostItem extends Component{
     constructor(props) {
         super(props);
         this.state = {
             inputVisibility: false
-        }
+        };
 
         this.handleInputVisibility = this.handleInputVisibility.bind(this);
     }
@@ -24,8 +25,15 @@ export default class PostItem extends Component{
     }
 
     render() {
-        const {post,onHandlePostLike} = this.props;
+        const {post,sendingComment,onHandlePostLike,onHandlePostComment,
+            sendingCommentReply,onHandleCommentReply,onHandleCommentLike,
+            getComments,comments,hasMoreComments,loadingComments,
+            loadingMoreComments,onCommentModalCloseHandler,getSubComments,
+            loadingMoreSubComments,hasMoreSubComments,
+            loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId
+        } = this.props;
         const {inputVisibility} = this.state;
+
         return (
             <MDBRow center>
                 <MDBCol sm={12} md={8}>
@@ -64,21 +72,52 @@ export default class PostItem extends Component{
                             <hr/>
                             <MDBRow>
                                 <MDBCol col={12}>
-                                    <SingleComment comment={post.comment} />
+                                    {post.comment &&
+                                        <SingleComment
+                                            onHandlePostComment={onHandlePostComment}
+                                            comment={post.comment}
+                                            sendingCommentReply={sendingCommentReply}
+                                            onHandleCommentReply={onHandleCommentReply}
+                                            onHandleCommentLike={onHandleCommentLike}
+                                            getSubComments={getSubComments}
+                                            loadingMoreSubComments={loadingMoreSubComments}
+                                            loadingMoreSubCommentsId={loadingMoreSubCommentsId}
+                                            sendingCommentId={sendingCommentId}
+                                            sendingCommentReplyId={sendingCommentReplyId}
+                                        />
+                                    }
 
-                                    {/*{commentCount > 1 &&*/}
-                                    {/*<CommentsAll*/}
-                                    {/*    commentCount={commentCount}*/}
-                                    {/*    setNewSingleComment={this.setNewSingleComment}*/}
-                                    {/*    setNewCommentCount={this.setNewCommentCount}*/}
-                                    {/*    getComment={this.getComment}*/}
-                                    {/*    post={post.id}*/}
-                                    {/*/>}*/}
+                                    {post.commentCount > 1 &&
+                                    <CommentList
+                                        comments={comments}
+                                        getComments={getComments}
+                                        hasMoreComments={hasMoreComments}
+                                        loadingComments={loadingComments}
+                                        loadingMoreComments={loadingMoreComments}
+                                        onHandlePostComment={onHandlePostComment}
+                                        sendingCommentReply={sendingCommentReply}
+                                        onHandleCommentReply={onHandleCommentReply}
+                                        onHandleCommentLike={onHandleCommentLike}
+                                        onCommentModalCloseHandler={onCommentModalCloseHandler}
+                                        getSubComments={getSubComments}
+                                        loadingMoreSubComments={loadingMoreSubComments}
+                                        hasMoreSubComments={hasMoreSubComments}
+                                        commentCount={post.commentCount}
+                                        postId={post.id}
+                                        sendingComment={sendingComment}
+                                        loadingMoreSubCommentsId={loadingMoreSubCommentsId}
+                                        sendingCommentId={sendingCommentId}
+                                        sendingCommentReplyId={sendingCommentReplyId}
+                                    />}
                                 </MDBCol>
                             </MDBRow>
 
                             <CommentInput
+                                onHandlePostComment={onHandlePostComment}
                                 inputVisibility={inputVisibility}
+                                sendingComment={sendingComment}
+                                sendingCommentId={sendingCommentId}
+                                postId={post.id}
                             />
 
                             <MDBRow center={true} className={'text-center'}>
@@ -100,7 +139,7 @@ export default class PostItem extends Component{
                                     </MDBBtn>
                                 </MDBCol>
                                 <MDBCol size={4}>
-                                    <PostShare/>
+                                    <PostShare />
                                 </MDBCol>
                             </MDBRow>
                         </MDBCardBody>
@@ -113,5 +152,19 @@ export default class PostItem extends Component{
 
 PostItem.propTypes = {
     post: PropTypes.object.isRequired,
-    onHandlePostLike: PropTypes.func.isRequired
+    getComments: PropTypes.func.isRequired,
+    hasMoreComments: PropTypes.bool.isRequired,
+    loadingComments: PropTypes.bool.isRequired,
+    onCommentModalCloseHandler: PropTypes.func.isRequired,
+    loadingMoreComments: PropTypes.bool.isRequired,
+    sendingComment: PropTypes.bool.isRequired,
+    onHandlePostLike: PropTypes.func.isRequired,
+    sendingCommentReply: PropTypes.bool.isRequired,
+    onHandleCommentReply: PropTypes.func.isRequired,
+    onHandleCommentLike: PropTypes.func.isRequired,
+    getSubComments: PropTypes.func.isRequired,
+    loadingMoreSubComments: PropTypes.bool.isRequired,
+    loadingMoreSubCommentsId: PropTypes.number.isRequired,
+    sendingCommentId: PropTypes.number.isRequired,
+    sendingCommentReplyId: PropTypes.number.isRequired,
 }

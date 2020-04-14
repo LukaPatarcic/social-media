@@ -10,14 +10,39 @@ export default class PostList extends Component {
     }
 
     render() {
-        const {posts,hasMore,loading,onHandlePostLike} = this.props;
+        const {
+            posts,hasMore,loading,comments,onHandlePostLike,
+            hasMoreComments,commentOffset,loadingComments,loadingMoreComments,
+            sendingComment,onHandlePostComment,onHandleCommentReply,
+            onHandleCommentLike,sendingCommentReply,getComments,onCommentModalCloseHandler,
+            getSubComments,loadingMoreSubComments,hasMoreSubComments,
+            loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId
+        } = this.props;
         return (
             <>
                 {posts.map((post,index) => (
                    <PostItem
-                       post={post}
                        key={index}
+                       post={post}
+                       comments={comments}
+                       hasMoreComments={hasMoreComments}
+                       commentOffset={commentOffset}
+                       loadingComments={loadingComments}
+                       onCommentModalCloseHandler={onCommentModalCloseHandler}
+                       loadingMoreComments={loadingMoreComments}
+                       sendingComment={sendingComment}
+                       getComments={getComments}
+                       sendingCommentReply={sendingCommentReply}
+                       onHandleCommentReply={onHandleCommentReply}
+                       onHandleCommentLike={onHandleCommentLike}
                        onHandlePostLike={onHandlePostLike}
+                       onHandlePostComment={onHandlePostComment}
+                       getSubComments={getSubComments}
+                       loadingMoreSubComments={loadingMoreSubComments}
+                       hasMoreSubComments={hasMoreSubComments}
+                       loadingMoreSubCommentsId={loadingMoreSubCommentsId}
+                       sendingCommentId={sendingCommentId}
+                       sendingCommentReplyId={sendingCommentReplyId}
                    />
                 ))}
                 {hasMore ?
@@ -32,7 +57,24 @@ export default class PostList extends Component {
 
 PostList.propTypes = {
     posts: PropTypes.array.isRequired,
+    comments: PropTypes.array.isRequired,
+    hasMoreComments: PropTypes.bool.isRequired,
+    loadingComments: PropTypes.bool.isRequired,
+    loadingMoreComments: PropTypes.bool.isRequired,
+    getComments: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
+    sendingComment: PropTypes.bool.isRequired,
     hasMore: PropTypes.bool.isRequired,
+    onCommentModalCloseHandler: PropTypes.func.isRequired,
     onHandlePostLike: PropTypes.func.isRequired,
-}
+    onHandlePostComment: PropTypes.func.isRequired,
+    sendingCommentReply: PropTypes.bool.isRequired,
+    onHandleCommentReply: PropTypes.func.isRequired,
+    onHandleCommentLike: PropTypes.func.isRequired,
+    getSubComments: PropTypes.func.isRequired,
+    loadingMoreSubComments: PropTypes.bool.isRequired,
+    loadingMoreSubCommentsId: PropTypes.number.isRequired,
+    sendingCommentId: PropTypes.number.isRequired,
+    sendingCommentReplyId: PropTypes.number.isRequired,
+
+};

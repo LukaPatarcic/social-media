@@ -17,6 +17,8 @@ import Notfound from "../Components/Error/Notfound";
 import MobileAppModal from "../Components/Mobile/MobileAppModal";
 import CookieConsent from "react-cookie-consent";
 import {LOGIN_URL, REGISTER_URL} from "../Config";
+import ProfileContainer from "../Components/Profile/ProfileContainer";
+import ProfileEdit from "../Components/Profile/ProfileEdit";
 
 export default class Routing extends React.Component{
 
@@ -41,9 +43,10 @@ export default class Routing extends React.Component{
                     <Route exact={true} path="/legal/tos" component={TermsOfService} />
                     {/* USER */}
                     <Route exact={true} path="/" component={Homepage}/>
+                    <Route exact={true} path="/profile/edit" component={ProfileEdit} />
                     <Route exact={true} path="/profile/:username" component={FriendProfile}/>
                     <Route exact={true} path="/notification/list" component={NotificationList} />
-                    <Route exact={true} path="/profile" component={Profile} />
+                    <Route exact={true} path="/profile" component={ProfileContainer} />
                     {/* NOT FOUND */}
                     <Route exact={true} path="/notFound" component={Notfound} />
                 </Switch>

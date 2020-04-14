@@ -1,74 +1,49 @@
-import {MDBBadge, MDBBtn, MDBCol, MDBContainer, MDBIcon, MDBInputGroup, MDBRow} from "mdbreact";
+import {MDBBadge, MDBCol, MDBRow} from "mdbreact";
 import TimeAgo from "react-timeago";
-import CommentLike from "./CommentLike";
-import CommentReply from "./CommentReply";
 import React from "react";
-import {BASE_URL} from "../../Config";
-import cookie from "react-cookies";
-import CommentInput from "./CommentInput";
+import {setProfilePicture} from "../../Helpers";
+import PropTypes from 'prop-types'
+import SubCommentInput from "./SubCommentInput";
+import SubCommentList from "./SubCommentList";
 
 export default class SingleComment extends React.Component {
 
     constructor(props) {
         super(props);
-        const {likes} = this.props.comment
         this.state = {
-            likes: likes ? parseInt(this.props.comment.likes) : 0,
-            liked: !!this.props.comment.liked
-        }
+            inputVisibility: false,
+        };
 
-        this.addLike = this.addLike.bind(this)
-        this.removeLike = this.removeLike.bind(this)
-        this.handleLike = this.handleLike.bind(this)
+        this.handleInputVisibility = this.handleInputVisibility.bind(this);
+        this.handleLike = this.handleLike.bind(this);
     }
 
-    addLike() {
-        this.setState((prevState) => ({
-            likes: prevState.likes+1
-        }));
+    handleInputVisibility(e) {
+        e.preventDefault();
+        this.setState((prevState) => ({inputVisibility: !prevState.inputVisibility}))
     }
 
-    removeLike() {
-        this.setState((prevState) => ({
-            likes: prevState.likes-1
-        }));
+    handleLike(e) {
+        e.preventDefault();
+        this.props.onHandleCommentLike(this.props.comment.id,this.props.comment.liked)
     }
 
-    handleLike() {
-        const {liked} = this.state;
-        fetch(BASE_URL+'/comment/like',{
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' +  cookie.load('access-token')
-            },
-            method: liked ? 'DELETE' : 'POST',
-            body: JSON.stringify({id: this.props.comment.id})
-        })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    this.setState({liked: !this.state.liked},() => {
-                        this.state.liked ?
-                            this.addLike()
-                            :
-                            this.removeLike()
-                    })
-
-                }
-            })
-    }
 
     render() {
-        const {comment} = this.props;
-        const {likes,liked} = this.state;
+        const {comment,onHandleCommentReply,sendingCommentReply,
+            getSubComments,loadingMoreSubComments,
+            loadingMoreSubCommentsId,sendingCommentReplyId,
+            sendingCommentId
+        } = this.props;
+        const {inputVisibility} = this.state;
+
         return (
             <>
             <MDBRow>
                 <MDBCol sm={1} className={'pr-0 d-flex align-items-start justify-content-center'}>
                     <img
                         className={'img-fluid pb-2'}
-                        src={'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=38&name=' + comment.firstName + '+' + comment.lastName}
+                        src={setProfilePicture(comment.firstName,comment.lastName)}
                     />
                 </MDBCol>
                 <MDBCol sm={11} className={'pl-0'}>
@@ -79,33 +54,44 @@ export default class SingleComment extends React.Component {
                     </MDBCol>
                     <MDBCol sm={12} className={'text-muted'}>
                         {comment.text}
-                        <MDBBadge className={'float-right z-index-1 position-relative'} color={'red'}>{likes}</MDBBadge>
+                        <MDBBadge className={'float-right z-index-1 position-relative'} color={'red'}>{comment.likes}</MDBBadge>
                     </MDBCol>
                     <MDBCol sm={12}>
                         <a className={'text-danger mr-3'} style={{fontSize: 14,fontWeight: 400}} onClick={this.handleLike}>
-                            {liked ? 'Liked' : 'Like'}
+                            {comment.liked ? 'Liked' : 'Like'}
                         </a>
-                        <a href={'#'} className={'text-danger'} style={{fontSize: 14}}>Reply</a>
-                        <MDBInputGroup
-                            material
-                            size={'sm'}
-                            name={'comment'}
-                            // value={this.state.comment}
-                            // onChange={this.onChangeHandler}
-                            // onKeyDown={this.keyPress}
-                            containerClassName="mb-2 mt-0"
-                            hint={'Enter comment...'}
-                            append={
-                                <MDBBtn color={'white'} style={{boxShadow: 'none'}} onClick={this.submitHandler}>
-                                    <MDBIcon  far={true} style={{color: 'red'}} icon={'paper-plane'} size={'2x'}/>
-                                </MDBBtn>
-                            }
+                        <a href={'#'} className={'text-danger'} style={{fontSize: 14}} onClick={this.handleInputVisibility}>Reply</a>
+                    </MDBCol>
+                    <MDBCol size={12}>
+                        <SubCommentList
+                            subComments={comment.subComments}
+                            subCommentCount={comment.subCommentCount}
+                            getSubComments={getSubComments}
+                            loadingMoreSubComments={loadingMoreSubComments}
+                            commentId={comment.id}
+                            loadingMoreSubCommentsId={loadingMoreSubCommentsId}
+                            sendingCommentId={sendingCommentId}
+                            sendingCommentReplyId={sendingCommentReplyId}
                         />
                     </MDBCol>
                 </MDBCol>
+                <SubCommentInput inputVisibility={inputVisibility} onHandleCommentReply={onHandleCommentReply} sendingCommentReply={sendingCommentReply} commentId={comment.id} />
             </MDBRow>
                 <hr />
             </>
         )
     }
 }
+
+SingleComment.propTypes = {
+    comment: PropTypes.object.isRequired,
+    sendingCommentReply: PropTypes.bool.isRequired,
+    onHandlePostComment: PropTypes.func.isRequired,
+    onHandleCommentReply: PropTypes.func.isRequired,
+    onHandleCommentLike: PropTypes.func.isRequired,
+    getSubComments: PropTypes.func.isRequired,
+    loadingMoreSubComments: PropTypes.bool.isRequired,
+    loadingMoreSubCommentsId: PropTypes.number.isRequired,
+    sendingCommentId: PropTypes.number.isRequired,
+    sendingCommentReplyId: PropTypes.number.isRequired,
+};

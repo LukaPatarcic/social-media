@@ -1,12 +1,10 @@
 import React, {createRef,Component} from "react";
 import {MDBBtn, MDBCol, MDBIcon, MDBInput, MDBRow} from "mdbreact";
-import {BASE_URL} from "../../Config";
-import cookie from "react-cookies";
 import SimpleReactValidator from "simple-react-validator";
 import PropTypes from 'prop-types'
 import {ClipLoader} from "react-spinners";
 
-export default class CommentInput extends Component{
+export default class SubCommentInput extends Component{
 
     constructor(props) {
         super(props);
@@ -26,7 +24,7 @@ export default class CommentInput extends Component{
             return true;
         }
 
-        if(nextState.sendingComment !== this.props.sendingComment) {
+        if(nextState.sendingCommentReply !== this.props.sendingCommentReply) {
             return true;
         }
 
@@ -50,7 +48,7 @@ export default class CommentInput extends Component{
     validateForm(e) {
         e.preventDefault();
         if (this.validator.allValid()) {
-            this.props.onHandlePostComment(this.state.comment,this.props.postId);
+            this.props.onHandleCommentReply(this.props.commentId,this.state.comment);
             this.setState({comment: ''})
         } else {
             this.validator.showMessages();
@@ -60,7 +58,7 @@ export default class CommentInput extends Component{
 
 
     render() {
-        const {inputVisibility,sendingComment,postId,sendingCommentId} = this.props;
+        const {inputVisibility,sendingCommentReply} = this.props;
         const {comment} = this.state;
 
         return (
@@ -81,15 +79,13 @@ export default class CommentInput extends Component{
                         <MDBCol size={2} className={'d-flex align-items-center justify-content-center pl-0'}>
                             <MDBBtn color={'white'} className={'text-center'} style={{boxShadow: 'none'}} onClick={this.validateForm}>
                                 {
-                                    sendingComment ?
-                                        sendingCommentId === postId ?
-                                            <ClipLoader
-                                                sizeUnit={"px"}
-                                                size={20}
-                                                color={'#f00'}
-                                                loading={sendingComment}
-                                            />
-                                            :<MDBIcon  far={true} style={{color: 'red'}} icon={'paper-plane'} size={'2x'}/>
+                                    sendingCommentReply ?
+                                        <ClipLoader
+                                            sizeUnit={"px"}
+                                            size={20}
+                                            color={'#f00'}
+                                            loading={sendingCommentReply}
+                                        />
                                         :
                                         <MDBIcon  far={true} style={{color: 'red'}} icon={'paper-plane'} size={'2x'}/>
                                 }
@@ -102,10 +98,9 @@ export default class CommentInput extends Component{
     }
 }
 
-CommentInput.propTypes = {
+SubCommentInput.propTypes = {
     inputVisibility: PropTypes.bool.isRequired,
-    onHandlePostComment: PropTypes.func.isRequired,
-    sendingComment: PropTypes.bool.isRequired,
-    postId: PropTypes.number.isRequired,
-    sendingCommentId: PropTypes.number.isRequired,
+    onHandleCommentReply: PropTypes.func.isRequired,
+    sendingCommentReply: PropTypes.bool.isRequired,
+    commentId: PropTypes.number.isRequired,
 }

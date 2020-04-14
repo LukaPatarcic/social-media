@@ -41,7 +41,7 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function findFeedPosts(User $user,$limit = 10,$offset = 0)
+    public function findFeedPosts(User $user,$limit = 10,$offset = 0,$onlyMe=false)
     {
         $em = $this->getEntityManager()->getConnection();
         try {
@@ -53,14 +53,14 @@ class PostRepository extends ServiceEntityRepository
                 (SELECT COUNT(l.id) as likes FROM like_post l JOIN post p ON p.id = l.post_id WHERE l.post_id = postId) as likes
                 FROM post p
                 JOIN user u ON p.user_id = u.id
-                JOIN friendship f ON u.id = f.friend_id
-                WHERE p.user_id != :user AND f.user_id = :user
-                ORDER BY p.created_at DESC
+                JOIN friendship f ON u.id = f.friend_id".
+                ($onlyMe ? " WHERE p.user_id = :user " : " WHERE p.user_id != :user AND f.user_id = :user ")
+                ."ORDER BY p.created_at DESC
                 LIMIT :limit
                 OFFSET :offset
                 ");
         } catch (DBALException $e) {
-            return [];
+            return ['error' => $e->getMessage()];
         }
         $stm->bindValue('user',$user->getId());
         $stm->bindValue('limit',(int)$limit,\PDO::PARAM_INT);
@@ -68,20 +68,6 @@ class PostRepository extends ServiceEntityRepository
         $stm->execute();
 
         return $stm->fetchAll(FetchMode::ASSOCIATIVE);
-//        return $this->createQueryBuilder('p')
-//            ->select('p.id, p.text, p.createdAt, COUNT(lp.id) as likes, u.firstName, u.lastName, u.profileName')
-//            ->addSelect('(SELECT l.id FROM App\Entity\LikePost l WHERE l.user = :user and l.post = p) as liked')
-//            ->join('p.user','u')
-//            ->join('p.likePosts','lp')
-//            ->join('u.friends','uf')
-//            ->andWhere('p.user != :user')
-//            ->setParameter('user', $user)
-//            ->orderBy('p.createdAt', 'DESC')
-//            ->setMaxResults($limit)
-//            ->setFirstResult($offset)
-//            ->getQuery()
-//            ->getResult()
-//            ;
     }
 
     public function findUsersPosts(User $user)

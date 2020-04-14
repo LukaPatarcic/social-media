@@ -50,7 +50,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(
      *     max="50",
-     *     maxMessage="Max number of characters is 255 characters",
+     *     maxMessage="Max number of characters is 50 characters",
      *     min="2",
      *     minMessage="Your first name should be at least 2 characters"
      * )
@@ -63,7 +63,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(
      *     max="50",
-     *     maxMessage="Max number of characters is 255 characters",
+     *     maxMessage="Max number of characters is 50 characters",
      *     min="2",
      *     minMessage="Your last name should be at least 2 characters"
      * )

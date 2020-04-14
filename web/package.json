@@ -1,7 +1,7 @@
 {
   "name": "allshak",
   "version": "0.1.0",
-  "homepage": "https://allshak.lukaku.tech",
+  "homepage": "https://allshack.lukaku.tech",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
