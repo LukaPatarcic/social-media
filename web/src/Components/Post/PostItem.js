@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import {MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBIcon, MDBRow} from "mdbreact";
+import {MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBIcon, MDBRow, MDBTooltip} from "mdbreact";
 import {setProfilePicture} from "../../Helpers";
 import {Link} from "react-router-dom";
 import TimeAgo from "react-timeago";
@@ -9,6 +9,7 @@ import LikeButton from "./LikeButton";
 import PostShare from "./PostShare";
 import PropTypes from 'prop-types';
 import CommentList from "../PostComment/CommentList";
+import PostLikes from "./PostLikes";
 
 export default class PostItem extends Component{
     constructor(props) {
@@ -41,16 +42,26 @@ export default class PostItem extends Component{
                         <MDBCardBody>
                             <MDBRow className={'mb-3'}>
                                 <MDBCol size={1} className={'pr-0 d-flex justify-content-start align-items-center'}>
-                                    <img
-                                        className={'img-fluid'}
-                                        src={setProfilePicture(post.firstName,post.lastName)}
-                                        alt={post.firstName + ' ' + post.lastName}
-                                    />
+                                    <Link  to={'/profile/' + post.profileName}>
+                                        <img
+                                            className={'img-fluid'}
+                                            src={setProfilePicture(post.firstName,post.lastName)}
+                                            alt={''}
+                                        />
+                                    </Link>
                                 </MDBCol>
                                 <MDBCol size={10} className={'pl-3'}>
                                     <h5 className={'mb-0'}>
-                                        <Link className={'text-dark'}
-                                              to={'/profile/' + post.profileName}>{post.firstName} {post.lastName}</Link><br/>
+                                        <MDBTooltip>
+                                            <Link
+                                                className={'text-dark'}
+                                                to={'/profile/' + post.profileName}
+                                            >
+                                                {post.profileName}
+                                            </Link>
+                                            <div>{post.firstName+' '+post.lastName}</div>
+                                        </MDBTooltip>
+
                                     </h5>
                                     <small className={'text-muted'} style={{fontSize: 11}}><TimeAgo
                                         date={post.createdAt}/></small>
@@ -63,10 +74,32 @@ export default class PostItem extends Component{
                             </MDBRow>
                             <MDBRow>
                                 <MDBCol>
-                                    <span className={'mr-3'}>Likes <MDBBadge style={{fontSize: 14}}
-                                                                             color={'red'}>{post.likes}</MDBBadge></span>
-                                    <span>Comments <MDBBadge style={{fontSize: 14}}
-                                                             color={'black'}>{post.commentCount}</MDBBadge></span>
+                                    <PostLikes likes={post.likes} />
+                                    <CommentList
+                                        comments={comments}
+                                        getComments={getComments}
+                                        hasMoreComments={hasMoreComments}
+                                        loadingComments={loadingComments}
+                                        loadingMoreComments={loadingMoreComments}
+                                        onHandlePostComment={onHandlePostComment}
+                                        sendingCommentReply={sendingCommentReply}
+                                        onHandleCommentReply={onHandleCommentReply}
+                                        onHandleCommentLike={onHandleCommentLike}
+                                        onCommentModalCloseHandler={onCommentModalCloseHandler}
+                                        getSubComments={getSubComments}
+                                        loadingMoreSubComments={loadingMoreSubComments}
+                                        hasMoreSubComments={hasMoreSubComments}
+                                        commentCount={post.commentCount}
+                                        postId={post.id}
+                                        sendingComment={sendingComment}
+                                        loadingMoreSubCommentsId={loadingMoreSubCommentsId}
+                                        sendingCommentId={sendingCommentId}
+                                        sendingCommentReplyId={sendingCommentReplyId}
+                                        showMoreTag={<a href={'#'} className={'text-dark'}>
+                                        <span>Comments <MDBBadge style={{fontSize: 14}}
+                                                                 color={'black'}>{post.commentCount}</MDBBadge></span>
+                                        </a>}
+                                    />
                                 </MDBCol>
                             </MDBRow>
                             <hr/>
@@ -108,6 +141,9 @@ export default class PostItem extends Component{
                                         loadingMoreSubCommentsId={loadingMoreSubCommentsId}
                                         sendingCommentId={sendingCommentId}
                                         sendingCommentReplyId={sendingCommentReplyId}
+                                        showMoreTag={<p className={'text-center'}>
+                                            <a onClick={this.toggle} href={'#'} className={'text-danger'}>Show comments...</a>
+                                        </p>}
                                     />}
                                 </MDBCol>
                             </MDBRow>

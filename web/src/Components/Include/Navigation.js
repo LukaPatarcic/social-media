@@ -8,7 +8,8 @@ import {
 import {Link} from "react-router-dom";
 import Search from "../Search/Search";
 import DesktopNotification from "../Notification/DesktopNotification";
-import AuthContextProvider, {AuthContext} from "../../Contexts/AuthContext";
+import {AuthContext} from "../../Contexts/AuthContext";
+import cookie from 'react-cookies'
 
 export default class Navigation extends React.Component{
 
@@ -49,7 +50,7 @@ export default class Navigation extends React.Component{
                                     </Link>
                                 </MDBNavItem>
                                 <MDBNavItem className={'mt-2'}>
-                                    <Link className={'text-white mr-2'} to='/profile'>Profile</Link>
+                                    <Link className={'text-white mr-2'} to={'/profile/'+cookie.load('user').profileName}>Profile</Link>
                                 </MDBNavItem>
                                 <MDBNavItem className={'mt-2'}>
                                 <Link className={'text-white mr-2'} to='/logout'>Logout</Link>

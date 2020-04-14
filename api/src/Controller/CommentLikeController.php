@@ -27,17 +27,17 @@ class CommentLikeController extends AbstractController
     {
         $data = json_decode($request->getContent(),true);
         if(!isset($data['id']))
-            return $this->json([],Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Bad request'],Response::HTTP_BAD_REQUEST);
         $user = $this->getUser();
         $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(['id' => $data['id']]);
 
         if(!$comment) {
-            return $this->json([],Response::HTTP_NOT_FOUND);
+            return $this->json(['error' => 'Comment not found'],Response::HTTP_NOT_FOUND);
         }
 
         $commentLiked = $this->getDoctrine()->getRepository(CommentLike::class)->findOneBy(['comment' => $comment,'user' => $user]);
         if($commentLiked) {
-            return $this->json([],Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Comment already liked'],Response::HTTP_BAD_REQUEST);
         }
 
         $commentLike = new CommentLike();

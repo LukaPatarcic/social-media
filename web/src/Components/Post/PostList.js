@@ -49,7 +49,7 @@ export default class PostList extends Component {
                     (loading &&
                         <div className={'text-center mt-3'}><ClipLoader sizeUnit={"px"} size={100} color={'#f00'} loading={loading}/></div>)
                     :
-                    <p className={'text-center text-white'}>No more posts</p>}
+                    <p className={'text-center text-white'}>No more posts...</p>}
             </>
         );
     }

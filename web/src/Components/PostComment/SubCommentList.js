@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import {MDBRow} from "mdbreact";
+import {MDBCol, MDBRow} from "mdbreact";
 import PropTypes from 'prop-types';
 import SingleSubComment from "./SingleSubComment";
 import {ClipLoader} from "react-spinners";
@@ -30,29 +30,31 @@ export default class SubCommentList extends Component{
         const {loadingMoreSubComments,subComments,subCommentCount,loadingMoreSubCommentsId,commentId} = this.props;
 
         return (
-            <MDBRow>
-                {subComments.map((comment,index) => (
-                    <SingleSubComment key={index} comment={comment} />
-                ))}
-                {loadingMoreSubComments ?
-                    loadingMoreSubCommentsId === commentId ?
-                        <div className={'text-center'}>
-                            <ClipLoader sizeUnit={"px"} size={30} color={'#f00'} loading={loadingMoreSubComments}/>
-                        </div>
-                        :
-                        subCommentCount > 0 ?
-                        <ShowMoreReplies
-                            showMoreReplies={this.showMoreReplies}
-                            subCommentCount={subCommentCount}
-                        />
-                        : null
-                    : subCommentCount > 0 ?
-                        <ShowMoreReplies
-                            showMoreReplies={this.showMoreReplies}
-                            subCommentCount={subCommentCount}
-                        />
-                    :null
-                }
+            <MDBRow className={'mt-3'}>
+                <MDBCol size={12}>
+                    {subComments.map((comment,index) => (
+                        <SingleSubComment key={index} comment={comment} />
+                    ))}
+                    {loadingMoreSubComments ?
+                        loadingMoreSubCommentsId === commentId ?
+                            <div className={'text-center'}>
+                                <ClipLoader sizeUnit={"px"} size={30} color={'#f00'} loading={loadingMoreSubComments}/>
+                            </div>
+                            :
+                            subCommentCount > 0 ?
+                                <ShowMoreReplies
+                                    showMoreReplies={this.showMoreReplies}
+                                    subCommentCount={subCommentCount}
+                                />
+                                : null
+                        : subCommentCount > 0 ?
+                            <ShowMoreReplies
+                                showMoreReplies={this.showMoreReplies}
+                                subCommentCount={subCommentCount}
+                            />
+                            :null
+                    }
+                </MDBCol>
             </MDBRow>
         );
     }

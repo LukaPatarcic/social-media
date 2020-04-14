@@ -45,75 +45,74 @@ export default class CommentList extends React.Component{
             onHandlePostComment,sendingCommentReply,hasMoreComments,
             loadingComments,loadingMoreComments,getSubComments,loadingMoreSubComments,
             postId,sendingComment,loadingMoreSubCommentsId,sendingCommentId,
-            sendingCommentReplyId
+            sendingCommentReplyId,showMoreTag
         } = this.props;
         return (
             <>
-                <MDBContainer onScroll={this.handleScroll}>
-                    <p className={'text-center'}>
-                        <a onClick={this.toggle} href={'#'} className={'text-danger'}>Show comments...</a>
-                    </p>
-                    <MDBModal size={'lg'} isOpen={modal} toggle={this.toggle}>
-                        <MDBModalHeader toggle={this.toggle}>Comments ({commentCount})</MDBModalHeader>
-                        <MDBModalBody style={{height: 600,overflowY: 'scroll'}}>
-                            {loadingComments ?
+                {React.cloneElement(showMoreTag, {
+                    onClick: this.toggle
+                })}
+                <MDBModal size={'lg'} isOpen={modal} toggle={this.toggle}>
+                    <MDBModalHeader toggle={this.toggle}>Comments ({commentCount})</MDBModalHeader>
+                    <MDBModalBody style={{height: 600,overflowY: 'scroll'}}>
+                        {loadingComments ?
+                            <div className={'text-center mt-3'}>
+                                <ClipLoader
+                                    sizeUnit={"px"}
+                                    size={100}
+                                    color={'#f00'}
+                                    loading={loadingComments}
+                                />
+                            </div>
+                            :
+                            comments.map((comment,index) =>
+                                <SingleComment
+                                    key={index}
+                                    comment={comment}
+                                    onHandleCommentLike={onHandleCommentLike}
+                                    onHandleCommentReply={onHandleCommentReply}
+                                    onHandlePostComment={onHandlePostComment}
+                                    sendingCommentReply={sendingCommentReply}
+                                    getSubComments={getSubComments}
+                                    loadingMoreSubComments={loadingMoreSubComments}
+                                    loadingMoreSubCommentsId={loadingMoreSubCommentsId}
+                                    sendingCommentId={sendingCommentId}
+                                    sendingCommentReplyId={sendingCommentReplyId}
+                                    fromCommentList={true}
+                                />
+                            )
+                        }
+                        {hasMoreComments ?
+                            (loadingMoreComments ?
                                 <div className={'text-center mt-3'}>
                                     <ClipLoader
                                         sizeUnit={"px"}
                                         size={100}
                                         color={'#f00'}
-                                        loading={loadingComments}
+                                        loading={loadingMoreComments}
                                     />
                                 </div>
                                 :
-                                comments.map((comment,index) =>
-                                    <SingleComment
-                                        key={index}
-                                        comment={comment}
-                                        onHandleCommentLike={onHandleCommentLike}
-                                        onHandleCommentReply={onHandleCommentReply}
-                                        onHandlePostComment={onHandlePostComment}
-                                        sendingCommentReply={sendingCommentReply}
-                                        getSubComments={getSubComments}
-                                        loadingMoreSubComments={loadingMoreSubComments}
-                                        loadingMoreSubCommentsId={loadingMoreSubCommentsId}
-                                        sendingCommentId={sendingCommentId}
-                                        sendingCommentReplyId={sendingCommentReplyId}
-                                    />
-                                )
-                            }
-                            {hasMoreComments ?
-                                (loadingMoreComments ?
-                                    <div className={'text-center mt-3'}>
-                                        <ClipLoader
-                                            sizeUnit={"px"}
-                                            size={100}
-                                            color={'#f00'}
-                                            loading={loadingMoreComments}
-                                        />
-                                    </div>
-                                    :
-                                    !loadingComments ?
-                                        <p className={'text-center'} onClick={this.loadMoreComments}><a href={'#'} className={'text-dark'}>Load more comments (+)</a></p>
-                                        :null
-                                )
-                                :
-                                <p className={'text-center text-dark'}>No more comments...</p>
-                            }
-                        </MDBModalBody>
-                        <MDBModalFooter>
-                            <MDBContainer>
-                                <CommentInput
-                                 inputVisibility={true}
-                                 onHandlePostComment={onHandlePostComment}
-                                 postId={postId}
-                                 sendingComment={sendingComment}
-                                 sendingCommentId={sendingCommentId}
-                                />
-                            </MDBContainer>
-                        </MDBModalFooter>
-                    </MDBModal>
-                </MDBContainer>
+                                !loadingComments ?
+                                    <p className={'text-center'} onClick={this.loadMoreComments}><a href={'#'} className={'text-dark'}>Load more comments (+)</a></p>
+                                    :null
+                            )
+                            :
+                            <p className={'text-center text-dark'}>No more comments...</p>
+                        }
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                        <MDBContainer>
+                            <CommentInput
+                             inputVisibility={true}
+                             onHandlePostComment={onHandlePostComment}
+                             postId={postId}
+                             sendingComment={sendingComment}
+                             sendingCommentId={sendingCommentId}
+                            />
+                        </MDBContainer>
+                    </MDBModalFooter>
+                </MDBModal>
 
             </>
         );
@@ -137,6 +136,7 @@ CommentList.propTypes = {
     loadingMoreSubCommentsId: PropTypes.number.isRequired,
     sendingCommentId: PropTypes.number.isRequired,
     sendingCommentReplyId: PropTypes.number.isRequired,
-    sendingComment: PropTypes.bool.isRequired
+    sendingComment: PropTypes.bool.isRequired,
+    showMoreTag: PropTypes.element.isRequired
 }
 

@@ -28,7 +28,8 @@ export default class Login extends Component {
         this.setState({loading: true});
         login(email,password)
             .then(data => {
-                cookie.save('access-token', data.token,{maxAge: COOKIE_TTL});
+                cookie.save('access-token', data.token,{maxAge: COOKIE_TTL, secure: true});
+                cookie.save('user', data.user,{maxAge: COOKIE_TTL, secure: true});
                 this.context.setAuthenticated(true);
             })
             .catch(err => {

@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Form\PostType;
 use App\Form\RegistrationFormType;
 use App\Services\PushNotification;
+use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,13 +29,14 @@ class PostController extends BaseController
      * @Route("/post", name="post_feed_list", methods={"GET"})
      * @param Request $request
      * @return JsonResponse|Response
+     * @throws NonUniqueResultException
      */
     public function postsFeedList(Request $request)
     {
         $user = $this->getUser();
-        $offset = $request->query->getInt('offset') ?? null;
-        $onlyMe = $request->query->getBoolean('onlyMe') ?? false;
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findFeedPosts($user,10,$offset,$onlyMe);
+        $offset = $request->query->getInt('offset',0);
+        $onlyMe = $request->query->getBoolean('onlyMe',false);
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findPosts($user,10,$offset,$onlyMe);
         $data = [];
         foreach ($posts as $k => $post) {
             $data[$k]['id'] = +$post['postId'];
@@ -78,27 +80,13 @@ class PostController extends BaseController
     }
 
     /**
-     * @Route("/post/user", name="post_feed", methods={"GET"})
-     * @return JsonResponse|Response
+     * @Route("/post/{$id}/likes", name="post_likes", methods={"GET"})
      */
-    public function postUser()
+    public function postLikes($id, Request $request)
     {
-        $user = $this->getUser();
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findUsersPosts($user);
-        $data = [];
-        foreach ($posts as $k => $post) {
-            $data[$k]['id'] = $post->getId();
-            $data[$k]['firstName'] = $post->getUser()->getFirstName();
-            $data[$k]['lastName'] = $post->getUser()->getLastName();
-            $data[$k]['profileName'] = $post->getUser()->getProfileName();
-            $data[$k]['text'] = $post->getText();
-            $data[$k]['createdAt'] = $post->getCreatedAt();
-            $data[$k]['likes'] = count($post->getLikePosts());
-            $data[$k]['liked'] = (bool)$this->getDoctrine()->getRepository(LikePost::class)->findIfUserLikedPost($user,$post);
-        }
-
-
-        return $this->json($data,Response::HTTP_OK);
+        $offset = $request->query->getInt('offset',0);
+        $limit = $request->query->getInt('limit',10);
+        $likes = $this->getDoctrine()->getRepository(Post::class)->findPostLikes($id,$offset,$limit,'ASC');
     }
 
 

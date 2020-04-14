@@ -1,7 +1,5 @@
 import React,{Component} from "react";
 import Profile from "./Profile";
-import {BASE_URL} from "../../Config";
-import cookie from "react-cookies";
 
 export default class ProfileContainer extends Component{
     constructor(props) {
@@ -18,6 +16,7 @@ export default class ProfileContainer extends Component{
     }
 
     componentDidMount() {
+        const profileName = this.props.match.params.profileName;
         // fetch(BASE_URL+'/user',{
         //     headers: {
         //         'Accept': 'application/json',

@@ -41,7 +41,7 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function findFeedPosts(User $user,$limit = 10,$offset = 0,$onlyMe=false)
+    public function findPosts(User $user,$limit = 10,$offset = 0,$onlyMe=false)
     {
         $em = $this->getEntityManager()->getConnection();
         try {
@@ -70,28 +70,15 @@ class PostRepository extends ServiceEntityRepository
         return $stm->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
-    public function findUsersPosts(User $user)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.user = :id')
-            ->join('p.user','u')
-            ->setParameter('id', $user->getId())
-            ->orderBy('p.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult()
-            ;
-
-    }
-
-    /*
-    public function findOneBySomeField($value): ?Post
+    public function findPostLikes($id,$offset = 0,$limit = 10,$sort = 'ASC')
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->setParameter('val', $id)
+            ->orderBy('p.id', 'ASC')
+            ->setMaxResults(10)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult()
+            ;
     }
-    */
 }

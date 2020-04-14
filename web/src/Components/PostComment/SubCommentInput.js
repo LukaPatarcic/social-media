@@ -48,7 +48,7 @@ export default class SubCommentInput extends Component{
     validateForm(e) {
         e.preventDefault();
         if (this.validator.allValid()) {
-            this.props.onHandleCommentReply(this.props.commentId,this.state.comment);
+            this.props.onHandleCommentReply(this.props.commentId,this.state.comment,this.props.fromCommentList);
             this.setState({comment: ''})
         } else {
             this.validator.showMessages();
@@ -58,7 +58,7 @@ export default class SubCommentInput extends Component{
 
 
     render() {
-        const {inputVisibility,sendingCommentReply} = this.props;
+        const {inputVisibility,sendingCommentReply,profileName} = this.props;
         const {comment} = this.state;
 
         return (
@@ -67,17 +67,19 @@ export default class SubCommentInput extends Component{
                     <MDBRow>
                         <MDBCol size={10} className={'pr-0'}>
                             <MDBInput
+                                containerClass={'mt-3'}
                                 ref={this.inputRef}
                                 value={comment}
+                                size={'sm'}
                                 name={'comment'}
-                                label={'Enter comment...'}
+                                label={'Reply to '+profileName}
                                 onKeyDown={this.keyPress}
                                 onChange={this.onChangeHandler}
                             />
                             <small className="grey-text">{this.validator.message('comment', comment, 'required|max:50')}</small>
                         </MDBCol>
                         <MDBCol size={2} className={'d-flex align-items-center justify-content-center pl-0'}>
-                            <MDBBtn color={'white'} className={'text-center'} style={{boxShadow: 'none'}} onClick={this.validateForm}>
+                            <MDBBtn color={'white'} block={true} className={'text-center'} style={{boxShadow: 'none'}} onClick={this.validateForm}>
                                 {
                                     sendingCommentReply ?
                                         <ClipLoader
@@ -96,6 +98,10 @@ export default class SubCommentInput extends Component{
             </MDBRow>
         );
     }
+
+    static defaultProps = {
+        fromCommentList: false
+    }
 }
 
 SubCommentInput.propTypes = {
@@ -103,4 +109,6 @@ SubCommentInput.propTypes = {
     onHandleCommentReply: PropTypes.func.isRequired,
     sendingCommentReply: PropTypes.bool.isRequired,
     commentId: PropTypes.number.isRequired,
+    profileName: PropTypes.string.isRequired,
+    fromCommentList: PropTypes.bool
 }

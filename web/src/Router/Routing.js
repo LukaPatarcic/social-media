@@ -10,9 +10,7 @@ import CookiePolicy from "../Components/Legal/CookiePolicy";
 import TermsOfService from "../Components/Legal/TermsOfService";
 import PrivacyPolicy from "../Components/Legal/PrivacyPolicy";
 import {setBackground} from "../Helpers";
-import Profile from "../Components/Profile/Profile";
 import NotificationList from "../Components/Notification/NotificationList";
-import FriendProfile from "../Components/Profile/FriendProfile";
 import Notfound from "../Components/Error/Notfound";
 import MobileAppModal from "../Components/Mobile/MobileAppModal";
 import CookieConsent from "react-cookie-consent";
@@ -44,9 +42,8 @@ export default class Routing extends React.Component{
                     {/* USER */}
                     <Route exact={true} path="/" component={Homepage}/>
                     <Route exact={true} path="/profile/edit" component={ProfileEdit} />
-                    <Route exact={true} path="/profile/:username" component={FriendProfile}/>
+                    <Route exact={true} path="/profile/:profileName" component={ProfileContainer}/>
                     <Route exact={true} path="/notification/list" component={NotificationList} />
-                    <Route exact={true} path="/profile" component={ProfileContainer} />
                     {/* NOT FOUND */}
                     <Route exact={true} path="/notFound" component={Notfound} />
                 </Switch>

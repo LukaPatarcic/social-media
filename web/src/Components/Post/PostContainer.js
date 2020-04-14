@@ -34,17 +34,18 @@ export default class PostContainer extends React.Component{
         this.handleCommentLike = this.handleCommentLike.bind(this);
         this.handleCommentReply = this.handleCommentReply.bind(this);
         this.commentModalCloseHandler = this.commentModalCloseHandler.bind(this);
+        this.handleScroll = this.handleScroll.bind(this)
         this.getSubComments = this.getSubComments.bind(this);
         this.getComments = this.getComments.bind(this);
     }
 
     componentDidMount() {
         this.getPosts();
-        window.addEventListener('scroll', debounce(this.handleScroll.bind(this),100));
+        window.addEventListener('scroll', this.handleScroll);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', debounce(this.handleScroll.bind(this),100))
+        window.removeEventListener('scroll', this.handleScroll)
     }
 
     handleScroll() {
@@ -63,7 +64,6 @@ export default class PostContainer extends React.Component{
         if(loading || !hasMore) {
             return;
         }
-        console.log(this.props.onlyMe);
         getPosts(offset,this.props.onlyMe)
             .then(data => {
                 this.setState((prevState) => ({
@@ -183,18 +183,20 @@ export default class PostContainer extends React.Component{
 
     }
 
-    handleCommentReply(id,reply) {
+    handleCommentReply(id,reply,fromCommentList = false) {
         commentReply(id,reply)
             .then(response => {
                 this.setState((prevState => {
-                    prevState.comments.filter(comment => {
-                        if (comment.id === id) {
-                            comment.subComments = [response.comment,...comment.subComments];
-                            return comment;
-                        }
+                    if(fromCommentList) {
+                        prevState.comments.filter(comment => {
+                            if (comment.id === id) {
+                                comment.subComments = [response.comment,...comment.subComments];
+                                return comment;
+                            }
 
-                        return comment;
-                    });
+                            return comment;
+                        });
+                    }
 
                     prevState.posts.filter(post => {
                         if(post.comment !== null) {
@@ -218,7 +220,6 @@ export default class PostContainer extends React.Component{
     handleCommentLike(id,liked) {
 
         this.setState((prevState) => {
-
             prevState.comments.filter(comment => {
                 if (comment.id === id) {
                     comment.liked = !comment.liked;
@@ -232,7 +233,8 @@ export default class PostContainer extends React.Component{
             prevState.posts.filter(post => {
                 if(post.comment !== null) {
                     if (post.comment.id === id) {
-                        post.comment.liked = !post.comment.liked;
+                        console.log('before',post.comment,post.comment.liked,!post.comment.liked);
+                        post.comment.liked = !liked;
                         post.comment.likes = post.comment.liked ? post.comment.likes+1 : post.comment.likes -1;
                         return post;
                     }

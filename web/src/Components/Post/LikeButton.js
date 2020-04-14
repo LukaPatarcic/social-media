@@ -1,32 +1,11 @@
 import React from "react";
 import {MDBBtn, MDBIcon, MDBTooltip} from "mdbreact";
-import cookie from "react-cookies";
-import {BASE_URL} from "../../Config";
 import PropTypes from 'prop-types';
 
 export default class LikeButton extends React.Component{
     constructor(props) {
         super(props);
 
-    }
-
-    handleLike() {
-        fetch(BASE_URL + '/like/post',{
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + cookie.load('access-token')
-            },
-            method: this.state.heartClicked ? 'POST' : 'DELETE',
-            body: JSON.stringify({id: this.props.postId})
-        })
-            .then((response => response.json()))
-            .then((data => {
-                if(!data.error) {
-                    this.props.handleLikes(this.state.heartClicked);
-                    this.setState((prevState) => ({heartClicked: !prevState.heartClicked}))
-                }
-            }))
     }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -50,4 +29,4 @@ LikeButton.propTypes = {
     liked: PropTypes.bool.isRequired,
     id: PropTypes.number.isRequired,
     onHandlePostLike: PropTypes.func.isRequired
-}
+};
