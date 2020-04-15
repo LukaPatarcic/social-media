@@ -9,120 +9,72 @@ import {
     MDBNavItem, MDBRow
 } from "mdbreact";
 import {isMobile} from "react-device-detect";
-import cookie from "react-cookies";
-import {store} from "react-notifications-component";
-import {BASE_URL} from "../../Config";
+import PropTypes from 'prop-types';
+import {ClipLoader} from "react-spinners";
 
 export default class DesktopNotification extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            notifications: [],
-            loading: false
-        }
-    }
-
-    getNotifications() {
-        this.setState({loading: false});
-        fetch(BASE_URL+'/friend/request',{
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' +  cookie.load('access-token')
-            },
-            method: "GET",
-        })
-            .then((response => response.json()))
-            .then((data => {
-                this.setState({notifications: data,loading: false});
-                this.props.getFriends();
-                if(data.error) {
-                    this.setState({error: true})
-                }
-            }))
-            .catch(err => {
-                this.setState({error: true,loading: false});
-            })
-    }
-    componentDidMount() {
-        this.getNotifications();
-    }
-
-    acceptFollow(e) {
-        let id = e.currentTarget.id;
-        fetch('https://api.allshak.lukaku.tech/friend/request',{
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': cookie.load('access-token')
-            },
-            method: "PATCH",
-            body: JSON.stringify({id})
-        })
-            .then((response => response.json()))
-            .then((data => {
-                this.setState({loading: false});
-                if(data.error) {
-                    this.setState({error: true})
-                }
-                this.getNotifications();
-            }))
-            .catch(err => {
-                this.setState({error: true,loading: false});
-            })
-        this.getNotifications();
-
-    }
-
-    declineFollow(e) {
-        let id = e.currentTarget.id;
-        fetch('https://api.allshak.lukaku.tech/friend/request',{
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': cookie.load('access-token')
-            },
-            method: "DELETE",
-            body: JSON.stringify({id})
-        })
-            .then((response => response.json()))
-            .then((data => {
-                this.setState({loading: false});
-                if(data.error) {
-                    this.setState({error: true})
-                }
-                this.getNotifications();
-            }))
-            .catch(err => {
-                this.setState({error: true,loading: false});
-            })
-        this.getNotifications();
+            notifications: [{
+                id: 1,
+                title: 'some title', // not required
+                message: 'The notification text',
+                new: false, // if the user has read the notification
+                tags: [{ // not required
+                    type: 'success',
+                    text: 'text'
+                }],
+                date: '09/12/2016' // not required
+            }]
+        };
     }
 
 
     render() {
-        const {notifications} = this.state;
+        const {notifications,loading,onAcceptFollowHandler,onDeclineFollowHandler} = this.props;
         return (
             <MDBNavItem>
+                {notifications &&
                 <MDBDropdown>
                     <MDBDropdownToggle nav caret>
                         <MDBIcon icon={'bell'} />
                         <MDBBadge color="dark" className="ml-2">{notifications.length}</MDBBadge>
                     </MDBDropdownToggle>
-                    {notifications &&
                     <MDBDropdownMenu basic right={!isMobile} onClick={(e) => e.stopPropagation()}>
                         <MDBDropdownItem header>Follower Requests ({notifications.length})</MDBDropdownItem>
                         <MDBDropdownItem divider />
-                        {notifications.map((value,index) =>
+                        {notifications.map((notification,index) =>
                             <>
                             <MDBDropdownItem key={index} onClick={(e) => e.preventDefault()}>
                                 <MDBRow>
                                     <MDBCol col={8}>
-                                        {value.firstName} {value.lastName} want to follow you
+                                        {notification.firstName} {notification.lastName} wants to follow you
                                     </MDBCol>
                                     <MDBCol className={'text-center'}>
-                                        <MDBBtn size={'sm'} color={'red'} id={value.id} onClick={(e) =>this.acceptFollow(e)}><MDBIcon icon={'check'}/></MDBBtn>
-                                        <MDBBtn size={'sm'} color={'grey'} id={value.id}  onClick={(e) =>this.declineFollow(e)}><MDBIcon icon={'times'}/></MDBBtn>
+                                        <MDBBtn
+                                            size={'sm'}
+                                            color={'red'}
+                                            onClick={() => onAcceptFollowHandler(notification.id)}
+                                        >
+                                            {loading ?
+                                                <ClipLoader
+                                                    sizeUnit={"px"}
+                                                    size={20}
+                                                    color={'#fff'}
+                                                    loading={loading}
+                                                />
+                                                :
+                                                <MDBIcon icon={'check'}/>
+                                            }
+                                        </MDBBtn>
+                                        <MDBBtn
+                                            size={'sm'}
+                                            color={'grey'}
+                                            onClick={() => onDeclineFollowHandler(notification.id)}
+                                        >
+                                            <MDBIcon icon={'times'}/>
+                                        </MDBBtn>
                                     </MDBCol>
                                 </MDBRow>
                             </MDBDropdownItem>
@@ -130,9 +82,17 @@ export default class DesktopNotification extends React.Component{
                             </>
                         )}
                     </MDBDropdownMenu>
-                    }
                 </MDBDropdown>
+                }
             </MDBNavItem>
         )
     }
+}
+
+DesktopNotification.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    notifications: PropTypes.array.isRequired,
+    getNotifications: PropTypes.func.isRequired,
+    onAcceptFollowHandler: PropTypes.func.isRequired,
+    onDeclineFollowHandler: PropTypes.func.isRequired,
 }

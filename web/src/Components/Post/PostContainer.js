@@ -12,7 +12,6 @@ export default class PostContainer extends React.Component{
         super(props);
         this.state = {
             posts: [],
-            comments: [],
             loading: false,
             loadingComments: false,
             loadingMoreComments: false,
@@ -81,19 +80,25 @@ export default class PostContainer extends React.Component{
     getComments(id,loadingMore = false) {
         const loading = loadingMore ? {loadingMoreComments: true} : {loadingComments: true}
         this.setState(loading);
-        if(this.state.commentOffset === 0) {
-            this.setState({comments: []})
-        }
 
         getComments(id,this.state.commentOffset)
             .then(response => {
-                this.setState((prevSate) => ({
-                    comments: [...prevSate.comments,...response],
-                    commentOffset: prevSate.commentOffset + 10,
-                    loadingComments: false,
-                    hasMoreComments: response.length >= 10,
-                    loadingMoreComments: false,
-                }));
+                this.setState((prevSate) => {
+                    prevSate.posts.filter(post => {
+                        if(post.id === id) {
+                            post.comments = [...post.comments,...response]
+                        }
+                        return post;
+                    });
+
+                    return {
+                        posts: prevSate.posts,
+                        commentOffset: prevSate.commentOffset + 10,
+                        loadingComments: false,
+                        hasMoreComments: response.length >= 10,
+                        loadingMoreComments: false,
+                    }
+                });
             })
             .catch(err => err.response.json().then(err => {
                 toastr.error(err.error);
@@ -109,34 +114,15 @@ export default class PostContainer extends React.Component{
         getSubComments(id,offset)
             .then(response => {
                 this.setState((prevState) => {
-                    prevState.comments.filter(comment => {
-                        if (comment.id === id) {
-                            comment.subComments = [...comment.subComments,...response];
-                            comment.subCommentCount = comment.subCommentCount - response.length;
-                            return comment;
-                        }
-                        return comment;
-                    });
-
                     prevState.posts.filter(post => {
-                        if(post.comment !== null) {
-                            if (post.comment.id === id) {
-                                if(typeof post.comment.subComments === 'undefined') {
-                                    if(post.comment.subComments.slice(-1)[0].id !== response.slice(-1)[0].id) {
-                                        post.comment.subComments = [...post.comment.subComments,...response];
-                                    }
-                                } else {
-                                    if(post.comment.subComments.length % 3 === 0) {
-                                        post.comment.subComments = [...post.comment.subComments,...response];
-                                    } else {
-                                        post.comment.subComments = response;
-                                    }
-
+                        post.comments.filter(comment => {
+                            if(comment !== null) {
+                                if (comment.id === id) {
+                                    comment.subComments = [...comment.subComments,...response];
+                                    comment.subCommentCount = comment.subCommentCount - response.length;
                                 }
-                                post.comment.subCommentCount = post.comment.subCommentCount - response.length;
-                                return post;
                             }
-                        }
+                        })
 
                         return post;
                     });
@@ -160,10 +146,10 @@ export default class PostContainer extends React.Component{
         postComment(comment,id)
             .then(response => {
                 this.setState((prevState) => {
-                    prevState.posts.filter((post) => {
+                    prevState.posts.filter(post => {
                         if(post.id === id) {
-                            post.comment = response.comment;
-                            post.commentCount = post.commentCount+1;
+                            post.comments = [response.comment,...post.comments];
+                            post.commentsCount = post.commentsCount + 1;
                             return post;
                         }
                         return post;
@@ -172,7 +158,6 @@ export default class PostContainer extends React.Component{
                     return {
                         posts: prevState.posts,
                         sendingComment: false,
-                        comments: [response.comment,...prevState.comments]
                     }
                 })
             })
@@ -183,32 +168,22 @@ export default class PostContainer extends React.Component{
 
     }
 
-    handleCommentReply(id,reply,fromCommentList = false) {
+    handleCommentReply(id,reply) {
         commentReply(id,reply)
             .then(response => {
                 this.setState((prevState => {
-                    if(fromCommentList) {
-                        prevState.comments.filter(comment => {
-                            if (comment.id === id) {
-                                comment.subComments = [response.comment,...comment.subComments];
-                                return comment;
-                            }
-
-                            return comment;
-                        });
-                    }
-
                     prevState.posts.filter(post => {
-                        if(post.comment !== null) {
-                            if (post.comment.id === id) {
-                                post.comment.subComments = [response.comment,...post.comment.subComments];
-                                return post;
-                            }
+                        if(post.comments !== null) {
+                            post.comments.filter(comment => {
+                                if (comment.id === id) {
+                                    comment.subComments = [response.comment, ...comment.subComments];
+                                }
+                                return comment;
+                            })
+                            return post;
                         }
-
                         return post;
                     });
-
                     return {posts: prevState.posts,comments: prevState.comments};
                 }))
             })
@@ -220,30 +195,22 @@ export default class PostContainer extends React.Component{
     handleCommentLike(id,liked) {
 
         this.setState((prevState) => {
-            prevState.comments.filter(comment => {
-                if (comment.id === id) {
-                    comment.liked = !comment.liked;
-                    comment.likes = comment.liked ? comment.likes+1 : comment.likes -1;
-                    return comment;
-                }
-
-                return comment;
-            });
 
             prevState.posts.filter(post => {
-                if(post.comment !== null) {
-                    if (post.comment.id === id) {
-                        console.log('before',post.comment,post.comment.liked,!post.comment.liked);
-                        post.comment.liked = !liked;
-                        post.comment.likes = post.comment.liked ? post.comment.likes+1 : post.comment.likes -1;
-                        return post;
+                post.comments.filter(comment => {
+                    if(comment !== null) {
+                        if (comment.id === id) {
+                            console.log('before',comment,comment.liked,!comment.liked);
+                            comment.liked = !liked;
+                            comment.likes = comment.liked ? comment.likes+1 : comment.likes -1;
+                            return post;
+                        }
                     }
-                }
-
+                })
                 return post;
             });
 
-            return {posts: prevState.posts,comments: prevState.comments};
+            return {posts: prevState.posts};
         });
 
         const method = liked ? 'DELETE' : 'POST';

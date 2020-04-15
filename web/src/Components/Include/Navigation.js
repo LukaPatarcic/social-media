@@ -7,9 +7,9 @@ import {
 } from "mdbreact";
 import {Link} from "react-router-dom";
 import Search from "../Search/Search";
-import DesktopNotification from "../Notification/DesktopNotification";
 import {AuthContext} from "../../Contexts/AuthContext";
 import cookie from 'react-cookies'
+import NotificationContainer from "../Notification/NotificationContainer";
 
 export default class Navigation extends React.Component{
 
@@ -55,7 +55,7 @@ export default class Navigation extends React.Component{
                                 <MDBNavItem className={'mt-2'}>
                                 <Link className={'text-white mr-2'} to='/logout'>Logout</Link>
                                 </MDBNavItem>
-                                <DesktopNotification />
+                                <NotificationContainer />
                                 </>
                                 :
                                 <>

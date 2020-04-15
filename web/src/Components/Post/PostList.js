@@ -57,7 +57,6 @@ export default class PostList extends Component {
 
 PostList.propTypes = {
     posts: PropTypes.array.isRequired,
-    comments: PropTypes.array.isRequired,
     hasMoreComments: PropTypes.bool.isRequired,
     loadingComments: PropTypes.bool.isRequired,
     loadingMoreComments: PropTypes.bool.isRequired,

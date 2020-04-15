@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     MDBContainer,
     MDBBtn,
@@ -9,11 +9,8 @@ import {
     MDBIcon,
     MDBInput
 } from 'mdbreact';
-import cookie from 'react-cookies'
 import {ClipLoader} from "react-spinners";
 import FriendItem from "./FriendItem";
-import {BASE_URL} from "../../Config";
-import { debounce } from "throttle-debounce";
 
 
 export default class Search extends Component {
@@ -21,20 +18,15 @@ export default class Search extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false,
             q: '',
-            searchQuery: [],
+            modal: false,
             loading: false,
-            error: ''
+            error: '',
+            searchQuery: []
         }
 
-        this.toggle = this.toggle.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.handleChangeDebounce = debounce(200,this.search);
-    }
-
-    search = qq => {
-        this.getFriends()
+        this.toggle = this.toggle.bind(this);
     }
 
     toggle() {
@@ -43,59 +35,18 @@ export default class Search extends Component {
         });
     }
 
-    getFriends(loading = false) {
-        const {q} = this.state;
-        const controller = new AbortController();
-        const signal = controller.signal;
-        if(loading) {
-            this.setState({loading:true});
-        }
-        if(q === '') {
-            this.setState({error: 'No Results...',loading:false});
-            return;
-        }
-
-        let url = new URL(BASE_URL+'/search');
-        let params = {search:q};
-        url.search = new URLSearchParams(params).toString();
-
-        fetch(url,{
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + cookie.load('access-token')
-            },
-            signal: signal,
-            method: "GET",
-        })
-            .then((response => response.json()))
-            .then((data => {
-                this.setState({searchQuery: data,loading: false});
-
-                if(data) {
-                    this.setState({error: ''});
-                } else {
-                    this.setState({error: 'No Results...'});
-                }
-
-
-            }))
-            .catch(err => {
-                this.setState({error: 'Oops... Something went wrong!',loading: false});
-            })
-    }
 
     handleChange(e) {
-        this.setState({ [e.target.name] : e.target.value },() => {
+        this.setState({[e.target.name]: e.target.value}, () => {
             this.handleChangeDebounce(this.state.q);
         });
     }
 
     render() {
-        const {searchQuery,loading,error} = this.state;
+        const {searchQuery, loading, error} = this.state;
         return (
             <MDBContainer>
-                <MDBIcon onClick={this.toggle} fas={'true'} icon="search" className={'text-white mr-2'} />
+                <MDBIcon onClick={this.toggle} fas={'true'} icon="search" className={'text-white mr-2'}/>
                 <MDBModal className={'text-dark'} size={'lg'} isOpen={this.state.modal} toggle={this.toggle}>
                     <MDBModalHeader toggle={this.toggle}>Search for friends</MDBModalHeader>
                     <MDBModalBody className={'text-center'}>
@@ -130,7 +81,6 @@ export default class Search extends Component {
                                             toggle={this.toggle.bind(this)}
                                             getFriends={this.getFriends.bind(this)}
                                         />
-
                                     )
                                     :
                                     <p>No results...</p>

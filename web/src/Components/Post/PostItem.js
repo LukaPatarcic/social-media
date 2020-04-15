@@ -28,7 +28,7 @@ export default class PostItem extends Component{
     render() {
         const {post,sendingComment,onHandlePostLike,onHandlePostComment,
             sendingCommentReply,onHandleCommentReply,onHandleCommentLike,
-            getComments,comments,hasMoreComments,loadingComments,
+            getComments,hasMoreComments,loadingComments,
             loadingMoreComments,onCommentModalCloseHandler,getSubComments,
             loadingMoreSubComments,hasMoreSubComments,
             loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId
@@ -76,7 +76,7 @@ export default class PostItem extends Component{
                                 <MDBCol>
                                     <PostLikes likes={post.likes} />
                                     <CommentList
-                                        comments={comments}
+                                        comments={post.comments}
                                         getComments={getComments}
                                         hasMoreComments={hasMoreComments}
                                         loadingComments={loadingComments}
@@ -105,10 +105,10 @@ export default class PostItem extends Component{
                             <hr/>
                             <MDBRow>
                                 <MDBCol col={12}>
-                                    {post.comment &&
+                                    {post.comments.length > 0 &&
                                         <SingleComment
                                             onHandlePostComment={onHandlePostComment}
-                                            comment={post.comment}
+                                            comment={post.comments[0]}
                                             sendingCommentReply={sendingCommentReply}
                                             onHandleCommentReply={onHandleCommentReply}
                                             onHandleCommentLike={onHandleCommentLike}
@@ -122,7 +122,7 @@ export default class PostItem extends Component{
 
                                     {post.commentCount > 1 &&
                                     <CommentList
-                                        comments={comments}
+                                        comments={post.comments}
                                         getComments={getComments}
                                         hasMoreComments={hasMoreComments}
                                         loadingComments={loadingComments}

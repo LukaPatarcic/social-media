@@ -29,23 +29,23 @@ export default class Routing extends React.Component{
 
         return (
             <Router>
-                <Navigation search={this.props.search}/>
+                <Navigation />
                 <Switch>
                     {/* SECURITY */}
-                    <Route exact={true} path={REGISTER_URL} component={Register}/>
-                    <Route exact={true} path={LOGIN_URL} component={Login}/>
-                    <Route exact={true} path="/logout" component={Logout}/>
+                    <Route exact={true} path={REGISTER_URL} component={Register} />
+                    <Route exact={true} path={LOGIN_URL} component={Login} />
+                    <Route exact={true} path="/logout" component={Logout} />
                     {/* LEGAL */}
                     <Route exact={true} path="/legal/cookie" component={CookiePolicy} />
                     <Route exact={true} path="/legal/privacy" component={PrivacyPolicy} />
                     <Route exact={true} path="/legal/tos" component={TermsOfService} />
                     {/* USER */}
-                    <Route exact={true} path="/" component={Homepage}/>
+                    <Route exact={true} path="/" component={Homepage} />
                     <Route exact={true} path="/profile/edit" component={ProfileEdit} />
-                    <Route exact={true} path="/profile/:profileName" component={ProfileContainer}/>
+                    <Route exact={true} path="/profile/:profileName" component={ProfileContainer} />
                     <Route exact={true} path="/notification/list" component={NotificationList} />
                     {/* NOT FOUND */}
-                    <Route exact={true} path="/notFound" component={Notfound} />
+                    <Route component={Notfound} />
                 </Switch>
                 <MobileAppModal />
                 <CookieConsent
