@@ -22,10 +22,7 @@ export default class Homepage extends Component{
         return (
             <MDBContainer className={authenticated ? null : 'text-center pt-5'}>
                 {authenticated ?
-                    <>
-                        <PostCreate />
-                        <PostContainer />
-                    </>
+                    <PostContainer />
                 :
                     <>
                         <Banner/>

@@ -29,7 +29,6 @@ export default class SingleComment extends React.Component {
         this.props.onHandleCommentLike(this.props.comment.id,this.props.comment.liked)
     }
 
-
     render() {
         const {comment,onHandleCommentReply,sendingCommentReply,
             getSubComments,loadingMoreSubComments,

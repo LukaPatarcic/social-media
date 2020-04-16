@@ -1,71 +1,47 @@
 import React,{Component} from "react";
 import Profile from "./Profile";
+import toastr from 'toastr/build/toastr.min'
+import {getUserData} from "../../Api/profile";
 
 export default class ProfileContainer extends Component{
     constructor(props) {
         super(props);
         this.state = {
             user: {},
-            following: [],
-            followers: [],
-            posts: [],
             loading: true
         };
 
-        document.title = 'Allshack | Profile'
+        this.getData = this.getData.bind(this);
+    }
+
+    getData(profileName) {
+        this.setState({loading: true})
+        getUserData(profileName)
+            .then(response => {
+                this.setState({
+                    user: response,
+                    loading: false
+                })
+            })
+            .catch(err => err.response.json().then(err => {
+                toastr.error(err.error);
+                this.setState({loading: false})
+            }))
+    }
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if(nextProps.match.params.profileName !== this.props.match.params.profileName) {
+            this.getData(nextProps.match.params.profileName);
+            return true;
+        }
+        return  nextState !== this.state;
     }
 
     componentDidMount() {
         const profileName = this.props.match.params.profileName;
-        // fetch(BASE_URL+'/user',{
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json',
-        //         'Authorization': 'Bearer ' + cookie.load('access-token')
-        //     },
-        //     method: "GET"
-        // })
-        //     .then((response => response.json()))
-        //     .then((data => {
-        //         this.setState({userData: data,loading: false});
-        //     }))
-        //     .catch(err => {
-        //     })
-        setTimeout(() => {
-            this.setState({
-                "user": {
-                    "id": 24,
-                    "firstName": "Luka",
-                    "lastName": "Patarcic",
-                    "profileName": "Khallion",
-                    "followerCount": 1,
-                    "followingCount": 2
-                },
-                "followers": [
-                    {
-                        "id": 27,
-                        "firstName": "Branislav",
-                        "lastName": "Velicanstveni",
-                        "profileName": "BranislavVelicanstve"
-                    }
-                ],
-                "following": [
-                    {
-                        "id": 9,
-                        "firstName": "Tatjana",
-                        "lastName": "Ivosevic",
-                        "profileName": "MissIT"
-                    },
-                    {
-                        "id": 27,
-                        "firstName": "Branislav",
-                        "lastName": "Velicanstveni",
-                        "profileName": "BranislavVelicanstve"
-                    }
-                ],
-                loading: false
-            })
-        },300)
+        document.title = `Allshack | ${profileName}`
+           this.getData(this.props.match.params.profileName)
+
     }
 
 

@@ -1,45 +1,63 @@
 import React from "react";
 import PostList from "./PostList";
-import debounce from "lodash.debounce";
-import {getPosts, postComment, postLike} from "../../Api/post";
+import {getPostLikes, getPosts, postComment, postLike} from "../../Api/post";
 import toastr from 'toastr/build/toastr.min'
 import {commentLike, commentReply, getComments, getSubComments} from "../../Api/comment";
 import PropTypes from 'prop-types';
+import PostCreate from "./PostCreate";
 
+const defaultState = {
+    posts: [],
+    likes: [],
+    loading: false,
+    loadingComments: false,
+    loadingPostLikes: false,
+    loadingMorePostLikes: false,
+    loadingMoreComments: false,
+    loadingMoreSubComments: false,
+    loadingMoreSubCommentsId: 0,
+    sendingComment: false,
+    sendingCommentId: 0,
+    sendingCommentReply: false,
+    sendingCommentReplyId: 0,
+    hasMore: true,
+    hasMoreComments: true,
+    hasMorePostLikes: true,
+    offset: 0,
+    postLikesOffset: 0,
+    commentOffset: 0,
+    subCommentOffset: 0
+}
 export default class PostContainer extends React.Component{
 
     constructor(props) {
         super(props);
-        this.state = {
-            posts: [],
-            loading: false,
-            loadingComments: false,
-            loadingMoreComments: false,
-            loadingMoreSubComments: false,
-            loadingMoreSubCommentsId: 0,
-            sendingComment: false,
-            sendingCommentId: 0,
-            sendingCommentReply: false,
-            sendingCommentReplyId: 0,
-            hasMore: true,
-            hasMoreComments: true,
-            offset: 0,
-            commentOffset: 0,
-            subCommentOffset: 0
-        };
+        this.state = defaultState;
 
         this.handlePostLike = this.handlePostLike.bind(this);
+        this.handlePostAdd = this.handlePostAdd.bind(this);
         this.handlePostComment = this.handlePostComment.bind(this);
         this.handleCommentLike = this.handleCommentLike.bind(this);
         this.handleCommentReply = this.handleCommentReply.bind(this);
         this.commentModalCloseHandler = this.commentModalCloseHandler.bind(this);
+        this.postLikesModalCloseHandler = this.postLikesModalCloseHandler.bind(this);
         this.handleScroll = this.handleScroll.bind(this)
         this.getSubComments = this.getSubComments.bind(this);
         this.getComments = this.getComments.bind(this);
+        this.getPostLikes = this.getPostLikes.bind(this);
+    }
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if(nextProps.profile !== this.props.profile) {
+            this.setState({})
+            this.getPosts(nextProps.profile);
+        }
+
+        return  true;
     }
 
     componentDidMount() {
-        this.getPosts();
+        this.getPosts(this.props.profile);
         window.addEventListener('scroll', this.handleScroll);
     }
 
@@ -49,7 +67,7 @@ export default class PostContainer extends React.Component{
 
     handleScroll() {
         if(window.scrollY+window.innerHeight > document.body.offsetHeight - 600) {
-            this.getPosts();
+            this.getPosts(this.props.profile);
         }
     }
 
@@ -57,13 +75,23 @@ export default class PostContainer extends React.Component{
         this.setState({hasMoreComments: true, commentOffset: 0})
     }
 
-    getPosts() {
+    postLikesModalCloseHandler() {
+        this.setState({hasMorePostLikes: true, postLikesOffset: 0})
+    }
+
+    handlePostAdd(post) {
+        this.setState((prevState) => ({
+            posts: [post,...prevState.posts]
+        }))
+    }
+
+    getPosts(profile) {
         const {offset,loading,hasMore} = this.state;
         this.setState({loading: true});
         if(loading || !hasMore) {
             return;
         }
-        getPosts(offset,this.props.onlyMe)
+        getPosts(offset,profile)
             .then(data => {
                 this.setState((prevState) => ({
                     loading: false,
@@ -74,6 +102,29 @@ export default class PostContainer extends React.Component{
             })
             .catch(err => err.response.json().then(err => {
                 this.setState({error: err.error, loading: false});
+            }))
+    }
+
+    getPostLikes(id,loadingMore = false) {
+        const loading = loadingMore ? {loadingMorePostLikes: true} : {loadingPostLikes: true}
+        this.setState(loading);
+
+        getPostLikes(id,this.state.postLikesOffset)
+            .then(response => {
+                this.setState((prevSate) => ({
+                    likes: [...prevSate.likes,...response],
+                    postLikesOffset: prevSate.postLikesOffset + 10,
+                    loadingPostLikes: false,
+                    hasMorePostLikes: response.length >= 10,
+                    loadingMorePostLikes: false,
+                }));
+            })
+            .catch(err => err.response.json().then(err => {
+                toastr.error(err.error);
+                this.setState({
+                    loadingPostLikes: false,
+                    loadingMorePostLikes: false,
+                });
             }))
     }
 
@@ -200,7 +251,6 @@ export default class PostContainer extends React.Component{
                 post.comments.filter(comment => {
                     if(comment !== null) {
                         if (comment.id === id) {
-                            console.log('before',comment,comment.liked,!comment.liked);
                             comment.liked = !liked;
                             comment.likes = comment.liked ? comment.likes+1 : comment.likes -1;
                             return post;
@@ -232,6 +282,8 @@ export default class PostContainer extends React.Component{
                 return post;
             });
             return {posts: prevState.posts};
+        }, () => {
+
         });
 
         const method = liked ? 'DELETE' : 'POST';
@@ -244,7 +296,17 @@ export default class PostContainer extends React.Component{
     }
 
     render() {
+        const {showCreatePost} = this.props
         return (
+            <>
+                {
+                    showCreatePost ?
+                    <PostCreate
+                        showCreatePost={showCreatePost}
+                        onHandlePostAdd={this.handlePostAdd}
+                    />
+                    : null
+                }
             <PostList
                 {...this.state}
                 onHandlePostLike={this.handlePostLike}
@@ -252,18 +314,24 @@ export default class PostContainer extends React.Component{
                 onHandleCommentLike={this.handleCommentLike}
                 onHandlePostComment={this.handlePostComment}
                 onCommentModalCloseHandler={this.commentModalCloseHandler}
+                onPostLikesModalCloseHandler={this.postLikesModalCloseHandler}
                 getComments={this.getComments}
                 getSubComments={this.getSubComments}
+                getPostLikes={this.getPostLikes}
             />
+            }
+            </>
         );
     }
 
 
     static defaultProps = {
-        onlyMe: false
+        showCreatePost: true,
+        profile: null
     }
 }
 
 PostContainer.propTypes = {
-    onlyMe: PropTypes.bool
+    showCreatePost: PropTypes.bool,
+    profile: PropTypes.number
 };

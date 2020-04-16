@@ -112,14 +112,7 @@ class SecurityController extends BaseController
 
         $entityManager->flush();
 
-        return $this->json([
-            'token' => $token,
-            'user' => [
-                'profileName' => $user->getProfileName(),
-                'firstName' => $user->getFirstName(),
-                'lastName' => $user->getLastName()
-            ]
-        ],Response::HTTP_CREATED);
+        return $this->json(['token' => $token],Response::HTTP_CREATED);
     }
 
     /**

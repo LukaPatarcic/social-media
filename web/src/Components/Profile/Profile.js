@@ -1,11 +1,10 @@
 import * as React from "react";
 import {MDBBadge, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
-import PostCreate from "../Post/PostCreate";
 import {Link} from "react-router-dom";
 import {setProfilePicture} from "../../Helpers";
 import PostContainer from "../Post/PostContainer";
-import {ClipLoader} from "react-spinners";
 import PropTypes from 'prop-types';
+import Loading from "../../Helpers/Loading";
 
 
 export default class Profile extends React.Component{
@@ -30,72 +29,37 @@ export default class Profile extends React.Component{
                                     </span>
                                     <MDBRow className={'d-flex align-items-center justify-content-center'}>
                                         <MDBCol size={4} sm={4} md={2} className={'offset-md-2'} >
-                                            {loading ?
-                                                <ClipLoader
-                                                    sizeUnit={"px"}
-                                                    size={20}
-                                                    color={'#f00'}
-                                                    loading={loading}
-                                                />
-                                                :
+                                            <Loading loading={loading}>
                                                 <img
                                                     alt={''}
                                                     className={'img-fluid'}
                                                     src={setProfilePicture(user.firstName,user.lastName,128)}
                                                 />
-                                            }
+                                            </Loading>
                                         </MDBCol>
                                         <MDBCol size={8}>
                                             <h3>
-                                                {loading ?
-                                                    <ClipLoader
-                                                        sizeUnit={"px"}
-                                                        size={20}
-                                                        color={'#f00'}
-                                                        loading={loading}
-                                                    />
-                                                    :
-                                                    <>{' '+user.profileName}<br /></>
-                                                }
+                                               <Loading loading={loading}>
+                                                   {' '+user.profileName}<br />
+                                               </Loading>
                                             </h3>
                                             <h6>
-                                                {loading ?
-                                                    <ClipLoader
-                                                        sizeUnit={"px"}
-                                                        size={20}
-                                                        color={'#f00'}
-                                                        loading={loading}
-                                                    />
-                                                    :
-                                                    user.firstName + ' ' + user.lastName
-                                                }
+                                                <Loading loading={loading}>
+                                                    {` ${user.firstName} ${user.lastName}`}
+                                                </Loading>
                                             </h6>
                                             <MDBRow>
                                                 <MDBCol sm={6} md={3}>
                                                     Followers:{'\u00A0'}
-                                                    {loading ?
-                                                        <ClipLoader
-                                                            sizeUnit={"px"}
-                                                            size={20}
-                                                            color={'#f00'}
-                                                            loading={loading}
-                                                        />
-                                                        :
-                                                        <MDBBadge style={{fontSize: 14}} color={'red'}>{user.followerCount}</MDBBadge>
-                                                    }
+                                                    <Loading loading={loading}>
+                                                        <MDBBadge style={{fontSize: 14}} color={'red'}>{user.followers}</MDBBadge>
+                                                    </Loading>
                                                 </MDBCol>
                                                 <MDBCol sm={6} md={3}>
                                                     Following:{'\u00A0'}
-                                                    {loading ?
-                                                        <ClipLoader
-                                                            sizeUnit={"px"}
-                                                            size={20}
-                                                            color={'#f00'}
-                                                            loading={loading}
-                                                        />
-                                                        :
-                                                        <MDBBadge style={{fontSize: 14}} color={'red'}>{user.followingCount}</MDBBadge>
-                                                    }
+                                                    <Loading loading={loading}>
+                                                        <MDBBadge style={{fontSize: 14}} color={'red'}>{user.following}</MDBBadge>
+                                                    </Loading>
                                                 </MDBCol>
                                             </MDBRow>
                                         </MDBCol>
@@ -106,8 +70,7 @@ export default class Profile extends React.Component{
                     </MDBRow>
                     <MDBRow>
                         <MDBCol sm={12}>
-                            <PostCreate />
-                            <PostContainer onlyMe={true} />
+                            {loading ? null : <PostContainer onlyMe={true} profile={user.id} />}
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>

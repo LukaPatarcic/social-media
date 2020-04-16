@@ -15,9 +15,9 @@ export default class SubCommentList extends Component{
         this.showMoreReplies = this.showMoreReplies.bind(this);
     }
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return nextProps.loadingMoreSubComments !== this.props.loadingMoreSubComments || nextProps.subComments !== this.props.subComments
-    }
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     return nextProps.loadingMoreSubComments !== this.props.loadingMoreSubComments || nextProps.subComments !== this.props.subComments
+    // }
 
 
     showMoreReplies(e) {

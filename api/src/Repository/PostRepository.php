@@ -41,7 +41,7 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function findPosts(User $user,$limit = 10,$offset = 0,$onlyMe=false)
+    public function findPosts(User $user,$limit = 10,$offset = 0,$profile = null)
     {
         $em = $this->getEntityManager()->getConnection();
         try {
@@ -53,8 +53,8 @@ class PostRepository extends ServiceEntityRepository
                 (SELECT COUNT(l.id) as likes FROM like_post l JOIN post p ON p.id = l.post_id WHERE l.post_id = postId) as likes
                 FROM post p
                 JOIN user u ON p.user_id = u.id
-                JOIN friendship f ON u.id = f.friend_id".
-                ($onlyMe ? " WHERE p.user_id = :user " : " WHERE p.user_id != :user AND f.user_id = :user ")
+                ".($profile ? " " : "JOIN friendship f ON u.id = f.friend_id").
+                ($profile ? " WHERE p.user_id= :profile " : " WHERE p.user_id != :user AND f.user_id = :user ")
                 ."ORDER BY p.created_at DESC
                 LIMIT :limit
                 OFFSET :offset
@@ -62,7 +62,11 @@ class PostRepository extends ServiceEntityRepository
         } catch (DBALException $e) {
             return ['error' => $e->getMessage()];
         }
+        $id = $profile === $user->getId() ? $user->getId() : $profile;
         $stm->bindValue('user',$user->getId());
+        if($profile) {
+            $stm->bindParam('profile',$id);
+        }
         $stm->bindValue('limit',(int)$limit,\PDO::PARAM_INT);
         $stm->bindValue('offset',(int)$offset,\PDO::PARAM_INT);
         $stm->execute();

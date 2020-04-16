@@ -39,6 +39,10 @@ export default class CommentList extends React.Component{
         this.props.getComments(this.props.postId,true)
     }
 
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return this.state.modal === true
+    }
+
     render() {
         const {modal} = this.state;
         const {commentCount,comments,onHandleCommentLike,onHandleCommentReply,

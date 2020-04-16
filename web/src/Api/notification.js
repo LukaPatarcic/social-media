@@ -6,14 +6,14 @@ export const getFriendRequests = () => {
 
 export const declineFollowRequest = (id) => {
     return fetchJson('/friend/request',{
-        method: "PATCH",
+        method: "DELETE",
         body: JSON.stringify({id})
     },true)
 }
 
 export const acceptFollowRequest = (id) => {
     return fetchJson('/friend/request',{
-        method: "DELETE",
+        method: "PATCH",
         body: JSON.stringify({id})
     },true)
 }

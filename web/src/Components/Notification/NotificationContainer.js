@@ -1,7 +1,6 @@
 import React,{Component} from "react";
-import {BASE_URL} from "../../Config";
-import cookie from "react-cookies";
-import DesktopNotification from "./DesktopNotification";
+import toastr from 'toastr/build/toastr.min'
+import NotificationList from "./NotificationList";
 import {acceptFollowRequest, declineFollowRequest, getFriendRequests} from "../../Api/notification";
 
 export default class NotificationContainer extends Component{
@@ -9,7 +8,6 @@ export default class NotificationContainer extends Component{
         super(props);
         this.state = {
             notifications: [],
-            loading: false
         }
 
         this.getNotifications = this.getNotifications.bind(this);
@@ -22,45 +20,56 @@ export default class NotificationContainer extends Component{
     }
 
     getNotifications() {
-        this.setState({loading: true});
         getFriendRequests()
             .then(response => {
-                console.log(response)
-                this.setState({notifications: response,loading: false});
+                this.setState({notifications: response});
             })
             .catch(err => err.response.json().then(err => {
-                this.setState({error: err,loading: false});
+                toastr.error(err.error)
             }))
 
     }
 
-    acceptFollowHandler(e) {
-        let id = e.currentTarget.id;
-        acceptFollowRequest()
+    acceptFollowHandler(id) {
+        this.setState((prevState) => {
+            return {
+                notifications: prevState.notifications.filter(notification => {
+                    if(notification.id !== id) {
+                        return notification;
+                    }
+                })
+            }
+        })
+        acceptFollowRequest(id)
             .then(response => {
-                this.setState({loading: false});
-                this.getNotifications();
             })
             .catch(err => err.response.json().then(err => {
-                this.setState({error: err,loading: false});
+                toastr.error(err.error)
             }))
 
     }
 
     declineFollowHandler(id) {
+        this.setState((prevState) => {
+            return {
+                notifications: prevState.notifications.filter(notification => {
+                    if(notification.id !== id) {
+                        return notification;
+                    }
+                })
+            }
+        })
         declineFollowRequest(id)
             .then(response => {
-                this.setState({loading: false});
-                this.getNotifications();
             })
             .catch(err => err.response.json().then(err => {
-                this.setState({error: err,loading: false});
+                toastr.error(err.error)
             }))
     }
 
     render() {
         return (
-            <DesktopNotification
+            <NotificationList
                 {...this.state}
                 getNotifications={this.getNotifications}
                 onAcceptFollowHandler={this.acceptFollowHandler}

@@ -7,8 +7,9 @@ export const sendPost = (text) => {
     },true)
 };
 
-export const getPosts = (offset,onlyMe) => {
-    return fetchJson('/post?offset='+offset+'&onlyMe='+onlyMe,{},true)
+export const getPosts = (offset,profile) => {
+    const id = profile ? `&profile=${profile}` : ''
+    return fetchJson(`/post?offset=${offset}`+id,{},true)
 };
 
 export const postLike = (id,method) => {
@@ -23,4 +24,11 @@ export const postComment = (comment,id) => {
         method: 'POST',
         body: JSON.stringify({text:comment,post:id})
     },true);
+}
+
+export const getPostLikes = (id,offset) => {
+    console.log(id,offset)
+    return fetchJson(`/like/post?id=${id}offset=${offset}`,{
+        method: 'GET'
+    },true)
 }

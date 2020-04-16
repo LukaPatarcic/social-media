@@ -88,15 +88,17 @@ class FriendRequestController extends BaseController
     public function deleteFriendRequest(Request $request)
     {
         $data = json_decode($request->getContent(),true);
+
         if(!$data['id']) {
-            return $this->json([],Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Bad request'],Response::HTTP_BAD_REQUEST);
         }
+
         $friendRequest = $this->getDoctrine()
             ->getRepository(FriendshipRequest::class)
             ->findOneBy(['id' => $data['id']]);
 
         if(!$friendRequest) {
-            return $this->json([],Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Follow request not found'],Response::HTTP_BAD_REQUEST);
         }
 
         $this->getDoctrine()->getManager()->remove($friendRequest);
@@ -113,16 +115,16 @@ class FriendRequestController extends BaseController
     public function acceptFriendRequest(Request $request)
     {
         /** @var User $user */
-        $user = $this->getApiUser($request);
+        $user = $this->getUser();
         $data = json_decode($request->getContent(),true);
         if(!isset($data['id'])) {
-            return  $this->json([],Response::HTTP_BAD_REQUEST);
+            return  $this->json(['error' => 'Bad request'],Response::HTTP_BAD_REQUEST);
         }
 
         $friendRequest = $this->getDoctrine()->getRepository(FriendshipRequest::class)->findOneBy(['id' => $data['id'], 'toUser' => $user->getId()]);
 
         if(!$friendRequest) {
-            return  $this->json([], Response::HTTP_NOT_FOUND);
+            return  $this->json(['error' => 'Follow request not found'], Response::HTTP_NOT_FOUND);
         }
 
         $friendship = new Friendship();

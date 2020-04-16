@@ -31,7 +31,9 @@ export default class PostItem extends Component{
             getComments,hasMoreComments,loadingComments,
             loadingMoreComments,onCommentModalCloseHandler,getSubComments,
             loadingMoreSubComments,hasMoreSubComments,
-            loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId
+            loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId,
+            loadingPostLikes,loadingMorePostLikes,getPostLikes,likes,hasMorePostLikes
+
         } = this.props;
         const {inputVisibility} = this.state;
 
@@ -74,7 +76,15 @@ export default class PostItem extends Component{
                             </MDBRow>
                             <MDBRow>
                                 <MDBCol>
-                                    <PostLikes likes={post.likes} />
+                                    <PostLikes
+                                        postId={post.id}
+                                        likes={likes}
+                                        likeCount={post.likes}
+                                        getPostLikes={getPostLikes}
+                                        loadingPostLikes={loadingPostLikes}
+                                        loadingMorePostLikes={loadingMorePostLikes}
+                                        hasMorePostLikes={hasMorePostLikes}
+                                    />
                                     <CommentList
                                         comments={post.comments}
                                         getComments={getComments}
@@ -188,6 +198,7 @@ export default class PostItem extends Component{
 
 PostItem.propTypes = {
     post: PropTypes.object.isRequired,
+    likes: PropTypes.array.isRequired,
     getComments: PropTypes.func.isRequired,
     hasMoreComments: PropTypes.bool.isRequired,
     loadingComments: PropTypes.bool.isRequired,
@@ -203,4 +214,8 @@ PostItem.propTypes = {
     loadingMoreSubCommentsId: PropTypes.number.isRequired,
     sendingCommentId: PropTypes.number.isRequired,
     sendingCommentReplyId: PropTypes.number.isRequired,
+    getPostLikes: PropTypes.func.isRequired,
+    loadingPostLikes: PropTypes.bool.isRequired,
+    loadingMorePostLikes: PropTypes.bool.isRequired,
+    hasMorePostLikes: PropTypes.bool.isRequired,
 }

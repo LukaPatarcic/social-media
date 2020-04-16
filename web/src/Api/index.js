@@ -26,7 +26,6 @@ export const fetchJson = (url, options,token = false) => {
     }, options))
         .then(checkStatus)
         .then(response => {
-
             // decode JSON, but avoid problems with empty responses
             return response.text()
                 .then(text => text ? JSON.parse(text) : '')

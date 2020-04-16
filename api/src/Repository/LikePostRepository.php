@@ -21,22 +21,6 @@ class LikePostRepository extends ServiceEntityRepository
         parent::__construct($registry, LikePost::class);
     }
 
-    // /**
-    //  * @return LikePost[] Returns an array of LikePost objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
     public function findIfUserLikedPost(User $user, Post $post)
     {
         return $this->createQueryBuilder('l')
@@ -48,15 +32,18 @@ class LikePostRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    /*
-    public function findOneBySomeField($value): ?LikePost
+
+    public function findByPost(Post $post,$offset = 0, $limit = 10, $sort = 'DESC')
     {
         return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select('lu.firstName, lu.lastName, lu.profileName, l.createdAt')
+            ->join('l.user','lu')
+            ->andWhere('l.post = :post')
+            ->setParameter('post',$post)
+            ->orderBy('l.createdAt',$sort)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

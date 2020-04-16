@@ -8,9 +8,9 @@ export default class LikeButton extends React.Component{
 
     }
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return nextProps.liked !== this.props.liked;
-    }
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     return nextProps.liked !== this.props.liked;
+    // }
 
     render() {
         const {liked,onHandlePostLike,id} = this.props;

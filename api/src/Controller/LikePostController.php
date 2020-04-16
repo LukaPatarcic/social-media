@@ -19,7 +19,31 @@ use Symfony\Component\Routing\Annotation\Route;
 class LikePostController extends BaseController
 {
     /**
+     * @Route("/like/post", name="like_get", methods={"GET"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function likeGet(Request $request)
+    {
+        $id = $request->query->getInt('id');
+        $offset = $request->query->getInt('offset',0);
+        $post = $this->getDoctrine()->getRepository(Post::class)->findOneBy(['id' => $id]);
+        if(!isset($id)) {
+            return $this->json(['error' => 'Bad request',Response::HTTP_BAD_REQUEST]);
+        }
+        if(!$post) {
+            return $this->json(['error' => 'Post not found',Response::HTTP_NOT_FOUND]);
+        }
+        $likes = $this->getDoctrine()->getRepository(LikePost::class)->findByPost($post,$offset,10);
+
+        return $this->json($likes,Response::HTTP_OK);
+
+    }
+
+    /**
      * @Route("/like/post", name="like_post_add", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
      */
     public function likeAdd(Request $request)
     {

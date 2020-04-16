@@ -2,8 +2,9 @@ import React, {createRef} from "react";
 import toastr from 'toastr/build/toastr.min'
 import PostCreateForm from "./PostCreateForm";
 import {sendPost} from "../../Api/post";
+import PropTypes from 'prop-types';
 
-export default class Post extends React.Component {
+export default class PostCreate extends React.Component {
 
     constructor(props) {
         super(props);
@@ -22,6 +23,10 @@ export default class Post extends React.Component {
             .then(response => {
                 this.setState({loading: false});
                 this.postCreateFormRef.current.resetText();
+                if(this.props.onlyMe) {
+                    this.props.onHandlePostAdd(response.post)
+                }
+
                 toastr.success('Post added to timeline!')
             })
             .catch(err => {err.response.json().then(err => {
@@ -41,4 +46,8 @@ export default class Post extends React.Component {
             />
         )
     }
+}
+
+PostCreate.propTypes = {
+    onHandlePostAdd: PropTypes.func
 }

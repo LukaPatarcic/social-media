@@ -35,8 +35,8 @@ class PostController extends BaseController
     {
         $user = $this->getUser();
         $offset = $request->query->getInt('offset',0);
-        $onlyMe = $request->query->getBoolean('onlyMe',false);
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findPosts($user,10,$offset,$onlyMe);
+        $profile = $request->query->getInt('profile',null);
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findPosts($user,10,$offset,$profile);
         $data = [];
         foreach ($posts as $k => $post) {
             $data[$k]['id'] = +$post['postId'];
@@ -129,6 +129,19 @@ class PostController extends BaseController
         $em->persist($post);
         $em->flush();
 
-        return $this->json(['success' => 1],Response::HTTP_OK);
+        $data = [
+           'id' => +$post->getId(),
+            'firstName' =>  $post->getUser()->getFirstName(),
+            'lastName' => $post->getUser()->getLastName(),
+            'profileName' => $post->getUser()->getProfileName(),
+            'text' =>  $post->getText(),
+            'createdAt' =>  $post->getCreatedAt(),
+            'likes' =>  0,
+            'liked' =>  false,
+            'comments' => [],
+            'commentCount' => 0
+        ];
+
+        return $this->json(['success' => 1,'post' => $data],Response::HTTP_OK);
     }
 }

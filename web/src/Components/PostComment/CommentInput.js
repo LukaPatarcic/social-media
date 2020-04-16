@@ -21,17 +21,12 @@ export default class CommentInput extends Component{
         this.inputRef = createRef();
     }
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        if(nextState.comment !== this.state.comment) {
-            return true;
-        }
-
-        if(nextState.sendingComment !== this.props.sendingComment) {
-            return true;
-        }
-
-        return nextProps.inputVisibility !== this.props.inputVisibility
-    }
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     return nextProps.inputVisibility !== this.props.inputVisibility ||
+    //         nextProps.sendingComment !== this.props.sendingComment ||
+    //         nextProps.sendingCommentId !== this.props.sendingCommentId ||
+    //         nextState.comment !== this.state.comment
+    // }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(!prevProps.inputVisibility) {

@@ -16,7 +16,9 @@ export default class PostList extends Component {
             sendingComment,onHandlePostComment,onHandleCommentReply,
             onHandleCommentLike,sendingCommentReply,getComments,onCommentModalCloseHandler,
             getSubComments,loadingMoreSubComments,hasMoreSubComments,
-            loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId
+            loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId,
+            onPostLikesModalCloseHandler,hasMorePostLikes,getPostLikes,
+            loadingPostLikes,loadingMorePostLikes,likes
         } = this.props;
         return (
             <>
@@ -25,6 +27,7 @@ export default class PostList extends Component {
                        key={index}
                        post={post}
                        comments={comments}
+                       likes={likes}
                        hasMoreComments={hasMoreComments}
                        commentOffset={commentOffset}
                        loadingComments={loadingComments}
@@ -42,7 +45,12 @@ export default class PostList extends Component {
                        hasMoreSubComments={hasMoreSubComments}
                        loadingMoreSubCommentsId={loadingMoreSubCommentsId}
                        sendingCommentId={sendingCommentId}
+                       onPostLikesModalCloseHandler={onPostLikesModalCloseHandler}
                        sendingCommentReplyId={sendingCommentReplyId}
+                       hasMorePostLikes={hasMorePostLikes}
+                       getPostLikes={getPostLikes}
+                       loadingPostLikes={loadingPostLikes}
+                       loadingMorePostLikes={loadingMorePostLikes}
                    />
                 ))}
                 {hasMore ?
@@ -57,7 +65,9 @@ export default class PostList extends Component {
 
 PostList.propTypes = {
     posts: PropTypes.array.isRequired,
+    likes: PropTypes.array.isRequired,
     hasMoreComments: PropTypes.bool.isRequired,
+    hasMorePostLikes: PropTypes.bool.isRequired,
     loadingComments: PropTypes.bool.isRequired,
     loadingMoreComments: PropTypes.bool.isRequired,
     getComments: PropTypes.func.isRequired,
@@ -75,5 +85,8 @@ PostList.propTypes = {
     loadingMoreSubCommentsId: PropTypes.number.isRequired,
     sendingCommentId: PropTypes.number.isRequired,
     sendingCommentReplyId: PropTypes.number.isRequired,
-
+    onPostLikesModalCloseHandler: PropTypes.func.isRequired,
+    getPostLikes: PropTypes.func.isRequired,
+    loadingPostLikes: PropTypes.bool.isRequired,
+    loadingMorePostLikes: PropTypes.bool.isRequired,
 };
