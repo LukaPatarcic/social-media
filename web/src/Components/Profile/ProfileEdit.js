@@ -1,9 +1,10 @@
 import React,{Component} from "react";
 import {MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDBIcon, MDBInput, MDBRow} from "mdbreact";
+import ls from 'local-storage'
 
 export default class ProfileEdit extends Component{
     render() {
-        const {firstName,lastName,profileName} =this.props.location.state;
+        const {firstName,lastName,profileName,email} = ls.get('user');
         console.log();
         return (
             <MDBContainer className={'mt-5'}>
@@ -20,6 +21,7 @@ export default class ProfileEdit extends Component{
                                 />
                                 <MDBInput
                                     label={'Email'}
+                                    value={email}
                                 />
                                 <MDBInput
                                     label={'First Name'}

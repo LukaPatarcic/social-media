@@ -4,6 +4,7 @@ import {COOKIE_TTL} from "../../Config";
 import {AuthContext} from "../../Contexts/AuthContext";
 import {login} from "../../Api/security";
 import cookie from 'react-cookies'
+import ls from 'local-storage';
 import LoginForm from "./LoginForm";
 
 export default class Login extends Component {
@@ -27,13 +28,14 @@ export default class Login extends Component {
 
         this.setState({loading: true});
         login(email,password)
-            .then(data => {
-                cookie.save('access-token', data.token,{maxAge: COOKIE_TTL, secure: true});
+            .then(response => {
+                cookie.save('access-token', response.token,{maxAge: COOKIE_TTL, secure: true});
+                ls.set('user',response.user)
                 this.context.setAuthenticated(true);
             })
             .catch(err => {
-                err.response.json().then(data => {
-                    this.setState({error: data.error,loading: false});
+                err.response.json().then(err => {
+                    this.setState({error: err.error,loading: false});
                 })
             })
     }

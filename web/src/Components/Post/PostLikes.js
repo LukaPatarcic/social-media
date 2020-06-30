@@ -20,6 +20,8 @@ export default class PostLikes extends Component{
         this.setState({modal: !this.state.modal},() => {
             if(this.state.modal){
                 this.props.getPostLikes(this.props.postId);
+            } else {
+                this.props.onPostLikesModalCloseHandler()
             }
         });
     }
@@ -110,4 +112,5 @@ PostLikes.propTypes = {
     loadingPostLikes: PropTypes.bool.isRequired,
     loadingMorePostLikes: PropTypes.bool.isRequired,
     hasMorePostLikes: PropTypes.bool.isRequired,
+    onPostLikesModalCloseHandler: PropTypes.func.isRequired
 }

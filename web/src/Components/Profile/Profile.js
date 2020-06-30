@@ -5,6 +5,7 @@ import {setProfilePicture} from "../../Helpers";
 import PostContainer from "../Post/PostContainer";
 import PropTypes from 'prop-types';
 import Loading from "../../Helpers/Loading";
+import ls from "local-storage";
 
 
 export default class Profile extends React.Component{
@@ -15,18 +16,20 @@ export default class Profile extends React.Component{
 
     render() {
         const {loading,user} = this.props;
-
+        const isMe = ls.get('user').profileName === user.profileName
         return (
             <MDBContainer>
                     <MDBRow className={'mt-5'}>
                         <MDBCol size={12} sm={12} md={10} className={'offset-md-1'}>
                             <MDBCard>
                                 <MDBCardBody>
+                                    {isMe &&
                                     <span className={'float-right'}>
                                         <Link to={'/profile/edit'} style={{color: 'black'}}>
                                             <MDBIcon icon={'ellipsis-v'} color={'black'} />
                                         </Link>
                                     </span>
+                                    }
                                     <MDBRow className={'d-flex align-items-center justify-content-center'}>
                                         <MDBCol size={4} sm={4} md={2} className={'offset-md-2'} >
                                             <Loading loading={loading}>
@@ -70,7 +73,7 @@ export default class Profile extends React.Component{
                     </MDBRow>
                     <MDBRow>
                         <MDBCol sm={12}>
-                            {loading ? null : <PostContainer onlyMe={true} profile={user.id} />}
+                            {loading ? null : <PostContainer showCreatePost={isMe} profile={user.id} />}
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>

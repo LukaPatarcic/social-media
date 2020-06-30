@@ -15,7 +15,8 @@ export default class PostItem extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            inputVisibility: false
+            inputVisibility: false,
+            commentCount: props.post.commentCount
         };
 
         this.handleInputVisibility = this.handleInputVisibility.bind(this);
@@ -32,10 +33,13 @@ export default class PostItem extends Component{
             loadingMoreComments,onCommentModalCloseHandler,getSubComments,
             loadingMoreSubComments,hasMoreSubComments,
             loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId,
-            loadingPostLikes,loadingMorePostLikes,getPostLikes,likes,hasMorePostLikes
-
+            loadingPostLikes,loadingMorePostLikes,getPostLikes,likes,hasMorePostLikes,
+            onPostLikesModalCloseHandler
         } = this.props;
         const {inputVisibility} = this.state;
+        if(post.id == 161) {
+            console.log(post.commentCount,post.id);
+        }
 
         return (
             <MDBRow center>
@@ -84,6 +88,7 @@ export default class PostItem extends Component{
                                         loadingPostLikes={loadingPostLikes}
                                         loadingMorePostLikes={loadingMorePostLikes}
                                         hasMorePostLikes={hasMorePostLikes}
+                                        onPostLikesModalCloseHandler={onPostLikesModalCloseHandler}
                                     />
                                     <CommentList
                                         comments={post.comments}
@@ -107,7 +112,7 @@ export default class PostItem extends Component{
                                         sendingCommentReplyId={sendingCommentReplyId}
                                         showMoreTag={<a href={'#'} className={'text-dark'}>
                                         <span>Comments <MDBBadge style={{fontSize: 14}}
-                                                                 color={'black'}>{post.commentCount}</MDBBadge></span>
+                                                                 color={'black'}>{this.state.commentCount}</MDBBadge></span>
                                         </a>}
                                     />
                                 </MDBCol>
@@ -218,4 +223,5 @@ PostItem.propTypes = {
     loadingPostLikes: PropTypes.bool.isRequired,
     loadingMorePostLikes: PropTypes.bool.isRequired,
     hasMorePostLikes: PropTypes.bool.isRequired,
+    onPostLikesModalCloseHandler: PropTypes.func.isRequired
 }

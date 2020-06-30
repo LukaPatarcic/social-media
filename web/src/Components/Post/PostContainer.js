@@ -76,7 +76,8 @@ export default class PostContainer extends React.Component{
     }
 
     postLikesModalCloseHandler() {
-        this.setState({hasMorePostLikes: true, postLikesOffset: 0})
+        console.log('here')
+        this.setState({hasMorePostLikes: true, postLikesOffset: 0, likes: []})
     }
 
     handlePostAdd(post) {
@@ -137,7 +138,11 @@ export default class PostContainer extends React.Component{
                 this.setState((prevSate) => {
                     prevSate.posts.filter(post => {
                         if(post.id === id) {
-                            post.comments = [...post.comments,...response]
+                            if(this.state.commentOffset === 0) {
+                                post.comments = response;
+                            } else {
+                                post.comments = [...post.comments,...response]
+                            }
                         }
                         return post;
                     });
@@ -199,8 +204,9 @@ export default class PostContainer extends React.Component{
                 this.setState((prevState) => {
                     prevState.posts.filter(post => {
                         if(post.id === id) {
+                            const num = post.commentCount + 1;
                             post.comments = [response.comment,...post.comments];
-                            post.commentsCount = post.commentsCount + 1;
+                            post.commentCount = num;
                             return post;
                         }
                         return post;

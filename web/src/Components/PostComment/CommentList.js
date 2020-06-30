@@ -6,8 +6,6 @@ import {
     MDBModalFooter,
     MDBModalHeader,
 } from "mdbreact";
-import {BASE_URL} from "../../Config";
-import cookie from "react-cookies";
 import SingleComment from "./SingleComment";
 import {ClipLoader} from "react-spinners";
 import CommentInput from "./CommentInput";
