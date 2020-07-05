@@ -18,7 +18,7 @@ export default class PostList extends Component {
             getSubComments,loadingMoreSubComments,hasMoreSubComments,
             loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId,
             onPostLikesModalCloseHandler,hasMorePostLikes,getPostLikes,
-            loadingPostLikes,loadingMorePostLikes,likes
+            loadingPostLikes,loadingMorePostLikes,likes,onlyMe
         } = this.props;
         return (
             <>
@@ -51,6 +51,7 @@ export default class PostList extends Component {
                        getPostLikes={getPostLikes}
                        loadingPostLikes={loadingPostLikes}
                        loadingMorePostLikes={loadingMorePostLikes}
+                       onlyMe={onlyMe}
                    />
                 ))}
                 {hasMore ?
@@ -60,6 +61,9 @@ export default class PostList extends Component {
                     <p className={'text-center text-white'}>No more posts...</p>}
             </>
         );
+    }
+    static defaultProps = {
+        onlyMe: null
     }
 }
 
@@ -89,4 +93,5 @@ PostList.propTypes = {
     getPostLikes: PropTypes.func.isRequired,
     loadingPostLikes: PropTypes.bool.isRequired,
     loadingMorePostLikes: PropTypes.bool.isRequired,
+    onlyMe: PropTypes.bool
 };

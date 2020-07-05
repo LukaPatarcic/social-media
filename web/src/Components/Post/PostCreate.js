@@ -24,7 +24,7 @@ export default class PostCreate extends React.Component {
                 this.setState({loading: false});
                 this.postCreateFormRef.current.resetText();
                 if(this.props.onlyMe) {
-                    this.props.onHandlePostAdd(response.post)
+                    this.props.onSendPostHandler(response.post)
                 }
 
                 toastr.success('Post added to timeline!')
@@ -49,5 +49,5 @@ export default class PostCreate extends React.Component {
 }
 
 PostCreate.propTypes = {
-    onHandlePostAdd: PropTypes.func
+    onSendPostHandler: PropTypes.func
 }

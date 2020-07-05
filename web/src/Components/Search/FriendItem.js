@@ -13,7 +13,7 @@ export default class FriendItem extends React.Component{
 
 
     render() {
-        const {friend,onSendFriendRequest,loadingSendFriendRequest, loadingSendFriendRequestId} = this.props;
+        const {friend,onSendFriendRequest,loadingSendFriendRequest, loadingSendFriendRequestId, onToggle} = this.props;
 
         return (
             <>
@@ -22,7 +22,7 @@ export default class FriendItem extends React.Component{
                         <MDBBadge color="red" className={'mr-3'}>
                              <MDBIcon className={'text-white'} icon={'user'} />
                         </MDBBadge>
-                        <Link className={'text-dark'} to={'/profile/' + friend.profileName} onClick={() => this.props.toggle()}>
+                        <Link className={'text-dark'} to={'/profile/' + friend.profileName} onClick={onToggle}>
                             {friend.firstName} {friend.lastName} ({friend.profileName})
                         </Link>
                         <MDBBtn
@@ -57,4 +57,5 @@ FriendItem.porpTypes = {
     friend: PropTypes.object.isRequired,
     loadingSendFriendRequest: PropTypes.bool.isRequired,
     loadingSendFriendRequestId: PropTypes.number,
+    onToggle: PropTypes.func.isRequired,
 }

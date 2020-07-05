@@ -35,7 +35,7 @@ export default class PostContainer extends React.Component{
         this.state = defaultState;
 
         this.handlePostLike = this.handlePostLike.bind(this);
-        this.handlePostAdd = this.handlePostAdd.bind(this);
+        this.sendPostHandler = this.sendPostHandler.bind(this);
         this.handlePostComment = this.handlePostComment.bind(this);
         this.handleCommentLike = this.handleCommentLike.bind(this);
         this.handleCommentReply = this.handleCommentReply.bind(this);
@@ -76,11 +76,10 @@ export default class PostContainer extends React.Component{
     }
 
     postLikesModalCloseHandler() {
-        console.log('here')
         this.setState({hasMorePostLikes: true, postLikesOffset: 0, likes: []})
     }
 
-    handlePostAdd(post) {
+    sendPostHandler(post) {
         this.setState((prevState) => ({
             posts: [post,...prevState.posts]
         }))
@@ -302,14 +301,15 @@ export default class PostContainer extends React.Component{
     }
 
     render() {
-        const {showCreatePost} = this.props
+        const {showCreatePost,onlyMe} = this.props
         return (
             <>
                 {
                     showCreatePost ?
                     <PostCreate
                         showCreatePost={showCreatePost}
-                        onHandlePostAdd={this.handlePostAdd}
+                        onSendPostHandler={this.sendPostHandler}
+                        onlyMe={onlyMe}
                     />
                     : null
                 }
@@ -324,6 +324,7 @@ export default class PostContainer extends React.Component{
                 getComments={this.getComments}
                 getSubComments={this.getSubComments}
                 getPostLikes={this.getPostLikes}
+                onlyMe={onlyMe}
             />
             }
             </>
@@ -333,11 +334,13 @@ export default class PostContainer extends React.Component{
 
     static defaultProps = {
         showCreatePost: true,
-        profile: null
+        profile: null,
+        onlyMe: null
     }
 }
 
 PostContainer.propTypes = {
     showCreatePost: PropTypes.bool,
-    profile: PropTypes.number
+    profile: PropTypes.number,
+    onlyMe: PropTypes.bool
 };

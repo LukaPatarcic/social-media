@@ -1,5 +1,16 @@
 import React,{Component} from "react";
-import {MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBIcon, MDBRow, MDBTooltip} from "mdbreact";
+import {
+    MDBBadge,
+    MDBBtn,
+    MDBCard,
+    MDBCardBody,
+    MDBCol,
+    MDBDropdown, MDBDropdownItem, MDBDropdownMenu,
+    MDBDropdownToggle,
+    MDBIcon, MDBPopover, MDBPopoverBody, MDBPopoverHeader,
+    MDBRow,
+    MDBTooltip
+} from "mdbreact";
 import {setProfilePicture} from "../../Helpers";
 import {Link} from "react-router-dom";
 import TimeAgo from "react-timeago";
@@ -10,6 +21,14 @@ import PostShare from "./PostShare";
 import PropTypes from 'prop-types';
 import CommentList from "../PostComment/CommentList";
 import PostLikes from "./PostLikes";
+import {
+    FacebookIcon,
+    FacebookShareButton, RedditIcon, RedditShareButton,
+    TwitterIcon,
+    TwitterShareButton,
+    WhatsappIcon,
+    WhatsappShareButton
+} from "react-share";
 
 export default class PostItem extends Component{
     constructor(props) {
@@ -33,7 +52,7 @@ export default class PostItem extends Component{
             loadingMoreSubComments,hasMoreSubComments,
             loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId,
             loadingPostLikes,loadingMorePostLikes,getPostLikes,likes,hasMorePostLikes,
-            onPostLikesModalCloseHandler
+            onPostLikesModalCloseHandler,onlyMe
         } = this.props;
         const {inputVisibility} = this.state;
 
@@ -63,10 +82,25 @@ export default class PostItem extends Component{
                                             </Link>
                                             <div>{post.firstName+' '+post.lastName}</div>
                                         </MDBTooltip>
-
                                     </h5>
                                     <small className={'text-muted'} style={{fontSize: 11}}><TimeAgo
                                         date={post.createdAt}/></small>
+                                </MDBCol>
+                                <MDBCol size={1}>
+                                    {onlyMe &&
+                                    <MDBPopover placement={'top'} popover={true} clickable={true} id={'share-media'}>
+                                        <MDBIcon icon={'ellipsis-v'} color={'black'} />
+                                        <div>
+                                            <MDBPopoverHeader>Actions</MDBPopoverHeader>
+                                            <MDBPopoverBody>
+                                                Edit<br />
+                                                Delete
+                                            </MDBPopoverBody>
+                                        </div>
+                                    </MDBPopover>
+                                    }
+
+
                                 </MDBCol>
                             </MDBRow>
                             <MDBRow>
@@ -191,6 +225,10 @@ export default class PostItem extends Component{
             </MDBRow>
         );
     }
+
+    static defaultProps = {
+        onlyMe: null
+    }
 }
 
 PostItem.propTypes = {
@@ -215,5 +253,6 @@ PostItem.propTypes = {
     loadingPostLikes: PropTypes.bool.isRequired,
     loadingMorePostLikes: PropTypes.bool.isRequired,
     hasMorePostLikes: PropTypes.bool.isRequired,
-    onPostLikesModalCloseHandler: PropTypes.func.isRequired
+    onPostLikesModalCloseHandler: PropTypes.func.isRequired,
+    onlyMe: PropTypes.bool
 }

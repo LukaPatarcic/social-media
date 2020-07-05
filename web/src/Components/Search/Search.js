@@ -78,6 +78,7 @@ export default class Search extends Component {
                                             onSendFriendRequest={onSendFriendRequest}
                                             loadingSendFriendRequest={loadingSendFriendRequest}
                                             loadingSendFriendRequestId={loadingSendFriendRequestId}
+                                            onToggle={this.toggle}
                                         />
                                     )
                                     :

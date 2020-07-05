@@ -73,7 +73,7 @@ export default class Profile extends React.Component{
                     </MDBRow>
                     <MDBRow>
                         <MDBCol sm={12}>
-                            {loading ? null : <PostContainer showCreatePost={isMe} profile={user.id} />}
+                            {loading ? null : <PostContainer showCreatePost={isMe} profile={user.id} onlyMe={isMe} />}
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>
