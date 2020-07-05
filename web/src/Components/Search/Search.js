@@ -11,6 +11,7 @@ import {
 } from 'mdbreact';
 import {ClipLoader} from "react-spinners";
 import FriendItem from "./FriendItem";
+import PropTypes from 'prop-types';
 
 
 export default class Search extends Component {
@@ -20,9 +21,6 @@ export default class Search extends Component {
         this.state = {
             q: '',
             modal: false,
-            loading: false,
-            error: '',
-            searchQuery: []
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -38,15 +36,15 @@ export default class Search extends Component {
 
     handleChange(e) {
         this.setState({[e.target.name]: e.target.value}, () => {
-            this.handleChangeDebounce(this.state.q);
+            this.props.onHandleChangeDebounce(this.state.q);
         });
     }
 
     render() {
-        const {searchQuery, loading, error} = this.state;
+        const {searchQuery, loading, error, onSendFriendRequest,loadingSendFriendRequest, loadingSendFriendRequestId} = this.props;
         return (
             <MDBContainer>
-                <MDBIcon onClick={this.toggle} fas={'true'} icon="search" className={'text-white mr-2'}/>
+                <MDBIcon onClick={this.toggle} fas={'true'} icon="search" className={'text-white mr-2 hand-icon'}/>
                 <MDBModal className={'text-dark'} size={'lg'} isOpen={this.state.modal} toggle={this.toggle}>
                     <MDBModalHeader toggle={this.toggle}>Search for friends</MDBModalHeader>
                     <MDBModalBody className={'text-center'}>
@@ -77,9 +75,9 @@ export default class Search extends Component {
                                         <FriendItem
                                             key={index}
                                             friend={value}
-                                            change={this.state.change}
-                                            toggle={this.toggle.bind(this)}
-                                            getFriends={this.getFriends.bind(this)}
+                                            onSendFriendRequest={onSendFriendRequest}
+                                            loadingSendFriendRequest={loadingSendFriendRequest}
+                                            loadingSendFriendRequestId={loadingSendFriendRequestId}
                                         />
                                     )
                                     :
@@ -95,4 +93,14 @@ export default class Search extends Component {
             </MDBContainer>
         );
     }
+}
+
+Search.propTypes = {
+    searchQuery: PropTypes.array.isRequired,
+    loading: PropTypes.bool.isRequired,
+    loadingSendFriendRequest: PropTypes.bool.isRequired,
+    loadingSendFriendRequestId: PropTypes.number,
+    error: PropTypes.string.isRequired,
+    onHandleChangeDebounce: PropTypes.func.isRequired,
+    onSendFriendRequest: PropTypes.func.isRequired
 }

@@ -6,10 +6,10 @@ import {
     MDBNavItem, MDBNavLink
 } from "mdbreact";
 import {Link} from "react-router-dom";
-import Search from "../Search/Search";
 import {AuthContext} from "../../Contexts/AuthContext";
 import cookie from 'react-cookies'
 import NotificationContainer from "../Notification/NotificationContainer";
+import SearchContainer from "../Search/SearchContainer";
 
 export default class Navigation extends React.Component{
 
@@ -45,9 +45,7 @@ export default class Navigation extends React.Component{
                                 ?
                                 <>
                                 <MDBNavItem className={'mt-2'}>
-                                    <Link to={'#'}>
-                                        <Search />
-                                    </Link>
+                                    <SearchContainer />
                                 </MDBNavItem>
                                 <MDBNavItem className={'mt-2'}>
                                     <Link className={'text-white mr-2'} to={'/profile/'+cookie.load('user').profileName}>Profile</Link>

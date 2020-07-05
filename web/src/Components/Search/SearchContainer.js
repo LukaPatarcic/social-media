@@ -3,6 +3,9 @@ import Search from "./Search";
 import {debounce} from "throttle-debounce";
 import {BASE_URL} from "../../Config";
 import cookie from "react-cookies";
+import toastr from 'toastr'
+import './Search.css'
+import {getFriends, sendFriendRequest} from "../../Api/search";
 
 export default class SearchContainer extends Component{
     constructor(props) {
@@ -10,18 +13,28 @@ export default class SearchContainer extends Component{
         this.state = {
             searchQuery: [],
             loading: false,
-            error: ''
+            loadingSendFriendRequest: false,
+            loadingSendFriendRequestId: null,
+            error: '',
+            q: ''
         }
 
-        this.toggle = this.toggle.bind(this);
-        this.handleChangeDebounce = debounce(200,this.search);
+        this.handleChangeDebounce = this.handleChangeDebounce.bind(this);
+        this.sendFriendRequest = this.sendFriendRequest.bind(this);
+        this.getFriends = this.getFriends.bind(this);
     }
 
-    search = qq => {
-        this.getFriends()
+
+    handleChangeDebounce(q) {
+        this.setState({
+            q
+        },() => {
+            debounce(200,this.getFriends());
+        })
+
     }
 
-    getFriends(loading = false) {
+    getFriends(loading = true) {
         const {q} = this.state;
 
         if(loading) {
@@ -32,39 +45,47 @@ export default class SearchContainer extends Component{
             return;
         }
 
-        let url = new URL(BASE_URL+'/search');
-        let params = {search:q};
-        url.search = new URLSearchParams(params).toString();
+        const url =`/search?search=${q}`
 
-        fetch(url,{
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + cookie.load('access-token')
-            },
-            signal: signal,
-            method: "GET",
-        })
-            .then((response => response.json()))
-            .then((data => {
+        getFriends(url)
+            .then(data => {
                 this.setState({searchQuery: data,loading: false});
-
                 if(data) {
                     this.setState({error: ''});
                 } else {
                     this.setState({error: 'No Results...'});
                 }
-
-
-            }))
-            .catch(err => {
-                this.setState({error: 'Oops... Something went wrong!',loading: false});
             })
+            .catch(err => err.response.json().then(err => {
+                this.setState({error: 'Oops... Something went wrong!',loading: false});
+            }))
+    }
+
+    sendFriendRequest(id) {
+        this.setState({loadingSendFriendRequest: true,loadingSendFriendRequestId: id});
+        sendFriendRequest({id})
+            .then(data => {
+                this.setState({loading: false});
+                this.getFriends(false);
+                if(data.error) {
+                    this.setState({error: true})
+                    toastr.info('Friend request already sent!');
+                }
+                this.setState({loadingSendFriendRequest: false,loadingSendFriendRequestId: null});
+            })
+            .catch(err => err.response.json().then(err => {
+                this.setState({error: true,loading: false});
+                toastr.info('Friend request already sent!');
+            }))
     }
 
     render() {
         return (
-            <Search />
+            <Search
+                {...this.state}
+                onHandleChangeDebounce={this.handleChangeDebounce}
+                onSendFriendRequest={this.sendFriendRequest}
+            />
         );
     }
 }

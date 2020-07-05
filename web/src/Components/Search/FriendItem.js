@@ -1,54 +1,19 @@
 import React from "react";
 import {MDBBadge, MDBBtn, MDBCol, MDBIcon, MDBRow} from "mdbreact";
-import cookie from "react-cookies";
 import {ClipLoader} from "react-spinners";
-import { store } from 'react-notifications-component';
 import {Link} from "react-router-dom";
-import {BASE_URL} from "../../Config";
-import toastr from 'toastr/build/toastr.min'
+import PropTypes from 'prop-types';
+
 
 import 'toastr/build/toastr.min.css'
 export default class FriendItem extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {
-            loading: false,
-            btnText: 'Follow',
-            error: false,
-            requested: false
-        }
-
     }
 
-    sendFriendRequest(e) {
-        this.setState({loading: true});
-        fetch(BASE_URL+'/friend/request',{
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + cookie.load('access-token')
-            },
-            method: "POST",
-            body: JSON.stringify({id: e.currentTarget.id})
-        })
-            .then((response => response.json()))
-            .then((data => {
-                this.setState({loading: false});
-                this.props.getFriends();
-                if(data.error) {
-                    this.setState({error: true})
-                    toastr.info('Friend request already sent!');
-                }
-            }))
-            .catch(err => {
-                this.setState({error: true,loading: false});
-                toastr.info('Friend request already sent!');
-            })
-    }
 
     render() {
-        const {friend} = this.props;
-        const {loading,error} = this.state;
+        const {friend,onSendFriendRequest,loadingSendFriendRequest, loadingSendFriendRequestId} = this.props;
 
         return (
             <>
@@ -67,16 +32,15 @@ export default class FriendItem extends React.Component{
                             size={'sm'}
                             id={friend.id}
                             outline={'true'}
-                            onClick={this.sendFriendRequest.bind(this)}>
-                            {loading ?
+                            onClick={() => onSendFriendRequest(friend.id,true)}>
+                            {loadingSendFriendRequestId == friend.id && loadingSendFriendRequest ?
                                 <ClipLoader
                                     sizeUnit={"px"}
                                     size={20}
                                     color={'#f00'}
-                                    loading={loading}
+                                    loading={loadingSendFriendRequest}
                                 />
-                                :
-                                (friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))
+                                : (friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))
                             }
                         </MDBBtn>
                         <div className={'clearfix'}></div>
@@ -86,4 +50,11 @@ export default class FriendItem extends React.Component{
             </>
         )
     }
+}
+
+FriendItem.porpTypes = {
+    onSendFriendRequest: PropTypes.func.isRequired,
+    friend: PropTypes.object.isRequired,
+    loadingSendFriendRequest: PropTypes.bool.isRequired,
+    loadingSendFriendRequestId: PropTypes.number,
 }

@@ -63,7 +63,6 @@ class SecurityController extends BaseController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
-
         return $this->json(['success' => 1],Response::HTTP_CREATED);
     }
 

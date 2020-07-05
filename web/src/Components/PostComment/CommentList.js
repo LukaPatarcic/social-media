@@ -1,5 +1,6 @@
 import React from "react";
 import {
+    MDBBadge,
     MDBContainer,
     MDBModal,
     MDBModalBody,
@@ -51,9 +52,16 @@ export default class CommentList extends React.Component{
         } = this.props;
         return (
             <>
-                {React.cloneElement(showMoreTag, {
-                    onClick: this.toggle
-                })}
+                {showMoreTag ?
+                    <p className={'text-center'}>
+                        <a onClick={this.toggle} href={'#'} className={'text-danger'}>Show comments...</a>
+                    </p>
+                    :
+                    <a href={'#'} className={'text-dark'} onClick={this.toggle}>
+                        <span>Comments </span>
+                    </a>
+                }
+
                 <MDBModal size={'lg'} isOpen={modal} toggle={this.toggle}>
                     <MDBModalHeader toggle={this.toggle}>Comments ({commentCount})</MDBModalHeader>
                     <MDBModalBody style={{height: 600,overflowY: 'scroll'}}>
@@ -139,6 +147,6 @@ CommentList.propTypes = {
     sendingCommentId: PropTypes.number.isRequired,
     sendingCommentReplyId: PropTypes.number.isRequired,
     sendingComment: PropTypes.bool.isRequired,
-    showMoreTag: PropTypes.element.isRequired
+    showMoreTag: PropTypes.bool.isRequired
 }
 

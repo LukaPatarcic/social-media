@@ -15,8 +15,7 @@ export default class PostItem extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            inputVisibility: false,
-            commentCount: props.post.commentCount
+            inputVisibility: false
         };
 
         this.handleInputVisibility = this.handleInputVisibility.bind(this);
@@ -37,9 +36,6 @@ export default class PostItem extends Component{
             onPostLikesModalCloseHandler
         } = this.props;
         const {inputVisibility} = this.state;
-        if(post.id == 161) {
-            console.log(post.commentCount,post.id);
-        }
 
         return (
             <MDBRow center>
@@ -110,11 +106,9 @@ export default class PostItem extends Component{
                                         loadingMoreSubCommentsId={loadingMoreSubCommentsId}
                                         sendingCommentId={sendingCommentId}
                                         sendingCommentReplyId={sendingCommentReplyId}
-                                        showMoreTag={<a href={'#'} className={'text-dark'}>
-                                        <span>Comments <MDBBadge style={{fontSize: 14}}
-                                                                 color={'black'}>{this.state.commentCount}</MDBBadge></span>
-                                        </a>}
+                                        showMoreTag={false}
                                     />
+                                    <MDBBadge style={{fontSize: 14}} color={'black'}>{post.commentCount}</MDBBadge>
                                 </MDBCol>
                             </MDBRow>
                             <hr/>
@@ -156,9 +150,7 @@ export default class PostItem extends Component{
                                         loadingMoreSubCommentsId={loadingMoreSubCommentsId}
                                         sendingCommentId={sendingCommentId}
                                         sendingCommentReplyId={sendingCommentReplyId}
-                                        showMoreTag={<p className={'text-center'}>
-                                            <a onClick={this.toggle} href={'#'} className={'text-danger'}>Show comments...</a>
-                                        </p>}
+                                        showMoreTag={true}
                                     />}
                                 </MDBCol>
                             </MDBRow>
