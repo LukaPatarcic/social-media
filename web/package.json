@@ -28,6 +28,7 @@
     "react-facebook-login": "^4.1.1",
     "react-giphy-picker": "^1.1.1",
     "react-google-login": "^5.0.7",
+    "react-images-upload": "^1.2.8",
     "react-infinite-scroll-component": "^5.0.4",
     "react-notifications-component": "^2.2.4",
     "react-password-strength-bar": "^0.3.0",

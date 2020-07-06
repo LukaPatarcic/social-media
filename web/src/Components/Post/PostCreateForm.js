@@ -1,11 +1,12 @@
 import React,{Component} from "react";
 import {MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBIcon, MDBInput, MDBRow, MDBTooltip} from "mdbreact";
 import {isMobile} from "react-device-detect";
-import {ClipLoader} from "react-spinners";
+import Files from "react-butterfiles";
 import {Picker as EmojiPicker} from "emoji-mart";
 import SimpleReactValidator from "simple-react-validator";
 import './Post.css'
 import PropTypes from 'prop-types'
+import Loading from "../../Helpers/Loading";
 
 export default class PostCreateForm extends Component{
     constructor(props) {
@@ -15,6 +16,8 @@ export default class PostCreateForm extends Component{
             setChosenEmoji: null,
             text: '',
             showEmojis: false,
+            files: [],
+            errors: []
         };
 
         this.showEmojis = this.showEmojis.bind(this);
@@ -49,10 +52,7 @@ export default class PostCreateForm extends Component{
 
     closeMenu(e) {
         if (this.emojiPicker !== null && !this.emojiPicker.contains(e.target)) {
-            this.setState(
-                {
-                    showEmojis: false
-                },
+            this.setState({showEmojis: false},
                 () => document.removeEventListener("click", this.closeMenu)
             );
         }
@@ -65,6 +65,17 @@ export default class PostCreateForm extends Component{
     addEmoji(e) {
         let emoji = e.native;
         this.setState((prevState) => ({text: prevState.text + emoji}))
+    }
+
+    getBase64(file, cb) {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            cb(reader.result)
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
     }
 
     render() {
@@ -89,7 +100,6 @@ export default class PostCreateForm extends Component{
                                 <small>{this.validator.message('text', text, 'required|max:180')}</small>
                             </form>
                             <small className={'float-right ' + textColor}>{text.length}/180</small><br/>
-                            <MDBBtn outline={true} circle={true} color={'grey'} size={'sm'}><MDBIcon icon={'image'} size={'2x'} /></MDBBtn>
                             {!isMobile &&
                             <MDBTooltip placement="top">
                                 <MDBBtn onClick={this.showEmojis} outline={true} circle={true} color={'grey'} size={'sm'}><MDBIcon icon={'laugh-wink'} size={'2x'}/></MDBBtn>
@@ -105,17 +115,9 @@ export default class PostCreateForm extends Component{
                                     disabled={(!!(text.length > 180 || text.length < 1 || loading))}
                                     onClick={this.validateForm}
                                 >
-                                    {loading
-                                        ?
-                                        <ClipLoader
-                                            sizeUnit={"px"}
-                                            size={12}
-                                            color={'#f00'}
-                                            loading={loading}
-                                        />
-                                        :
+                                    <Loading loading={loading}>
                                         <MDBIcon icon={'plus'}/>
-                                    }
+                                    </Loading>
                                 </MDBBtn>
                                 <div>Post this to your timeline...</div>
                             </MDBTooltip>
@@ -128,11 +130,41 @@ export default class PostCreateForm extends Component{
                                 />
                             </span>
                             }
+                            <Files
+                                multiple={true}
+                                maxSize="3mb"
+                                multipleMaxSize="15mb"
+                                multipleMaxCount={5}
+                                onSuccess={files => this.setState({ files })}
+                                onError={errors => this.setState({ errors })}
+                                convertToBase64={true}
+                            >
+                                {({ browseFiles }) => (
+                                    <>
+                                        <MDBBtn outline={true} circle={true} color={'grey'} size={'sm'} onClick={browseFiles}><MDBIcon icon={'image'} size={'2x'} /></MDBBtn>
+                                        <ol>
+                                            {this.state.files.map((file,index) => {
+                                                return (<img key={index} className={'mr-2 '} src={file.src.base64} width={100} height={100} />)
+                                            })}
+                                            {this.state.errors.map(error => (
+                                                <li key={error.file.name}>
+                                                    {error.file.name} - {error.type}
+                                                </li>
+                                            ))}
+                                        </ol>
+                                    </>
+                                )}
+                            </Files>
+                            {this.state.errors.length > 0 && <div>An error occurred.</div>}
                         </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
             </MDBRow>
         );
+    }
+
+    static defaultProps = {
+        size: 8
     }
 }
 
@@ -140,7 +172,4 @@ PostCreateForm.propTypes = {
     loading: PropTypes.bool.isRequired,
     onSendPostHandler: PropTypes.func.isRequired,
     size: PropTypes.number
-}
-PostCreateForm.defaultProps = {
-    size: 8
 }
