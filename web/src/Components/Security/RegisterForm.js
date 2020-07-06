@@ -130,9 +130,7 @@ export default class RegisterForm extends Component{
                                                 {password &&
                                                     <PasswordStrengthBar password={password} />
                                                 }
-                                                <small>
-                                                    {this.validator.message('password', password, 'required|min:3|max:255')}
-                                                </small>
+                                                <small>{this.validator.message('password', password, 'required|min:3|max:255')}</small>
                                             </MDBCol>
                                             <MDBCol sm={12} md={6}>
                                                 <MDBInput

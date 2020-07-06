@@ -16,7 +16,7 @@ import MobileAppModal from "../Components/Mobile/MobileAppModal";
 import CookieConsent from "react-cookie-consent";
 import {LOGIN_URL, REGISTER_URL} from "../Config";
 import ProfileContainer from "../Components/Profile/ProfileContainer";
-import ProfileEdit from "../Components/Profile/ProfileEdit";
+import ProfileEditContainer from "../Components/Profile/ProfileEditContainer";
 
 export default class Routing extends React.Component{
 
@@ -41,7 +41,7 @@ export default class Routing extends React.Component{
                     <Route exact={true} path="/legal/tos" component={TermsOfService} />
                     {/* USER */}
                     <Route exact={true} path="/" component={Homepage} />
-                    <Route exact={true} path="/profile/edit" component={ProfileEdit} />
+                    <Route exact={true} path="/profile/edit" component={ProfileEditContainer} />
                     <Route exact={true} path="/profile/:profileName" render={(props) => (<ProfileContainer {...props} />)} />
                     <Route exact={true} path="/notification/list" component={NotificationList} />
                     {/* NOT FOUND */}

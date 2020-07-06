@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  * @package App\Controller
  * @IsGranted("ROLE_USER")
  */
-class EditProfileController extends BaseController
+class UserEditController extends BaseController
 {
     /**
      * @Route("/user/edit", name="user_edit", methods={"PATCH"})
@@ -26,12 +26,10 @@ class EditProfileController extends BaseController
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return JsonResponse
      */
-    public function profileEdit(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function userEdit(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $data = json_decode($request->getContent(),true);
-        /**
-         * @User $user
-         */
+        /** * @User $user */
         $user = $this->getUser();
 
         $user->setProfileName($data['profileName'])
@@ -47,7 +45,7 @@ class EditProfileController extends BaseController
         $form->submit($data);
 
         if($errors = $this->getErrorMessages($form)) {
-            return $this->json(['error' => $errors], Response::HTTP_OK);
+            return $this->json(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
 
