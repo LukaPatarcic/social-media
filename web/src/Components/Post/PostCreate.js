@@ -3,6 +3,7 @@ import toastr from 'toastr/build/toastr.min'
 import PostCreateForm from "./PostCreateForm";
 import {sendPost} from "../../Api/post";
 import PropTypes from 'prop-types';
+import './PostCreate.css'
 
 export default class PostCreate extends React.Component {
 
@@ -17,9 +18,9 @@ export default class PostCreate extends React.Component {
 
     }
 
-    sendPostHandler(text) {
+    sendPostHandler(text,images) {
         this.setState({loading: true})
-        sendPost(text)
+        sendPost(text,images)
             .then(response => {
                 this.setState({loading: false});
                 this.postCreateFormRef.current.resetText();

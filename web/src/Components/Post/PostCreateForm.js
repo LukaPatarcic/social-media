@@ -4,9 +4,11 @@ import {isMobile} from "react-device-detect";
 import Files from "react-butterfiles";
 import {Picker as EmojiPicker} from "emoji-mart";
 import SimpleReactValidator from "simple-react-validator";
+import ScrollContainer from 'react-indiana-drag-scroll'
 import './Post.css'
 import PropTypes from 'prop-types'
 import Loading from "../../Helpers/Loading";
+import ImageCompression from "../../Helpers/ImageCompression";
 
 export default class PostCreateForm extends Component{
     constructor(props) {
@@ -17,7 +19,8 @@ export default class PostCreateForm extends Component{
             text: '',
             showEmojis: false,
             files: [],
-            errors: []
+            errors: [],
+            filesForUpload: []
         };
 
         this.showEmojis = this.showEmojis.bind(this);
@@ -26,11 +29,23 @@ export default class PostCreateForm extends Component{
         this.validateForm = this.validateForm.bind(this);
         this.resetText = this.resetText.bind(this);
         this.validator = new SimpleReactValidator();
+        this.imageCompresssion = new ImageCompression();
     }
 
     validateForm() {
         if (this.validator.allValid()) {
-            this.props.onSendPostHandler(this.state.text)
+            this.state.files.map((file) => {
+                const img = this.imageCompresssion.compressImages(file);
+                    ImageCompression.getBase64(img)
+                        .then(base64 => {
+                            this.setState((prevState) => ({
+                                    filesForUpload: [...prevState.filesForUpload, base64]
+                            })
+                        );
+                })
+            });
+
+            this.props.onSendPostHandler(this.state.text,this.state.filesForUpload);
         } else {
             this.validator.showMessages();
             this.forceUpdate();
@@ -67,19 +82,16 @@ export default class PostCreateForm extends Component{
         this.setState((prevState) => ({text: prevState.text + emoji}))
     }
 
-    getBase64(file, cb) {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-            cb(reader.result)
-        };
-        reader.onerror = function (error) {
-            console.log('Error: ', error);
-        };
+    removeImage(name) {
+        this.setState(
+        {files:  this.state.files.filter((file) => {
+                return name !== file.src.file.name;
+            })
+        })
     }
 
     render() {
-        const {text,showEmojis} = this.state;
+        const {text,showEmojis,files} = this.state;
         const {loading,size} = this.props;
         const textColor = text.length > 180 ? 'text-danger' : 'text-dark';
         return (
@@ -132,8 +144,8 @@ export default class PostCreateForm extends Component{
                             }
                             <Files
                                 multiple={true}
-                                maxSize="3mb"
-                                multipleMaxSize="15mb"
+                                maxSize="10mb"
+                                multipleMaxSize="50mb"
                                 multipleMaxCount={5}
                                 onSuccess={files => this.setState({ files })}
                                 onError={errors => this.setState({ errors })}
@@ -142,16 +154,25 @@ export default class PostCreateForm extends Component{
                                 {({ browseFiles }) => (
                                     <>
                                         <MDBBtn outline={true} circle={true} color={'grey'} size={'sm'} onClick={browseFiles}><MDBIcon icon={'image'} size={'2x'} /></MDBBtn>
-                                        <ol>
-                                            {this.state.files.map((file,index) => {
-                                                return (<img key={index} className={'mr-2 '} src={file.src.base64} width={100} height={100} />)
+                                        <ScrollContainer
+                                            className="image-upload-container"
+                                            horizontal={true}
+                                            vertical={false}
+                                            hideScrollbars={false}
+                                            nativeMobileScroll={true}
+                                        >
+                                            {files.map((file,index) => {
+                                                return (
+                                                    <div className={'image-wrap'} key={index}>
+                                                        <img key={index} className={'mr-2 menu-image'} src={file.src.base64} width={100} height={100} style={{objectFit: 'cover'}} />
+                                                        <div className={'overlay'}><MDBIcon className={'remove-image'} icon={'times'} color={'white'} onClick={() => this.removeImage(file.src.file.name)} /></div>
+                                                    </div>
+                                                )
                                             })}
                                             {this.state.errors.map(error => (
-                                                <li key={error.file.name}>
-                                                    {error.file.name} - {error.type}
-                                                </li>
+                                                console.log(error)
                                             ))}
-                                        </ol>
+                                        </ScrollContainer>
                                     </>
                                 )}
                             </Files>

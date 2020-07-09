@@ -44,6 +44,11 @@ class Post
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $images = [];
+
     public function __construct()
     {
         $this->likePosts = new ArrayCollection();
@@ -137,6 +142,18 @@ class Post
                 $comment->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImages(): ?array
+    {
+        return $this->images;
+    }
+
+    public function setImages(?array $images): self
+    {
+        $this->images = $images;
 
         return $this;
     }

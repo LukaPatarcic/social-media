@@ -1,9 +1,9 @@
 import {fetchJson} from "./index";
 
-export const sendPost = (text) => {
+export const sendPost = (text,images) => {
     return fetchJson('/post',{
         method: 'POST',
-        body: JSON.stringify({text})
+        body: JSON.stringify({text,images})
     },true)
 };
 

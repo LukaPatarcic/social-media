@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Form\PostType;
 use App\Form\RegistrationFormType;
+use App\Services\ImageUpload;
 use App\Services\PushNotification;
 use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -100,14 +101,17 @@ class PostController extends BaseController
     {
         $data = json_decode($request->getContent(),true);
         $user = $this->getUser();
-
         $post = new Post();
-        $form = $this->createForm(PostType::class, $post);
-        $form->submit($data);
-
-        if($errors = $this->getErrorMessages($form)) {
-            return $this->json(['error' => $errors], Response::HTTP_OK);
-        }
+//        $form = $this->createForm(PostType::class, $post);
+//        $form->submit($data['text']);
+//
+//        if($errors = $this->getErrorMessages($form)) {
+//            return $this->json(['error' => $errors], Response::HTTP_OK);
+//        }
+        $images = new ImageUpload($user->getProfileName());
+        $images->uploadImages($data['images']);
+        $post->setText($data['text']);
+        $post->setImages($images->getUploadedImagesNames());
         $post->setUser($user);
 
         $friends = $user->getFriendsWithMe()->toArray();
@@ -128,7 +132,7 @@ class PostController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $em->persist($post);
         $em->flush();
-
+        $arr = $images->getAllAbsoluteUrlsToImages();
         $data = [
            'id' => +$post->getId(),
             'firstName' =>  $post->getUser()->getFirstName(),
@@ -136,6 +140,7 @@ class PostController extends BaseController
             'profileName' => $post->getUser()->getProfileName(),
             'text' =>  $post->getText(),
             'createdAt' =>  $post->getCreatedAt(),
+            'images' => $arr,
             'likes' =>  0,
             'liked' =>  false,
             'comments' => [],

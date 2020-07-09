@@ -2,7 +2,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.3.15",
+        "php": "^7.4",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-iconv": "*",
@@ -32,7 +32,8 @@
         "symfony/swiftmailer-bundle": "^3.4",
         "symfony/test-pack": "^1.0",
         "symfony/validator": "4.3.*",
-        "symfony/yaml": "4.3.*"
+        "symfony/yaml": "4.3.*",
+        "ext-exif": "*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
