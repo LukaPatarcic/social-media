@@ -36,17 +36,24 @@ export default class ImageCompression {
         if (!img) {
             return;
         }
-
-        let obj = new Compressor(img, {
-            quality: 0.6,
-            success(result) {
-                return result;
-            },
-            error(err) {
-                console.log(err.message);
-            },
-        });
-
-        return obj.file;
+        return  new Promise((resolve, reject) => {
+            new Compressor(img, {
+                quality: 0.6,
+                width: 600,
+                height: 600,
+                minWidth: 600,
+                maxWidth: 600,
+                minHeight: 600,
+                maxHeight: 600,
+                mimeType: 'images/jpeg',
+                convertSize: 1,
+                success(result) {
+                    resolve(result);
+                },
+                error(err) {
+                    reject(err.message);
+                },
+            });
+        })
     }
 }

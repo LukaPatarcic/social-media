@@ -6,8 +6,8 @@ namespace App\Services;
 
 class ImageUpload
 {
-    private $images;
     private $dirPath;
+    private array $uploadedImagesNameArray;
 
     public function __construct($user)
     {
@@ -19,14 +19,6 @@ class ImageUpload
     private function validateImage(string $image): bool
     {
         return (bool)exif_imagetype($image);
-    }
-
-    private function base64decode(string $image)
-    {
-        $filePath = tempnam(sys_get_temp_dir(), 'tmp_post_image');
-        $data = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image));;
-        file_put_contents($filePath, $data);
-
     }
 
     public function uploadImages($images): bool

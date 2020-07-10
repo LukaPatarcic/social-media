@@ -34,18 +34,23 @@ export default class PostCreateForm extends Component{
 
     validateForm() {
         if (this.validator.allValid()) {
-            this.state.files.map((file) => {
+            this.state.files.map((file,index) => {
                 const img = this.imageCompresssion.compressImages(file);
-                    ImageCompression.getBase64(img)
+                img.then(data => {
+                    ImageCompression.getBase64(data)
                         .then(base64 => {
                             this.setState((prevState) => ({
                                     filesForUpload: [...prevState.filesForUpload, base64]
-                            })
-                        );
+                                })
+                            )
+                        })
+                        .finally(() => {
+                            if(index === this.state.files.length - 1) {
+                                this.props.onSendPostHandler(this.state.text,this.state.filesForUpload);
+                            }
+                        })
                 })
             });
-
-            this.props.onSendPostHandler(this.state.text,this.state.filesForUpload);
         } else {
             this.validator.showMessages();
             this.forceUpdate();
@@ -53,7 +58,7 @@ export default class PostCreateForm extends Component{
     }
 
     resetText() {
-        this.setState({text: ''})
+        this.setState({text: '',files: [],filesForUpload: []})
     }
 
     showEmojis(e) {
@@ -145,6 +150,7 @@ export default class PostCreateForm extends Component{
                             <Files
                                 multiple={true}
                                 maxSize="10mb"
+                                accept={["image/jpeg","image/png","image/gif"]}
                                 multipleMaxSize="50mb"
                                 multipleMaxCount={5}
                                 onSuccess={files => this.setState({ files })}
