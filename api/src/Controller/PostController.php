@@ -48,6 +48,7 @@ class PostController extends BaseController
             $data[$k]['createdAt'] = $post['createdAt'];
             $data[$k]['likes'] = intval($post['likes']);
             $data[$k]['liked'] = (bool)$post['liked'];
+            $data[$k]['images'] = unserialize($post['images']) ?? [];
             $comment = $this->getDoctrine()->getRepository(Comment::class)->findByPost($post['postId'],$user,1,0,'DESC') ?? null;
             $data[$k]['comments'] = [];
             if($comment) {

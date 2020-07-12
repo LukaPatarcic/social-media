@@ -1,5 +1,16 @@
 import React,{Component} from "react";
-import {MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBIcon, MDBInput, MDBRow, MDBTooltip} from "mdbreact";
+import {
+    MDBBtn,
+    MDBCard,
+    MDBCardBody,
+    MDBCol,
+    MDBIcon,
+    MDBInput,
+    MDBModal, MDBModalBody, MDBModalFooter,
+    MDBModalHeader,
+    MDBRow,
+    MDBTooltip
+} from "mdbreact";
 import {isMobile} from "react-device-detect";
 import Files from "react-butterfiles";
 import {Picker as EmojiPicker} from "emoji-mart";
@@ -9,6 +20,7 @@ import './Post.css'
 import PropTypes from 'prop-types'
 import Loading from "../../Helpers/Loading";
 import ImageCompression from "../../Helpers/ImageCompression";
+import Cropper from 'react-cropper';
 
 export default class PostCreateForm extends Component{
     constructor(props) {
@@ -20,7 +32,11 @@ export default class PostCreateForm extends Component{
             showEmojis: false,
             files: [],
             errors: [],
-            filesForUpload: []
+            filesForUpload: [],
+            modal: false,
+            imageToEdit: null,
+            imageToEditId: null,
+            croppedImage: null
         };
 
         this.showEmojis = this.showEmojis.bind(this);
@@ -28,8 +44,12 @@ export default class PostCreateForm extends Component{
         this.closeMenu = this.closeMenu.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.resetText = this.resetText.bind(this);
+        this.toggle = this.toggle.bind(this);
+        this.saveChanges = this.saveChanges.bind(this);
         this.validator = new SimpleReactValidator();
         this.imageCompresssion = new ImageCompression();
+        this.cropper = React.createRef(null);
+
     }
 
     validateForm() {
@@ -95,6 +115,40 @@ export default class PostCreateForm extends Component{
         })
     }
 
+    toggle() {
+        this.setState({
+            modal: !this.state.modal,
+        });
+    }
+
+    saveChanges() {
+        this.toggle();
+        this.setState((prevState) => {
+            prevState.files.map((file) => {
+                if(file.id == this.state.imageToEditId) {
+                    file.src.base64 = this.cropper.current.getCroppedCanvas().toDataURL();
+                    return file;
+                }
+
+                return  file;
+            });
+            return {
+                files: prevState.files,
+                croppedImage: null,
+                imageToEdit: null,
+                imageToEditId: null,
+            }
+        });
+    }
+
+    editImage(image,id) {
+        this.toggle();
+        this.setState({
+            imageToEdit: image,
+            imageToEditId: id
+        })
+    }
+
     render() {
         const {text,showEmojis,files} = this.state;
         const {loading,size} = this.props;
@@ -140,13 +194,31 @@ export default class PostCreateForm extends Component{
                             </MDBTooltip>
                             {showEmojis &&
                             <span ref={el => (this.emojiPicker = el)}>
-                                <EmojiPicker  emojiTooltip={true}
-                                              title="Allshak"
-                                              style={{position: 'absolute', zIndex: 1}}
-                                              onSelect={this.addEmoji.bind(this)}
+                                <EmojiPicker
+                                    emojiTooltip={true}
+                                    title="Allshak"
+                                    style={{position: 'absolute', zIndex: 1}}
+                                    onSelect={this.addEmoji.bind(this)}
                                 />
                             </span>
                             }
+                            <MDBModal isOpen={this.state.modal} toggle={this.toggle}>
+                                <MDBModalHeader toggle={this.toggle}>MDBModal title</MDBModalHeader>
+                                <MDBModalBody>
+                                    <Cropper
+                                        ref={this.cropper}
+                                        src={this.state.imageToEdit}
+                                        style={{height: 400, width: '100%'}}
+                                        aspectRatio={1}
+                                        guides={false}
+
+                                    />
+                                </MDBModalBody>
+                                <MDBModalFooter>
+                                    <MDBBtn color="secondary" onClick={this.toggle}>Close</MDBBtn>
+                                    <MDBBtn color="primary" onClick={this.saveChanges}>Save changes</MDBBtn>
+                                </MDBModalFooter>
+                            </MDBModal>
                             <Files
                                 multiple={true}
                                 maxSize="10mb"
@@ -171,13 +243,13 @@ export default class PostCreateForm extends Component{
                                                 return (
                                                     <div className={'image-wrap'} key={index}>
                                                         <img key={index} className={'mr-2 menu-image'} src={file.src.base64} width={100} height={100} style={{objectFit: 'cover'}} />
-                                                        <div className={'overlay'}><MDBIcon className={'remove-image'} icon={'times'} color={'white'} onClick={() => this.removeImage(file.src.file.name)} /></div>
+                                                        <div className={'overlay'}>
+                                                            <MDBIcon className={'edit-image'} icon={'edit'} color={'white'} onClick={() => this.editImage(file.src.base64,file.id)} />
+                                                            <MDBIcon className={'remove-image'} icon={'times'} color={'white'} onClick={() => this.removeImage(file.src.file.name)} />
+                                                        </div>
                                                     </div>
                                                 )
                                             })}
-                                            {this.state.errors.map(error => (
-                                                console.log(error)
-                                            ))}
                                         </ScrollContainer>
                                     </>
                                 )}

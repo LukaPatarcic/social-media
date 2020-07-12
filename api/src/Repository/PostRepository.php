@@ -47,7 +47,7 @@ class PostRepository extends ServiceEntityRepository
         try {
             $stm = $em->prepare("
                 SELECT
-                p.id as postId,p.id as id,p.text,p.created_at as createdAt,u.first_name as firstName,u.last_name as lastName,u.profile_name as profileName,
+                p.id as postId,p.id as id,p.text,p.created_at as createdAt,u.first_name as firstName,u.last_name as lastName,u.profile_name as profileName,p.images as images,
                 (SELECT l.id IS NOT NULL FROM like_post l JOIN post p ON p.id = l.post_id WHERE l.user_id = :user AND l.post_id = postId) as liked,
                 (SELECT COUNT(c.id) FROM comment c JOIN post p ON p.id = c.post_id WHERE c.post_id = postId) as commentCount,
                 (SELECT COUNT(l.id) as likes FROM like_post l JOIN post p ON p.id = l.post_id WHERE l.post_id = postId) as likes

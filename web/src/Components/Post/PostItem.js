@@ -3,13 +3,13 @@ import {
     MDBBadge,
     MDBBtn,
     MDBCard,
-    MDBCardBody,
+    MDBCardBody, MDBCarousel, MDBCarouselInner, MDBCarouselItem,
     MDBCol,
     MDBDropdown, MDBDropdownItem, MDBDropdownMenu,
     MDBDropdownToggle,
     MDBIcon, MDBPopover, MDBPopoverBody, MDBPopoverHeader,
     MDBRow,
-    MDBTooltip
+    MDBTooltip, MDBView
 } from "mdbreact";
 import {setProfilePicture} from "../../Helpers";
 import {Link} from "react-router-dom";
@@ -29,6 +29,7 @@ import {
     WhatsappIcon,
     WhatsappShareButton
 } from "react-share";
+import {BASE_URL, POST_IMAGE} from "../../Config";
 
 export default class PostItem extends Component{
     constructor(props) {
@@ -107,7 +108,34 @@ export default class PostItem extends Component{
                                 <MDBCol>
                                     <p>{post.text}</p>
                                 </MDBCol>
+                                {post.images.length > 0 ?
+                                    <>
+                                    <MDBCol className={'p-0 m-0'} size={12} style={{display: 'flex',alignItems: 'center',justifyContent: 'center',width: 500,height: 500}}>
+                                        <MDBCarousel
+                                            activeItem={1}
+                                            length={post.images.length}
+                                            showControls={post.images.length > 1 ? true : false}
+                                            showIndicators={post.images.length > 1 ? true : false}
+                                            className="z-depth-1"
+                                            mobileGesture={true}
+                                            style={{width: '100%'}}
+                                        >
+                                            <MDBCarouselInner>
+                                                {post.images.map((image,index) => (
+                                                    <MDBCarouselItem itemId={index+1} key={index}>
+                                                        <MDBView>
+                                                            <img style={{objectFit: 'cover', height: 500}} className="d-block w-100" src={POST_IMAGE(post.profileName,image)} />
+                                                        </MDBView>
+                                                    </MDBCarouselItem>
+                                                ))}
+                                            </MDBCarouselInner>
+                                        </MDBCarousel>
+                                    </MDBCol>
+                                    </>
+                                    : ""
+                                }
                             </MDBRow>
+                            <hr/>
                             <MDBRow>
                                 <MDBCol>
                                     <PostLikes

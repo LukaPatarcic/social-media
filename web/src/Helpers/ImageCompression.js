@@ -39,12 +39,12 @@ export default class ImageCompression {
         return  new Promise((resolve, reject) => {
             new Compressor(img, {
                 quality: 0.6,
-                width: 600,
-                height: 600,
-                minWidth: 600,
-                maxWidth: 600,
-                minHeight: 600,
-                maxHeight: 600,
+                width: 700,
+                height: 700,
+                minWidth: 700,
+                maxWidth: 700,
+                minHeight: 700,
+                maxHeight: 700,
                 mimeType: 'images/jpeg',
                 convertSize: 1,
                 success(result) {

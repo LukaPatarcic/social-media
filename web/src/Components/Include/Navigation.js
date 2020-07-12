@@ -33,7 +33,6 @@ export default class Navigation extends React.Component{
 
     render() {
         const {authenticated} = this.context;
-        const user = ls.get('user').profileName
         return (
             <MDBNavbar color="red" dark expand="md">
                 <MDBContainer>
@@ -50,7 +49,7 @@ export default class Navigation extends React.Component{
                                     <SearchContainer />
                                 </MDBNavItem>
                                 <MDBNavItem className={'mt-2'}>
-                                    <Link className={'text-white mr-2'} to={'/profile/'+user}>Profile</Link>
+                                    <Link className={'text-white mr-2'} to={'/profile/'+ls.get('user').profileName}>Profile</Link>
                                 </MDBNavItem>
                                 <MDBNavItem className={'mt-2'}>
                                 <Link className={'text-white mr-2'} to='/logout'>Logout</Link>
