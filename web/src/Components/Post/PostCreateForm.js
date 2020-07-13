@@ -21,6 +21,7 @@ import PropTypes from 'prop-types'
 import Loading from "../../Helpers/Loading";
 import ImageCompression from "../../Helpers/ImageCompression";
 import Cropper from 'react-cropper';
+import {editUserPicture} from "../../Api/editUser";
 
 export default class PostCreateForm extends Component{
     constructor(props) {
@@ -211,7 +212,6 @@ export default class PostCreateForm extends Component{
                                         style={{height: 400, width: '100%'}}
                                         aspectRatio={1}
                                         guides={false}
-
                                     />
                                 </MDBModalBody>
                                 <MDBModalFooter>

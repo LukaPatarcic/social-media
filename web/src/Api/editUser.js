@@ -6,3 +6,10 @@ export const editUser = (data) => {
         body: JSON.stringify(data)
     },true)
 }
+
+export const editUserPicture = (image) => {
+    return fetchJson('/user/edit/picture',{
+        method: 'PATCH',
+        body: JSON.stringify({image})
+    },true)
+}

@@ -36,7 +36,10 @@
     background-color: rgba(0,0,0,0.5);
     z-index: 1;
 }
-
+.overlay-rounded {
+    border-radius: 50%;
+    background-color: rgba(0,0,0,1);
+}
 .remove-image {
     position: absolute;
     top: 5px;
@@ -49,8 +52,14 @@
     left: 10px;
 }
 
-.edit-image:hover,.remove-image:hover {
+.edit-image:hover,.remove-image:hover,.edit-profile-picture:hover {
     cursor: pointer;
+}
+
+.edit-profile-picture {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 100%);
 }
 
 .image-wrap:hover .overlay {

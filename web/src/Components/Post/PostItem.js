@@ -5,8 +5,6 @@ import {
     MDBCard,
     MDBCardBody, MDBCarousel, MDBCarouselInner, MDBCarouselItem,
     MDBCol,
-    MDBDropdown, MDBDropdownItem, MDBDropdownMenu,
-    MDBDropdownToggle,
     MDBIcon, MDBPopover, MDBPopoverBody, MDBPopoverHeader,
     MDBRow,
     MDBTooltip, MDBView
@@ -21,15 +19,7 @@ import PostShare from "./PostShare";
 import PropTypes from 'prop-types';
 import CommentList from "../PostComment/CommentList";
 import PostLikes from "./PostLikes";
-import {
-    FacebookIcon,
-    FacebookShareButton, RedditIcon, RedditShareButton,
-    TwitterIcon,
-    TwitterShareButton,
-    WhatsappIcon,
-    WhatsappShareButton
-} from "react-share";
-import {BASE_URL, POST_IMAGE} from "../../Config";
+import {POST_IMAGE} from "../../Config";
 
 export default class PostItem extends Component{
     constructor(props) {
@@ -110,7 +100,7 @@ export default class PostItem extends Component{
                                 </MDBCol>
                                 {post.images.length > 0 ?
                                     <>
-                                    <MDBCol className={'p-0 m-0'} size={12} style={{display: 'flex',alignItems: 'center',justifyContent: 'center',width: 500,height: 500}}>
+                                    <MDBCol className={'p-0 m-0'} size={12} style={{display: 'flex',alignItems: 'center',justifyContent: 'center'}}>
                                         <MDBCarousel
                                             activeItem={1}
                                             length={post.images.length}
@@ -124,7 +114,7 @@ export default class PostItem extends Component{
                                                 {post.images.map((image,index) => (
                                                     <MDBCarouselItem itemId={index+1} key={index}>
                                                         <MDBView>
-                                                            <img style={{objectFit: 'cover', height: 500}} className="d-block w-100" src={POST_IMAGE(post.profileName,image)} />
+                                                            <img className="img-fluid" src={POST_IMAGE(post.profileName,image)} />
                                                         </MDBView>
                                                     </MDBCarouselItem>
                                                 ))}
