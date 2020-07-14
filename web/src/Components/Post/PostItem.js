@@ -43,17 +43,17 @@ export default class PostItem extends Component{
             loadingMoreSubComments,hasMoreSubComments,
             loadingMoreSubCommentsId,sendingCommentId,sendingCommentReplyId,
             loadingPostLikes,loadingMorePostLikes,getPostLikes,likes,hasMorePostLikes,
-            onPostLikesModalCloseHandler,onlyMe
+            onPostLikesModalCloseHandler
         } = this.props;
         const {inputVisibility} = this.state;
 
         return (
             <MDBRow center>
-                <MDBCol sm={12} md={8}>
+                <MDBCol size={12} md={12} lg={10} xl={8}>
                     <MDBCard className={'my-3'}>
                         <MDBCardBody>
                             <MDBRow className={'mb-3'}>
-                                <MDBCol size={1} className={'pr-0 d-flex justify-content-start align-items-center'}>
+                                <MDBCol xs={2} className={'pr-0 d-flex justify-content-start align-items-center'}>
                                     <Link  to={'/profile/' + post.profileName}>
                                         <img
                                             className={'img-fluid rounded-circle'}
@@ -62,7 +62,7 @@ export default class PostItem extends Component{
                                         />
                                     </Link>
                                 </MDBCol>
-                                <MDBCol size={10} className={'pl-3'}>
+                                <MDBCol xs={10} className={'pl-3'}>
                                     <h5 className={'mb-0'}>
                                         <MDBTooltip>
                                             <Link
@@ -76,22 +76,6 @@ export default class PostItem extends Component{
                                     </h5>
                                     <small className={'text-muted'} style={{fontSize: 11}}><TimeAgo
                                         date={post.createdAt}/></small>
-                                </MDBCol>
-                                <MDBCol size={1}>
-                                    {onlyMe &&
-                                    <MDBPopover placement={'top'} popover={true} clickable={true} id={'share-media'}>
-                                        <MDBIcon icon={'ellipsis-v'} color={'black'} />
-                                        <div>
-                                            <MDBPopoverHeader>Actions</MDBPopoverHeader>
-                                            <MDBPopoverBody>
-                                                Edit<br />
-                                                Delete
-                                            </MDBPopoverBody>
-                                        </div>
-                                    </MDBPopover>
-                                    }
-
-
                                 </MDBCol>
                             </MDBRow>
                             <MDBRow>

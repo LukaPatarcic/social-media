@@ -31,7 +31,7 @@ export default class ImageCompression {
         });
     }
 
-    compressImages(file) {
+    compressImages(file, width = 700, height = 700) {
         const img = this.dataURLtoFile(file.src.base64, file.src.file.name);
         if (!img) {
             return;
@@ -39,12 +39,12 @@ export default class ImageCompression {
         return  new Promise((resolve, reject) => {
             new Compressor(img, {
                 quality: 0.6,
-                width: 700,
-                height: 700,
-                minWidth: 700,
-                maxWidth: 700,
-                minHeight: 700,
-                maxHeight: 700,
+                width: width,
+                height: height,
+                minWidth: width,
+                maxWidth: width,
+                minHeight: height,
+                maxHeight: height,
                 mimeType: 'images/jpeg',
                 convertSize: 1,
                 success(result) {

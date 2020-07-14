@@ -156,7 +156,7 @@ export default class PostCreateForm extends Component{
         const textColor = text.length > 180 ? 'text-danger' : 'text-dark';
         return (
             <MDBRow center className={'mt-3'}>
-                <MDBCol md={size ? size : 8} sm={12}>
+                <MDBCol md={12} lg={10} xl={8}>
                     <MDBCard>
                         <MDBCardBody>
                             <form noValidate>

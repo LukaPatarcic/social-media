@@ -40,7 +40,7 @@ export default class SingleComment extends React.Component {
         return (
             <>
             <MDBRow>
-                <MDBCol size={1} className={'pr-0 d-flex align-items-start justify-content-center'}>
+                <MDBCol md={1} lg={1} xl={1} className={'pr-0 d-flex align-items-start justify-content-center'}>
                     <Link to={'/profile/'+comment.profileName}>
                         <img
                             className={'img-fluid mb-2 rounded-circle'}
@@ -49,7 +49,7 @@ export default class SingleComment extends React.Component {
                         />
                     </Link>
                 </MDBCol>
-                <MDBCol size={11} className={'pl-0'}>
+                <MDBCol md={11} lg={11} xl={11} className={'pl-0'}>
                     <MDBCol size={12} style={{fontSize: 14}} className={'pl-2'}>
                         <MDBTooltip>
                             <Link to={'/profile/'+comment.profileName} className={'text-dark'}>{comment.profileName}</Link>

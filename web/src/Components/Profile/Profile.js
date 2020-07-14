@@ -17,74 +17,34 @@ import PostContainer from "../Post/PostContainer";
 import PropTypes from 'prop-types';
 import Loading from "../../Helpers/Loading";
 import ls from "local-storage";
-import ScrollContainer from "react-indiana-drag-scroll";
 import Files from "react-butterfiles";
 import Cropper from "react-cropper";
-import {editUserPicture} from "../../Api/editUser";
-
+import toastr from 'toastr'
 
 export default class Profile extends React.Component{
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            file: [],
-            error: [],
-            modal: false,
-            croppedImage: null
-        }
-
-        this.toggle = this.toggle.bind(this);
-        this.saveChanges = this.saveChanges.bind(this);
-        this.cropper = React.createRef(null);
-    }
-
-    toggle() {
-        this.setState({
-            modal: !this.state.modal
-        })
-    }
-
-    saveChanges() {
-        this.toggle();
-        this.setState((prevState) => {
-            prevState.file[0].src.base64 = this.cropper.current.getCroppedCanvas().toDataURL();
-            return {
-                file: prevState.file,
-                croppedImage: null,
-                imageToEdit: null,
-                imageToEditId: null,
-            }
-        }, () => {
-            editUserPicture(this.state.file[0].src.base64)
-                .then(data => {
-                    console.log(data);
-                })
-                .catch(err => err.response.json().then(err => {
-                    console.log(err)
-                }))
-        });
-    }
-
     render() {
-        const {loading,user} = this.props;
+        const {loading,user,file,error,uploadingImage,modal,onToggle,onSaveChanges,cropper,onChooseFile,onImageErrorHandler} = this.props;
         const isMe = ls.get('user').profileName === user.profileName
+        error.map((err,index) => (
+            toastr.error(err.type)
+        ))
         return (
             <MDBContainer>
-                <MDBModal isOpen={this.state.modal} toggle={this.toggle}>
-                    <MDBModalHeader toggle={this.toggle}>MDBModal title</MDBModalHeader>
+                <MDBModal isOpen={modal} toggle={onToggle}>
+                    <MDBModalHeader toggle={onToggle}>Resize image</MDBModalHeader>
                     <MDBModalBody>
                         <Cropper
-                            ref={this.cropper}
-                            src={this.state.file.length > 0 ? this.state.file[0].src.base64 : ''}
+                            ref={cropper}
+                            src={file.length > 0 ? file[0].src.base64 : ''}
                             style={{height: 400, width: '100%'}}
                             aspectRatio={1}
                             guides={false}
                         />
                     </MDBModalBody>
                     <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={this.toggle}>Close</MDBBtn>
-                        <MDBBtn color="primary" onClick={this.saveChanges}>Save changes</MDBBtn>
+                        <MDBBtn color="secondary" onClick={onToggle}>Close</MDBBtn>
+                        <MDBBtn color="primary" onClick={onSaveChanges}>Save changes</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
                 <MDBRow className={'mt-5'}>
@@ -100,14 +60,14 @@ export default class Profile extends React.Component{
                                 }
                                 <MDBRow className={'d-flex align-items-center justify-content-center'}>
                                     <MDBCol size={4} sm={4} md={2} className={'offset-md-2'} >
-                                        <Loading loading={loading}>
+                                        <Loading loading={loading || uploadingImage}>
                                             <div className={'image-wrap'}>
                                                 <img
                                                     alt={''}
                                                     className={'img-fluid menu-image rounded-circle'}
                                                     src={
-                                                        this.state.file.length > 0 ?
-                                                            this.state.file[0].src.base64 :
+                                                        file.length > 0 ?
+                                                            file[0].src.base64 :
                                                             user.profilePicture ? user.profilePicture :
                                                             setProfilePicture(user.firstName,user.lastName,128)
                                                     }
@@ -118,10 +78,11 @@ export default class Profile extends React.Component{
                                                         maxSize="10mb"
                                                         accept={["image/jpeg","image/png","image/gif"]}
                                                         onSuccess={file => {
-                                                            this.setState({ file })
-                                                            this.toggle()
+                                                            onChooseFile(file);
                                                         }}
-                                                        onError={error => this.setState({ error })}
+                                                        onError={error => {
+                                                            onImageErrorHandler(error)
+                                                        }}
                                                         convertToBase64={true}
                                                     >
                                                         {({ browseFiles }) => (
