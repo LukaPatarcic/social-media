@@ -54,8 +54,8 @@ export default class PostLikes extends Component{
                                     <MDBCol size={2} className={'pr-0 d-flex justify-content-start align-items-center'}>
                                         <Link  to={'/profile/' + like.profileName}>
                                             <img
-                                                className={'img-fluid'}
-                                                src={setProfilePicture(like.firstName,like.lastName)}
+                                                className={'img-fluid rounded-circle'}
+                                                src={like.profilePicture ? like.profilePicture : setProfilePicture(like.firstName,like.lastName,45)}
                                                 alt={''}
                                             />
                                         </Link>

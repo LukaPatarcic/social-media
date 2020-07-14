@@ -12,8 +12,8 @@ export default class SingleSubComment extends Component {
                 <MDBCol size={1} className={'pr-0'}>
                     <Link to={'/profile/'+comment.profileName}>
                         <img
-                            className={'img-fluid pb-2'}
-                            src={setProfilePicture(comment.firstName,comment.lastName,30)}
+                            className={'img-fluid mb-2 rounded-circle'}
+                            src={comment.profilePicture ? comment.profilePicture : setProfilePicture(comment.firstName,comment.lastName,30)}
                             alt={''}
                         />
                     </Link>

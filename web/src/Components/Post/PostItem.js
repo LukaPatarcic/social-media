@@ -56,8 +56,8 @@ export default class PostItem extends Component{
                                 <MDBCol size={1} className={'pr-0 d-flex justify-content-start align-items-center'}>
                                     <Link  to={'/profile/' + post.profileName}>
                                         <img
-                                            className={'img-fluid'}
-                                            src={setProfilePicture(post.firstName,post.lastName)}
+                                            className={'img-fluid rounded-circle'}
+                                            src={post.profilePicture ? post.profilePicture : setProfilePicture(post.firstName,post.lastName)}
                                             alt={''}
                                         />
                                     </Link>

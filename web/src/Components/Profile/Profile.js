@@ -108,6 +108,7 @@ export default class Profile extends React.Component{
                                                     src={
                                                         this.state.file.length > 0 ?
                                                             this.state.file[0].src.base64 :
+                                                            user.profilePicture ? user.profilePicture :
                                                             setProfilePicture(user.firstName,user.lastName,128)
                                                     }
                                                 />

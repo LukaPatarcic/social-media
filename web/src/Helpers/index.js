@@ -1,4 +1,5 @@
 import cookie from "react-cookies";
+import {BASE_URL} from "../Config";
 
 export const setBackground = () => {
     document.querySelector('body').style.backgroundImage = 'url(../images/background.svg)';

@@ -43,8 +43,8 @@ export default class SingleComment extends React.Component {
                 <MDBCol size={1} className={'pr-0 d-flex align-items-start justify-content-center'}>
                     <Link to={'/profile/'+comment.profileName}>
                         <img
-                            className={'img-fluid pb-2'}
-                            src={setProfilePicture(comment.firstName,comment.lastName,36)}
+                            className={'img-fluid mb-2 rounded-circle'}
+                            src={comment.profilePicture ? comment.profilePicture : setProfilePicture(comment.firstName,comment.lastName,36)}
                             alt={''}
                         />
                     </Link>
