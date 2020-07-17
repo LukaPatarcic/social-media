@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-    MDBBadge,
     MDBBtn,
     MDBCard,
     MDBCardBody,
@@ -20,6 +19,7 @@ import ls from "local-storage";
 import Files from "react-butterfiles";
 import Cropper from "react-cropper";
 import toastr from 'toastr'
+import FollowContainer from "./FollowContainer";
 
 export default class Profile extends React.Component{
 
@@ -111,18 +111,7 @@ export default class Profile extends React.Component{
                                             </Loading>
                                         </h6>
                                         <MDBRow>
-                                            <MDBCol sm={6} md={3}>
-                                                Followers:{'\u00A0'}
-                                                <Loading loading={loading}>
-                                                    <MDBBadge style={{fontSize: 14}} color={'red'}>{user.followers}</MDBBadge>
-                                                </Loading>
-                                            </MDBCol>
-                                            <MDBCol sm={6} md={3}>
-                                                Following:{'\u00A0'}
-                                                <Loading loading={loading}>
-                                                    <MDBBadge style={{fontSize: 14}} color={'red'}>{user.following}</MDBBadge>
-                                                </Loading>
-                                            </MDBCol>
+                                            <FollowContainer loading={loading} followers={user.followers} following={user.following} />
                                         </MDBRow>
                                     </MDBCol>
                                 </MDBRow>

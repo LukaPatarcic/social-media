@@ -30,3 +30,7 @@ textarea.form-control {
 .form-control :focus {
     border-color: #f00;
 }
+
+.click:hover {
+    cursor: pointer;
+}
