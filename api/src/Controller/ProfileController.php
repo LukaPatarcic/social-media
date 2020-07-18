@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\LikePost;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Services\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +36,7 @@ class ProfileController extends BaseController
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'email' => $user->getEmail(),
+            'profilePicture' => Image::getProfilePicture($user->getProfileName(),$user->getProfilePicture(),100,100),
             'profileName' =>$user->getProfileName(),
             'followers' => $user->getFriendsWithMe()->count(),
             'following' => $user->getFriends()->count()

@@ -36,7 +36,7 @@ class LikePostRepository extends ServiceEntityRepository
     public function findByPost(Post $post,$offset = 0, $limit = 10, $sort = 'DESC')
     {
         return $this->createQueryBuilder('l')
-            ->select('lu.firstName, lu.lastName, lu.profileName, l.createdAt')
+            ->select('lu.firstName, lu.lastName, lu.profilePicture, lu.profileName, l.createdAt')
             ->join('l.user','lu')
             ->andWhere('l.post = :post')
             ->setParameter('post',$post)

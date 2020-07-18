@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Form\PostType;
 use App\Form\RegistrationFormType;
+use App\Services\Image;
 use App\Services\ImageUpload;
 use App\Services\PushNotification;
 use Doctrine\ORM\NonUniqueResultException;
@@ -45,6 +46,7 @@ class PostController extends BaseController
             $data[$k]['lastName'] =$post['lastName'];
             $data[$k]['profileName'] =$post['profileName'];
             $data[$k]['text'] = $post['text'];
+            $data[$k]['profilePicture'] = Image::getProfilePicture($post['profileName'],$post['profilePicture'],45,45);
             $data[$k]['createdAt'] = $post['createdAt'];
             $data[$k]['likes'] = intval($post['likes']);
             $data[$k]['liked'] = (bool)$post['liked'];
@@ -57,6 +59,7 @@ class PostController extends BaseController
                     'firstName' => $comment['firstName'],
                     'lastName' => $comment['lastName'],
                     'profileName' => $comment['profileName'],
+                    'profilePicture' => Image::getProfilePicture($comment['profileName'],$comment['profilePicture'],45,45),
                     'text' => $comment['text'],
                     'createdAt' => $comment['createdAt'],
                     'likes' => intval($comment['likes']),

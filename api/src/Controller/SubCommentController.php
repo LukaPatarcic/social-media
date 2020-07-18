@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Entity\SubComment;
 use App\Form\CommentType;
 use App\Form\SubCommentType;
+use App\Services\Image;
 use App\Services\PushNotification;
 use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -51,6 +52,7 @@ class SubCommentController extends BaseController
             $data[$key]['firstName'] = $value['firstName'];
             $data[$key]['lastName'] = $value['lastName'];
             $data[$key]['profileName'] = $value['profileName'];
+            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],30,30);
             $data[$key]['text'] = $value['text'];
             $data[$key]['createdAt'] = $value['createdAt'];
         }

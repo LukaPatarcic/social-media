@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Services\ImageUpload;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,6 +55,27 @@ class UserEditController extends BaseController
 
         return $this->json(['success' => 1],Response::HTTP_OK);
 
+    }
+
+    /**
+     * @Route("/user/edit/picture", name="user_edit_profile_picture", methods="PATCH")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editProfilePicture(Request $request)
+    {
+        $data = json_decode($request->getContent(),true);
+        $user = $this->getUser();
+
+        $image = new ImageUpload($user->getProfileName());
+        $upload = $image->uploadProfilePic($data['image']);
+        if($upload) {
+            $user->setProfilePicture($image->getUploadedImagesNames()[0]);
+            $this->getDoctrine()->getManager()->flush();
+            return $this->json(['success' => 1],Response::HTTP_OK);
+        }
+
+        return $this->json(['error' => 'Oops... Something went wrong!'],Response::HTTP_BAD_REQUEST);
     }
 
 }

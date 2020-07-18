@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\LikePost;
 use App\Entity\Post;
+use App\Services\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,9 +36,11 @@ class LikePostController extends BaseController
             return $this->json(['error' => 'Post not found',Response::HTTP_NOT_FOUND]);
         }
         $likes = $this->getDoctrine()->getRepository(LikePost::class)->findByPost($post,$offset,10);
+        foreach ($likes as $key => $like) {
+            $likes[$key]['profilePicture'] = Image::getProfilePicture($like['profileName'],$like['profilePicture'],45,45);
+        }
 
         return $this->json($likes,Response::HTTP_OK);
-
     }
 
     /**

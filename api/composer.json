@@ -33,7 +33,8 @@
         "symfony/test-pack": "^1.0",
         "symfony/validator": "4.3.*",
         "symfony/yaml": "4.3.*",
-        "ext-exif": "*"
+        "ext-exif": "*",
+        "ext-gd": "*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",

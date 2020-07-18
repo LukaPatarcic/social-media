@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\CommentLike;
 use App\Entity\Post;
 use App\Form\CommentType;
+use App\Services\Image;
 use App\Services\PushNotification;
 use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -51,6 +52,7 @@ class CommentController extends BaseController
             $data[$key]['firstName'] = $value['firstName'];
             $data[$key]['lastName'] = $value['lastName'];
             $data[$key]['profileName'] = $value['profileName'];
+            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],35,35);
             $data[$key]['text'] = $value['text'];
             $data[$key]['createdAt'] = $value['createdAt'];
             $data[$key]['subCommentCount'] = (int)$value['subCommentCount'];

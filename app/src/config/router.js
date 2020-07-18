@@ -19,6 +19,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Comments from "../screens/Comments";
 import {Badge} from "react-native-paper";
 import AddPost from "../components/AddPost";
+import Messages from "../screens/Messages";
 
 
 export default class Router extends React.Component{
@@ -161,7 +162,7 @@ const SearchStack = createStackNavigator();
 const StatsStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
 
-const FeedStackScreen = () => (
+const FeedStackScreen = (navigation) => (
     <FeedStack.Navigator initialRoute={'Post'}>
         <FeedStack.Screen
             name="Feed"
@@ -174,7 +175,7 @@ const FeedStackScreen = () => (
                     </View>,
                 headerRight: () => (
                     <Icon
-                        onPress={() => alert('This is a button!')}
+                        onPress={() => console.log(navigation.navigation.navigate('Messages'))}
                         name={'comments'}
                         size={30}
                         style={{marginRight: 10}}
@@ -185,6 +186,13 @@ const FeedStackScreen = () => (
         <FeedStack.Screen
             name="Comments"
             component={Comments}
+        />
+        <FeedStack.Screen
+            name={"Messages"}
+            component={Messages}
+            options={{
+                headerShown: false
+            }}
         />
         <FeedStack.Screen
             name="Post"

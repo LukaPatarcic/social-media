@@ -24,13 +24,37 @@ class FriendshipRepository extends ServiceEntityRepository
      * @param User $user
      * @return Friendship[] Returns an array of Friendship objects
      */
-    public function findUsersFriends(User $user)
+    public function findUsersFollowers(User $user,$limit = 10,$offset = 0)
+    {
+        return $this->createQueryBuilder('f')
+            ->join('f.user','ff')
+            ->join('ff.friends','fff')
+            ->select('ff.firstName, ff.lastName, ff.profileName, ff.createdAt, ff.profilePicture')
+            ->where('f.friend = :user')
+            ->orderBy('f.createdAt','DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->setParameter(':user',$user)
+            ->getQuery()
+            ->getArrayResult()
+            ;
+    }
+
+
+    /**
+     * @param User $user
+     * @return Friendship[] Returns an array of Friendship objects
+     */
+    public function findUsersFollowing(User $user,$limit = 10,$offset = 0)
     {
         return $this->createQueryBuilder('f')
             ->join('f.friend','ff')
             ->join('f.user','fu')
-            ->select('ff.firstName, ff.lastName, ff.profileName, ff.createdAt')
+            ->select('ff.firstName, ff.lastName, ff.profileName, ff.createdAt, ff.profilePicture')
             ->where('f.user = :user')
+            ->orderBy('f.createdAt','DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
             ->setParameter(':user',$user)
             ->getQuery()
             ->getArrayResult()

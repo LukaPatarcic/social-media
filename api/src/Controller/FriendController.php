@@ -2,12 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\FriendRequest;
 use App\Entity\Friendship;
 use App\Entity\FriendshipRequest;
 use App\Entity\User;
-use App\Form\FriendRequestType;
 use App\Form\FriendshipFormType;
+use App\Services\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,22 +21,61 @@ use Symfony\Component\Routing\Annotation\Route;
 class FriendController extends BaseController
 {
     /**
-     * @Route("/friend", name="friend_list", methods={"GET"})
+     * @Route("/following", name="following_list", methods={"GET"})
+     * @param Request $request
      * @return JsonResponse
      */
-    public function listFriend()
+    public function listFollowers(Request $request)
     {
         /** @var User $user */
         $user = $this->getUser();
+        $offset = $request->query->getInt('offset',0);
         /** @var FriendshipRequest $requests */
-        $friends = $this->getDoctrine()->getRepository(Friendship::class)->findUsersFriends($user);
+        $friends = $this->getDoctrine()->getRepository(Friendship::class)->findUsersFollowing($user,10,$offset);
         if(!$friends) {
             return  $this->json([], Response::HTTP_NO_CONTENT);
         }
+        $data = [];
+        foreach ($friends as $friend) {
+            $data[] = [
+                'firstName' => $friend['firstName'],
+                'lastName' => $friend['lastName'],
+                'profileName' => $friend['profileName'],
+                'createdAt' => $friend['createdAt'],
+                'profilePicture' => Image::getProfilePicture($friend['profileName'],$friend['profilePicture'],45,45)
+            ];
+        }
 
-        return  $this->json($friends,Response::HTTP_OK,[],[
-            'groups' => ['user_info']
-        ]);
+        return  $this->json($data,Response::HTTP_OK,[]);
+    }
+
+    /**
+     * @Route("/followers", name="followers_list", methods={"GET"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listFollowing(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $offset = $request->query->getInt('offset',0);
+        /** @var FriendshipRequest $requests */
+        $friends = $this->getDoctrine()->getRepository(Friendship::class)->findUsersFollowers($user,10,$offset);
+        if(!$friends) {
+            return  $this->json([], Response::HTTP_NO_CONTENT);
+        }
+        $data = [];
+        foreach ($friends as $friend) {
+            $data[] = [
+                'firstName' => $friend['firstName'],
+                'lastName' => $friend['lastName'],
+                'profileName' => $friend['profileName'],
+                'createdAt' => $friend['createdAt'],
+                'profilePicture' => Image::getProfilePicture($friend['profileName'],$friend['profilePicture'],45,45)
+            ];
+        }
+
+        return  $this->json($data,Response::HTTP_OK,[]);
     }
 
 

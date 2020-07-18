@@ -152,6 +152,22 @@ class User implements UserInterface
      */
     private $subComments;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"user_info","search"})
+     */
+    private $profilePicture;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="fromUser")
+     */
+    private $messagesFrom;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="toUser")
+     */
+    private $messagesTo;
+
     public function __construct()
     {
         $this->friends = new ArrayCollection();
@@ -164,6 +180,8 @@ class User implements UserInterface
         $this->comments = new ArrayCollection();
         $this->commentLikes = new ArrayCollection();
         $this->subComments = new ArrayCollection();
+        $this->messagesFrom = new ArrayCollection();
+        $this->messagesTo = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -633,6 +651,80 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($subComment->getUser() === $this) {
                 $subComment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(string $profilePicture): self
+    {
+        $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessagesFrom(): Collection
+    {
+        return $this->messagesFrom;
+    }
+
+    public function addMessagesFrom(Message $messagesFrom): self
+    {
+        if (!$this->messagesFrom->contains($messagesFrom)) {
+            $this->messagesFrom[] = $messagesFrom;
+            $messagesFrom->setFromUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessagesFrom(Message $messagesFrom): self
+    {
+        if ($this->messagesFrom->contains($messagesFrom)) {
+            $this->messagesFrom->removeElement($messagesFrom);
+            // set the owning side to null (unless already changed)
+            if ($messagesFrom->getFromUser() === $this) {
+                $messagesFrom->setFromUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessagesTo(): Collection
+    {
+        return $this->messagesTo;
+    }
+
+    public function addMessagesTo(Message $messagesTo): self
+    {
+        if (!$this->messagesTo->contains($messagesTo)) {
+            $this->messagesTo[] = $messagesTo;
+            $messagesTo->setToUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessagesTo(Message $messagesTo): self
+    {
+        if ($this->messagesTo->contains($messagesTo)) {
+            $this->messagesTo->removeElement($messagesTo);
+            // set the owning side to null (unless already changed)
+            if ($messagesTo->getToUser() === $this) {
+                $messagesTo->setToUser(null);
             }
         }
 
