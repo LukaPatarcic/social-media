@@ -43,14 +43,25 @@ export default class SendFriendRequest extends React.Component{
     render() {
         const {friend} = this.props;
         const {loading} = this.state;
+        console.log(this.props.navigation);
         return (
-            <Card style={{marginVertical: 5,backgroundColor:'#fff'}}>
-                <Card.Title
-                    title={friend.firstName+' '+friend.lastName}
-                    subtitle={friend.profileName}
-                    left={(props) => <Avatar.Image {...props} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+friend.firstName+'+'+friend.lastName}} />}
-                    right={(props) => <Button onPress={this.sendFriendRequest} {...props} mode={'outlined'} color={'red'} style={{fontSize:10}} uppercase={false} disabled={friend.requested || friend.following}>{loading ? "Loading...":(friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))}</Button>}
-                />
+            <Card onPress={this.props.message ? () => this.props.navigation.navigate('MessagesWithUser',{user:friend}) : null} style={{marginVertical: 5,backgroundColor:'#fff'}}>
+                {this.props.message
+                    ?
+                    <Card.Title
+                        title={friend.firstName+' '+friend.lastName}
+                        subtitle={friend.profileName}
+                        left={(props) => <Avatar.Image {...props} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+friend.firstName+'+'+friend.lastName}} />}
+                    />
+                    :
+                    <Card.Title
+                        title={friend.firstName+' '+friend.lastName}
+                        subtitle={friend.profileName}
+                        left={(props) => <Avatar.Image {...props} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+friend.firstName+'+'+friend.lastName}} />}
+                        right={(props) => <Button onPress={this.sendFriendRequest} {...props} mode={'outlined'} color={'red'} style={{fontSize:10}} uppercase={false} disabled={friend.requested || friend.following}>{loading ? "Loading...":(friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))}</Button>}
+                    />
+                }
+
             </Card>
         );
     }

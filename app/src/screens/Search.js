@@ -8,7 +8,7 @@ import {BASE_URL} from "../config";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import {debounce} from 'lodash';
 
-export default class Profile extends React.Component {
+export default class Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -71,6 +71,7 @@ export default class Profile extends React.Component {
     };
 
     render() {
+        console.log(this.props.message);
         const {q,searchQuery,loading,loadingButton,token} = this.state;
         return (
             <ImageBackground
@@ -101,13 +102,17 @@ export default class Profile extends React.Component {
                                 : null
                             }
                             renderItem={({item,index}) => (
-                                <SendFriendRequest friend={item} key={index} getFriends={this.getFriends.bind(this)} token={token} />
+                                <SendFriendRequest friend={item} key={index} getFriends={this.getFriends.bind(this)} token={token} message={this.props.message} navigation={this.props.navigation} />
                             )}
                         />
                     }
             </ImageBackground>
         );
     }
+}
+
+Search.defaultProps = {
+    message: false
 }
 
 const styles = StyleSheet.create({

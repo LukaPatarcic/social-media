@@ -30,9 +30,13 @@ class MessageRepository extends ServiceEntityRepository
             ->select('
                 distinct
                 fu.id as fromUserId,
-                fu.profileName as fromUserProfileName, 
+                fu.profileName as fromUserProfileName,
+                fu.firstName as fromUserFirstName, 
+                fu.lastName as fromUserLastName,  
                 fu.profilePicture as fromUserProfilePicture,
                 tu.id as toUserId,
+                tu.firstName as toUserFirstName, 
+                tu.lastName as toUserLastName,  
                 tu.profileName as toUserProfileName,
                 tu.profilePicture as toUserProfilePicture
               ')
@@ -48,8 +52,7 @@ class MessageRepository extends ServiceEntityRepository
         try {
             return $this->createQueryBuilder('m')
                 ->select('m.message, m.createdAt')
-                ->orWhere('m.fromUser = :fromUser')
-                ->orWhere('m.toUser = :toUser')
+                ->where('(m.fromUser = :fromUser AND m.toUser = :toUser) OR (m.fromUser = :toUser AND m.toUser = :fromUser)')
                 ->setParameter('fromUser', $fromUserId)
                 ->setParameter('toUser', $toUserId)
                 ->orderBy('m.createdAt','DESC')
@@ -68,16 +71,12 @@ class MessageRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('m')
             ->join('m.fromUser','fu')
             ->join('m.toUser','tu')
-            ->select('
-                fu.profileName as fromUserProfileName,fu.firstName as fromUserFirstName, fu.lastName as fromUserLastName, fu.profilePicture as fromUserProfilePicture,
-                tu.profileName as toUserProfileName,tu.firstName as toUserFirstName, tu.lastName as toUserLastName, tu.profilePicture as toUserProfilePicture,
-                m.message, m.createdAt
-            ')
+            ->select('fu.profileName,fu.firstName, fu.lastName, fu.profilePicture,m.message, m.createdAt')
             ->where('(m.fromUser = :user AND m.toUser = :friend) OR (m.fromUser = :friend AND m.toUser = :user)')
             ->setParameter('user',$user)
             ->setParameter('friend',$friend)
             ->setMaxResults(20)
-            ->orderBy('m.createdAt','ASC')
+            ->orderBy('m.createdAt','DESC')
             ->setFirstResult($offset)
             ->getQuery()
             ->getResult();

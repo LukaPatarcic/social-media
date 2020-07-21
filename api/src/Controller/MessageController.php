@@ -37,24 +37,33 @@ class MessageController extends BaseController
                 unset($data[$key]['toUserProfileName']);
                 unset($data[$key]['toUserProfilePicture']);
             }
+
         }
+        $keyCounter = 0;
         foreach ($data as $key => $value) {
             $message = $this->getDoctrine()
                 ->getRepository(Message::class)
                 ->findLastUsersMessage($value['fromUserId'],$value['toUserId']);
-            $profileName = $value['fromUserProfileName'] ?? $value['toUserProfileName'];
-            if(isset($value['fromUserProfilePicture']) || isset($value['toUserProfilePicture'])) {
-                $profilePicture = $value['fromUserProfilePicture'] ?? $value['toUserProfilePicture'];
-            } else {
-                $profilePicture = null;
-            }
+            $id = $user->getId() == $value['fromUserId'] ? $value['toUserId'] : $value['fromUserId'];
+            $profileName = $user->getId() == $value['fromUserId'] ? $value['toUserProfileName'] : $value['fromUserProfileName'];
+            $firstName = $user->getId() == $value['fromUserId'] ? $value['toUserFirstName'] : $value['fromUserFirstName'];
+            $lastName = $user->getId() == $value['fromUserId'] ? $value['toUserLastName'] : $value['fromUserLastName'];
+            $profilePicture = $user->getId() == $value['fromUserId'] ? $value['toUserProfilePicture'] : $value['fromUserProfilePicture'];
             $userData = [
+                'id' => $id,
                 'profileName' => $profileName,
+                'firstName' => $firstName,
+                'lastName' => $lastName,
                 'profilePicture' => Image::getProfilePicture($profileName,$profilePicture,45,45)
             ];
-            $users[] = array_merge($message[0],$userData);
+            $ifProfileAlreadyInArray = array_column($users, 'profileName');
+            if(in_array($profileName,$ifProfileAlreadyInArray)) {
+                unset($ifProfileAlreadyInArray);
+                continue;
+            }
+            $users[$keyCounter] = array_merge($message[0],$userData);
+            $keyCounter = $keyCounter+1;
         }
-
         return $this->json($users);
     }
 
@@ -75,12 +84,10 @@ class MessageController extends BaseController
 
         $messages = $this->getDoctrine()->getRepository(Message::class)->findMessages($user,$friend,$offset);
         foreach ($messages as $key => $message) {
-            $fromUserPicture = Image::getProfilePicture($message['fromUserProfileName'],$message['fromUserProfilePicture'],30,30);
-            $toUserPicture = Image::getProfilePicture($message['toUserProfileName'],$message['toUserProfilePicture'],30,30);
-            unset($messages[$key]['fromUserProfilePicture']);
-            unset($messages[$key]['toUserProfilePicture']);
-            $messages[$key]['fromUserProfilePicture'] = $fromUserPicture;
-            $messages[$key]['toUserProfilePicture'] = $toUserPicture;
+            $profilePicture = Image::getProfilePicture($message['profileName'],$message['profilePicture'],45,45);
+            unset($messages[$key]['profilePicture']);
+            $messages[$key]['profilePicture'] = $profilePicture;
+            $messages[$key]['isMe'] = $user->getProfileName() == $message['profileName'] ? true : false;
         }
 
         return $this->json($messages);

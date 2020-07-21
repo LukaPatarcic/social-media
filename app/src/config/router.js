@@ -20,6 +20,8 @@ import Comments from "../screens/Comments";
 import {Badge} from "react-native-paper";
 import AddPost from "../components/AddPost";
 import Messages from "../screens/Messages";
+import MessagesWithUser from "../components/MessagesWithUser";
+import NewMessage from "../components/NewMessage";
 
 
 export default class Router extends React.Component{
@@ -190,6 +192,21 @@ const FeedStackScreen = (navigation) => (
         <FeedStack.Screen
             name={"Messages"}
             component={Messages}
+            options={{
+                // headerShown: false,
+                title: 'Message a friend'
+            }}
+        />
+        <FeedStack.Screen
+            name={"MessagesWithUser"}
+            component={MessagesWithUser}
+            options={({route}) => ({
+                title: route.params.user.profileName
+            })}
+        />
+        <FeedStack.Screen
+            name={"NewMessage"}
+            component={NewMessage}
             options={{
                 headerShown: false
             }}
