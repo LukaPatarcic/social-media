@@ -48,11 +48,12 @@ export class AuthProvider extends React.PureComponent {
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
                         this.setState({isLoading:false});
                         if(data.error === 'Authentication Required' || data.error === 'Invalid JWT Token') {
                             this.setState({isAuth:false})
                         } else {
+                            console.log(data.id.toString());
+                            AsyncStorage.setItem("id",data.id.toString())
                             this.setState({isAuth:true})
                         }
                     })

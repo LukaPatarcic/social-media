@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Message;
+use App\Form\MessageType;
 use App\Repository\MessageRepository;
 use App\Services\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -91,6 +92,41 @@ class MessageController extends BaseController
         }
 
         return $this->json($messages);
+    }
+
+    /**
+     * @Route("/message", name="message_post", methods="POST")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function postMessage(Request $request)
+    {
+        $data = json_decode($request->getContent(),true);
+        $message = new Message();
+        $form = $this->createForm(MessageType::class,$message);
+        $form->submit($data);
+
+        if($errors = $this->getErrorMessages($form)) {
+            return $this->json(['error' => $errors], Response::HTTP_BAD_REQUEST);
+        }
+        $message->setFromUser($this->getUser());
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($message);
+        $em->flush();
+        $response = [
+            "id" => $message->getId(),
+            "fromUser" => $message->getFromUser()->getId(),
+            "toUser" => $message->getToUser()->getId(),
+            "message" => $message->getMessage(),
+            "createdAt" => $message->getCreatedAt(),
+            "firstName" => $message->getFromUser()->getFirstName(),
+            "lastName" => $message->getFromUser()->getLastName(),
+            "profileName" => $message->getFromUser()->getProfileName(),
+            "profilePicture" => Image::getProfilePicture($message->getFromUser()->getProfileName(),$message->getFromUser()->getProfilePicture(),45,45),
+        ];
+
+        return $this->json($response,Response::HTTP_CREATED);
+
     }
 
 }

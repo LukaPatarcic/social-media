@@ -1,20 +1,47 @@
 import React,{Component} from "react";
-import {ActivityIndicator, FlatList, ImageBackground, Text, View} from "react-native";
+import {ActivityIndicator, AsyncStorage, FlatList, ImageBackground, Text, View} from "react-native";
 import {BASE_URL} from "../config";
 import SingleMessageItem from "./SingleMessageItem";
 import {IconButton, TextInput} from "react-native-paper";
+import {WebsocketContext} from "../context/WebsocketProvider";
 
 export default class MessagesWithUser extends Component{
+    static contextType = WebsocketContext;
+
     constructor(props) {
         super(props);
         this.state = {
             messages: [],
             loading: true,
-            refreshing: false
+            refreshing: false,
+            token: null,
+            message: ''
         }
+
+        this.sendMessage = this.sendMessage.bind(this);
     }
     componentDidMount() {
         this.getData();
+        AsyncStorage.getItem("access-token")
+            .then(token => {
+                this.setState({token})
+            })
+        const ws = this.context;
+
+        ws.io.on("message", (message) => {
+            this.setState({
+                messages: [message,...this.state.messages]
+            })
+        })
+    }
+
+    sendMessage() {
+        const ws = this.context;
+        const message = {
+            "toUser": this.props.route.params.user.id,
+            "message": this.state.message
+        }
+        ws.io.send(message, {"token": this.state.token})
     }
 
     getData() {
@@ -78,14 +105,14 @@ export default class MessagesWithUser extends Component{
                                 <View style={{width: '85%'}}>
                                     <TextInput
                                         label='Enter message...'
-                                        value={this.state.text}
+                                        value={this.state.message}
                                         underlineColor={'#c4c4c4'}
                                         theme={{ fonts: {font: 'font'}, colors: { primary: 'red',underlineColor:'transparent',}}}
-                                        onSubmitEditing={this.handleSubmit}
+                                        onSubmitEditing={this.sendMessage}
                                         returnKeyType={'send'}
                                         blurOnSubmit={false}
                                         style={{fontSize: 16,backgroundColor: '#c4c4c4',height: 54}}
-                                        onChangeText={text => this.setState({ text })}
+                                        onChangeText={message => this.setState({ message })}
                                     />
                                 </View>
                                 <View style={{width: '15%'}}>

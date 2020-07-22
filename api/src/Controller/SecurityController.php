@@ -28,7 +28,8 @@ class SecurityController extends BaseController
      */
     public function auth()
     {
-        return $this->json(['success' => 1]);
+        $id = $this->getUser()->getId();
+        return $this->json(['success' => 1,'id' => $id]);
     }
 
     /**

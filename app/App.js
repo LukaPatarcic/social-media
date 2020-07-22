@@ -5,6 +5,7 @@ import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-n
 import PushNotification from 'react-native-push-notification'
 import messaging from '@react-native-firebase/messaging'
 import firebase from '@react-native-firebase/app'
+import {WebsocketProvider} from "./src/context/WebsocketProvider";
 
 const fontConfig = {
     default: {
@@ -73,9 +74,11 @@ export default class App extends React.Component {
     render() {
         return(
             <AuthProvider>
-                <PaperProvider theme={theme}>
-                    <Router />
-                </PaperProvider>
+                <WebsocketProvider>
+                    <PaperProvider theme={theme}>
+                        <Router />
+                    </PaperProvider>
+                </WebsocketProvider>
             </AuthProvider>
         );
     }
