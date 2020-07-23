@@ -4,6 +4,11 @@ import {formatImage} from "../helpers/functions";
 import TimeAgo from 'react-native-timeago';
 
 export default class SingleMessageItem extends Component{
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return JSON.stringify(nextProps) !== JSON.stringify(this.props)
+    }
+
     render() {
         const {message} = this.props;
         return (
@@ -19,7 +24,7 @@ export default class SingleMessageItem extends Component{
                                     new Date(message.createdAt).toLocaleDateString() + " " + new Date(message.createdAt).toLocaleTimeString(),ToastAndroid.SHORT)}
                             style={{fontFamily: 'font',fontSize: 16,flex: 1,flexWrap: 'wrap'}}>{message.message}</Text>
                         <View>
-                            <TimeAgo style={{fontFamily: 'font',fontSize: 10}} date={message.createdAt} />
+                            <TimeAgo style={{fontFamily: 'font',fontSize: 10}} time={message.createdAt} />
                         </View>
                     </View>
                     <View>

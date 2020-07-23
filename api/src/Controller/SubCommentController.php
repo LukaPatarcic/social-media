@@ -52,7 +52,7 @@ class SubCommentController extends BaseController
             $data[$key]['firstName'] = $value['firstName'];
             $data[$key]['lastName'] = $value['lastName'];
             $data[$key]['profileName'] = $value['profileName'];
-            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],30,30);
+            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],45,45);
             $data[$key]['text'] = $value['text'];
             $data[$key]['createdAt'] = $value['createdAt'];
         }
@@ -98,6 +98,7 @@ class SubCommentController extends BaseController
         $com['lastName'] = $subComment->getUser()->getLastName();
         $com['profileName'] = $subComment->getUser()->getProfileName();
         $com['text'] = $subComment->getText();
+        $com['profilePicture'] = Image::getProfilePicture($subComment->getUser()->getProfileName(),$subComment->getUser()->getProfilePicture(),30,30);
         $com['createdAt'] = $subComment->getCreatedAt();
 
         return $this->json(['success' => 1, 'comment' => $com], Response::HTTP_OK);

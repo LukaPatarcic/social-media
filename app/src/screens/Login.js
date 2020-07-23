@@ -76,9 +76,9 @@ export default class Login extends React.Component {
             .then((data => {
                 this.setState({error: data.error,loading: false});
                 if(data.token) {
-                    console.log('here');
                     AsyncStorage.setItem('access-token',data.token);
-                    this.setState({token: true})
+                    AsyncStorage.setItem("id",data.user.id.toString())
+                    this.context.setIsAuth();
                 }
                 if(data.error === 'Invalid password') {
                     this.passwordRef.current.focus();
@@ -92,21 +92,15 @@ export default class Login extends React.Component {
 
     }
 
-    render() {
-        const {error,email,password,loading,token,focusPasswordInput,errorPassword,errorEmail,errorEmailMessage,errorPasswordMessage} = this.state;
+    static contextType = AuthContext;
 
+    render() {
+        const {error,email,password,loading,focusPasswordInput,errorPassword,errorEmail,errorEmailMessage,errorPasswordMessage} = this.state;
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%'}}
                 source={require('../../assets/images/background-01.png')}
             >
-                <AuthContext.Consumer>
-                    {(context) => {
-                        if(token) {
-                            context.setIsAuth();
-                        }
-                    }}
-                </AuthContext.Consumer>
 
                 <ScrollView scrollEnabled={true} contentContainerStyle={{flex: 1,alignContent: 'center',justifyContent: 'center'}}>
                     <Card style={{marginHorizontal: 10}}>

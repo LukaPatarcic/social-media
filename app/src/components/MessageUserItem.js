@@ -6,6 +6,7 @@ import {formatImage} from "../helpers/functions";
 export default class MessageUserItem extends Component{
     render() {
         const {user,navigation} = this.props;
+        console.log(user.createdAt);
         return (
             <Card onPress={() => navigation.navigate('MessagesWithUser',{user})}  style={{marginBottom: 20,marginHorizontal: 10,fontFamily: 'font'}}>
                 <Card.Title

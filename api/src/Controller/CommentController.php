@@ -100,6 +100,7 @@ class CommentController extends BaseController
         $com['firstName'] = $comment->getUser()->getFirstName();
         $com['lastName'] = $comment->getUser()->getLastName();
         $com['profileName'] = $comment->getUser()->getProfileName();
+        $com['profilePicture'] = Image::getProfilePicture($comment->getUser()->getProfileName(),$comment->getUser()->getProfilePicture(),40,40);
         $com['text'] = $comment->getText();
         $com['createdAt'] = $comment->getCreatedAt();
         $com['subCommentCount'] = 0;

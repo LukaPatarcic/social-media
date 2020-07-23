@@ -1,64 +1,112 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, Alert, TouchableOpacity, ScrollView, ActivityIndicator,} from 'react-native';
+import {
+    View,
+    StyleSheet,
+    ImageBackground,
+    TouchableOpacity,
+    ScrollView,
+    ActivityIndicator,
+    FlatList,
+} from 'react-native';
 import { Text } from 'native-base';
 import AsyncStorage from "@react-native-community/async-storage";
-// import FacebookLogin from "../components/FacebookLogin";
 import {Avatar, Card, FAB, IconButton, Paragraph} from 'react-native-paper';
-import {Button} from "react-native-elements";
 import PostItem from "../components/PostItem";
-import TimeAgo from "react-native-timeago";
-import LikeButton from "../components/LikeButton";
-import AddPost from "../components/AddPost";
 import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.android";
 import {BASE_URL} from "../config";
 import {AuthContext} from "../context/AuthProvider";
+import {formatImage} from "../helpers/functions";
 
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userData: {
-                user: {},
-                posts: [],
-                following: [],
-                followers: []
-            },
+            user: {},
+            posts: [],
+            following: [],
+            followers: [],
             token: null,
             redirect: false,
             loading: false,
-            logout: false
+            logout: false,
+            refreshing: false,
+            hasMore: true,
+            loadingMore: false,
+            offset: 0
         }
+
+        this.getUserData = this.getUserData.bind(this);
     }
 
     componentDidMount() {
         AsyncStorage.getItem('access-token', (err, val) => {
-            if (!val) {
-                // this.props.history.push('/login');
-            } else {
-                this.setState({token: val});
-                this.getUserData(val)
-            }
+            this.setState({token: val},() => {
+                this.getUserData();
+            });
         });
     }
 
-    getUserData(token) {
-
+    getUserData() {
         this.setState({loading: true});
         fetch(BASE_URL+'/user',{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-AUTH-TOKEN': token
+                'Authorization': 'Bearer '+this.state.token
             },
             method: "GET"
         })
             .then((response => response.json()))
             .then((data => {
-                this.setState({userData: data,loading: false});
+                this.setState({user: data});
+                this.getPostsData();
             }))
             .catch(err => {
                 this.setState({error: true,loading: false});
             })
+            .finally(() => {
+                this.setState((prevState) => ({
+                    loading: false,
+                    loadingMore: false,
+                }))
+            })
+   }
+
+   getPostsData(more = false) {
+       const {offset,refreshing,loadingMore,hasMore,token} = this.state;
+       if(loadingMore || !hasMore)
+           return;
+       if(more) {
+           this.setState({loadingMore: true})
+       }
+
+       fetch(BASE_URL+'/post?offset='+offset+'&profile='+this.state.user.id,{
+           headers: {
+               'Accept': 'application/json',
+               'Content-Type': 'application/json',
+               'Authorization': 'Bearer '+ token
+           },
+           method: "GET"
+       })
+           .then((response => response.json()))
+           .then((data => {
+               if(refreshing) {
+                   this.setState({posts: []});
+                   this.setState({posts: data})
+               } else {
+                   this.setState((prevState) => ({ posts: [...prevState.posts,...data]}))
+               }
+               this.setState((prevState) => ({
+                   loading: false,
+                   loadingMore: false,
+                   offset: prevState.offset + 10,
+                   hasMore: !!data.length,
+                   refreshing: false
+               }));
+           }))
+           .catch(err => {
+               this.setState({error: true,loading: false});
+           })
    }
 
    logout() {
@@ -66,9 +114,7 @@ export default class Profile extends React.Component {
            if (!val) {
                this.setState({logout:true})
                AsyncStorage.removeItem('access-token');
-               console.log('here')
            } else {
-               console.log('here2')
                fetch(BASE_URL+'/logout/android',{
                    headers: {
                        'Accept': 'application/json',
@@ -80,10 +126,10 @@ export default class Profile extends React.Component {
                })
                    .then((response => response.json()))
                    .then((data => {
-                       console.log(data);
                        this.setState({logout:true})
                        AsyncStorage.removeItem('access-token');
                        AsyncStorage.removeItem('notification-key');
+                       this.context.setIsAuth();
                    }))
                    .catch(err => {
                        this.setState({error: true,loading: false});
@@ -92,9 +138,10 @@ export default class Profile extends React.Component {
        });
    }
 
+   static contextType = AuthContext
+
     render() {
-        const {user,posts,followers,following} = this.state.userData;
-        const {loading,logout} = this.state;
+        const {user,posts,refreshing,loading,hasMore,loadingMore} = this.state;
 
         if(loading) {
             return (
@@ -114,77 +161,85 @@ export default class Profile extends React.Component {
                 style={{width: '100%', height: '100%'}}
                 source={require('../../assets/images/background-01.png')}
             >
-                <PTRViewAndroid onRefresh={() => this.getUserData(this.state.token)}>
-                    <AuthContext.Consumer>
-                        {(context) => {
-                            if(logout) {
-                                context.setIsAuth();
-                            }
-                        }}
-                    </AuthContext.Consumer>
+                <PTRViewAndroid onRefresh={() => this.getUserData()}>
                     <ScrollView>
                         <Card style={{marginVertical: 30,fontFamily: 'font'}}>
-                            <Card.Title subtitleStyle={{fontFamily: 'font'}} titleStyle={{fontFamily: 'font'}}  title={user.profileName} subtitle={user.firstName + " " + user.lastName} left={(props) =><Avatar.Image size={50} source={{uri: 'https://i.pinimg.com/originals/53/3c/18/533c18ff0df87fbbdf58b11e0048a199.jpg'}}/>} />
+                            <Card.Title
+                                subtitleStyle={{fontFamily: 'font'}}
+                                titleStyle={{fontFamily: 'font'}}
+                                title={user.profileName}
+                                subtitle={user.firstName + " " + user.lastName}
+                                left={(props) =>
+                                    <Avatar.Image
+                                        size={50}
+                                        source={{uri: formatImage(user.profilePicture,user.firstName,user.lastName)}}/>
+                                }
+                                right={() =>
+                                    <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center',alignItems: 'center',marginRight: 30}}>
+                                        <View style={{marginRight: 10}}><Text style={{textAlign: 'center',fontFamily: 'font'}}>Followers</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.followers}</Text></View>
+                                        <View><Text style={{textAlign: 'center',fontFamily: 'font'}}>Following</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.following}</Text></View>
+                                    </View>
+                                }
+                            />
                             <Card.Content>
-                                <View style={{flex: 1, flexDirection: 'row', alignContent: 'flex-start'}}>
-                                    <View style={{marginRight: 10, justifyContent: 'center'}}>
-                                        {/*<FacebookLogin/>*/}
-                                    </View>
-                                    <View>
-                                        <TouchableOpacity
-                                            activeOpacity={0.8}
-                                            style={{backgroundColor: '#f00',padding: 8,width: 100, alignItems: 'center'}}
-                                            onPress={this.logout.bind(this)}
-                                        >
-                                            <Text style={{fontFamily: 'font', color: '#fff', fontSize: 13}}>Logout</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
+                                <TouchableOpacity
+                                    activeOpacity={0.8}
+                                    style={{backgroundColor: '#f00',padding: 8,width: 100, alignItems: 'center'}}
+                                    onPress={this.logout.bind(this)}
+                                >
+                                    <Text style={{fontFamily: 'font', color: '#fff', fontSize: 13}}>Logout</Text>
+                                </TouchableOpacity>
                             </Card.Content>
                         </Card>
-                        <Card style={{marginVertical: 30,fontFamily: 'font'}}>
-                            <Card.Title titleStyle={{fontFamily: 'font'}}  title={'Followers (' + user.followerCount +')'} />
-                            <Card.Content>
-                                {followers.map((follower,index) =>
-                                    <View key={index} style={{flex: 1, justifyContent: 'flex-start', flexDirection: 'row',marginBottom: 5}}>
-                                        <View>
-                                            <Avatar.Image size={30} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+follower.firstName+'+'+follower.lastName}}/>
-                                        </View>
-                                        <View style={{marginTop: 7, marginLeft: 3}}>
-                                            <Text style={{fontFamily: 'font',fontSize: 14}}>{follower.firstName + " " + follower.lastName} ({follower.profileName})</Text>
-                                        </View>
-                                    </View>
-                                )}
-                            </Card.Content>
-                        </Card>
-
-                        <Card style={{marginBottom: 30,fontFamily: 'font'}}>
-                            <Card.Title titleStyle={{fontFamily: 'font'}}  title={'Following (' + user.followingCount +')'} />
-                            <Card.Content>
-                                {following.map((follower,index) =>
-                                    <View key={index} style={{flex: 1, justifyContent: 'flex-start', flexDirection: 'row', marginBottom: 5}}>
-                                        <View>
-                                            <Avatar.Image size={30} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+follower.firstName+'+'+follower.lastName}}/>
-                                        </View>
-                                        <View style={{marginTop: 7, marginLeft: 3}}>
-                                            <Text style={{fontFamily: 'font',fontSize: 14}}>{follower.firstName + " " + follower.lastName} ({follower.profileName})</Text>
-                                        </View>
-                                    </View>
-                                )}
-                            </Card.Content>
-                        </Card>
+                        {/*<Card style={{marginVertical: 30,fontFamily: 'font'}}>*/}
+                        {/*    <Card.Title titleStyle={{fontFamily: 'font'}}  title={'Followers (' + user.followerCount +')'} />*/}
+                        {/*    <Card.Content>*/}
+                        {/*        {followers.map((follower,index) =>*/}
+                        {/*            <View key={index} style={{flex: 1, justifyContent: 'flex-start', flexDirection: 'row',marginBottom: 5}}>*/}
+                        {/*                <View>*/}
+                        {/*                    <Avatar.Image size={30} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+follower.firstName+'+'+follower.lastName}}/>*/}
+                        {/*                </View>*/}
+                        {/*                <View style={{marginTop: 7, marginLeft: 3}}>*/}
+                        {/*                    <Text style={{fontFamily: 'font',fontSize: 14}}>{follower.firstName + " " + follower.lastName} ({follower.profileName})</Text>*/}
+                        {/*                </View>*/}
+                        {/*            </View>*/}
+                        {/*        )}*/}
+                        {/*    </Card.Content>*/}
+                        {/*</Card>*/}
                         <View>
                             <Card style={{marginBottom: 30}}>
                                 <Card.Title titleStyle={{fontFamily: 'font'}} title={'Posts'}/>
                             </Card>
-                            {posts.map((post,index) => (
-                                <PostItem post={post} key={index} />
-                            ))}
+                            <FlatList
+                                refreshing={refreshing}
+                                onRefresh={() => this.handleRefresh()}
+                                data={posts}
+                                ListEmptyComponent={
+                                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
+                                        <Text style={{fontFamily: 'font',fontSize: 20,color: 'white'}}>No posts found...</Text>
+                                    </View>
+                                }
+                                onEndReachedThreshold={0.6}
+                                ListFooterComponent={hasMore ?
+                                    loadingMore ? <ActivityIndicator size={60} color={'red'} /> : null
+                                    :
+                                    <Text style={{textAlign: 'center',fontFamily: 'font',fontSize: 16,color: '#fff'}}>No more posts...</Text>}
+                                onEndReached={() => this.getPostsData(true)}
+                                keyExtractor={(contact, index) => String(index)}
+                                renderItem={({item}) => (
+                                    <PostItem navigation={this.props.navigation} post={item} />
+                                )} />
                         </View>
                     </ScrollView>
                 </PTRViewAndroid>
                 <FAB
-                    style={styles.fab}
+                    style={{
+                        position: 'absolute',
+                        backgroundColor: 'grey',
+                        margin: 16,
+                        right: 0,
+                        bottom: 0,
+                    }}
                     icon="pencil"
                     color={'white'}
                     onPress={() => this.props.navigation.navigate('Post')}

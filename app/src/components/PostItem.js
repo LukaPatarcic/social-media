@@ -1,9 +1,11 @@
 import React from "react";
 import {Avatar, Card, IconButton, Paragraph, Text} from "react-native-paper";
-import { ToastAndroid, View} from "react-native";
+import {ToastAndroid, View, StyleSheet} from "react-native";
 import TimeAgo from 'react-native-timeago';
 import LikeButton from "./LikeButton";
 import SharePost from "./SharePost";
+import {formatImage} from "../helpers/functions";
+import ImageCarousel from "./ImageCarousel";
 
 export default class PostItem extends React.Component{
 
@@ -31,11 +33,12 @@ export default class PostItem extends React.Component{
         const {likes,comments} = this.state;
         return (
             <Card style={{marginBottom: 20,marginHorizontal: 10,fontFamily: 'font'}}>
-                <Card.Title subtitleStyle={{fontFamily: 'font'}} titleStyle={{fontFamily: 'font'}}  title={post.profileName} subtitle={<TimeAgo onLongPress={() => ToastAndroid.show(post.createdAt,ToastAndroid.SHORT)} time={post.createdAt}/>} left={(props) => <Avatar.Image size={50} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+post.firstName+'+'+post.lastName}}/>} />
+                <Card.Title subtitleStyle={{fontFamily: 'font'}} titleStyle={{fontFamily: 'font'}}  title={post.profileName} subtitle={<TimeAgo onLongPress={() => ToastAndroid.show(post.createdAt,ToastAndroid.SHORT)} time={post.createdAt}/>} left={(props) => <Avatar.Image size={50} source={{uri: formatImage(post.profilePicture,post.firstName,post.lastName)}}/>} />
                 <Card.Content>
                     <Paragraph  style={{fontFamily: 'font', fontSize: 18}}>
                         {post.text}
                     </Paragraph>
+                    <ImageCarousel images={post.images} profileName={post.profileName} />
                     <View style={{flex:1,justifyContent: 'space-between', flexDirection: 'row', marginTop: 15}}>
                         <View>
                             <Text style={{fontFamily: 'font'}}>Likes {likes}</Text>
@@ -65,3 +68,18 @@ export default class PostItem extends React.Component{
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 0.5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    contentContainer: {
+        borderWidth: 2,
+        borderColor: '#CCC',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});

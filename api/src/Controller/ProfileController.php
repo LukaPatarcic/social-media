@@ -27,7 +27,7 @@ class ProfileController extends BaseController
      */
     public function user(Request $request)
     {
-        $profileName = $request->query->get('profileName','');
+        $profileName = $request->query->get('profileName',$this->getUser()->getProfileName());
         /*** User $user*/
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['profileName' => $profileName]);
 

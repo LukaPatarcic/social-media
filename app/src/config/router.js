@@ -14,7 +14,6 @@ import {Easing, Image, ImageBackground, Linking, Text, View} from "react-native"
 import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
 import Search from "../screens/Search";
 import Notifications from "../screens/Notifications";
-import Stats from "../screens/Stats";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Comments from "../screens/Comments";
 import {Badge} from "react-native-paper";
@@ -57,7 +56,7 @@ export default class Router extends React.Component{
                 {(context) => {
                     return(
                         <NavigationContainer>
-                            <RootStackScreen state={{...context.state,...this.state}} />
+                            <RootStackScreen state={{...context,...this.state}} />
                         </NavigationContainer>
                     )
                 }}
@@ -159,9 +158,8 @@ const AuthStackScreen = () => (
 );
 
 const FeedStack = createStackNavigator();
-const ProfileStack = createDrawerNavigator();
+const ProfileStack = createStackNavigator();
 const SearchStack = createStackNavigator();
-const StatsStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
 
 const FeedStackScreen = (navigation) => (
@@ -177,7 +175,7 @@ const FeedStackScreen = (navigation) => (
                     </View>,
                 headerRight: () => (
                     <Icon
-                        onPress={() => console.log(navigation.navigation.navigate('Messages'))}
+                        onPress={() => navigation.navigation.navigate('Messages')}
                         name={'comments'}
                         size={30}
                         style={{marginRight: 10}}
@@ -259,18 +257,8 @@ const NotificationStackScreen = () => (
     </NotificationStack.Navigator>
 );
 
-const StatsStackScreen = () => (
-    <StatsStack.Navigator>
-        <StatsStack.Screen
-            name="Stats"
-            component={Stats}
-            options={{headerShown: false}}
-        />
-    </StatsStack.Navigator>
-);
-
 const ProfileStackScreen = () => (
-    <ProfileStack.Navigator drawerPosition={'right'}>
+    <ProfileStack.Navigator>
         <ProfileStack.Screen
             name="Profile"
             component={Profile}
@@ -325,17 +313,6 @@ const TabsScreen = () => (
                     )
                 },
             }}
-        />
-        <Tabs.Screen
-            name="Stats"
-            options={{
-                tabBarLabel: 'Stats',
-                tabBarColor: '#f00',
-                tabBarIcon: ({ color }) => (
-                    <Icon name="pie-chart" color={color} size={26} />
-                ),
-            }}
-            component={StatsStackScreen}
         />
         <Tabs.Screen
             name="Profile"

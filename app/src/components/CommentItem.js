@@ -5,6 +5,7 @@ import React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import {BASE_URL} from "../config";
 import SubCommentItem from "./SubCommentItem";
+import {formatImage} from "../helpers/functions";
 
 export default class CommentItem extends React.Component {
     constructor(props) {
@@ -86,7 +87,7 @@ export default class CommentItem extends React.Component {
                     <View style={{flexDirection:'row',alignItems: 'flex-start',justifyContent: 'flex-start'}}>
                         <View>
                             <View>
-                                <Image style = {{height: 40, width: 40, margin: 5 }} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+comment.firstName+'+'+comment.lastName}} />
+                                <Image style = {{height: 40, width: 40, margin: 5, borderRadius: 20,overflow: 'hidden'}} source={{uri: formatImage(comment.profilePicture,comment.firstName,comment.lastName)}} />
                             </View>
                         </View>
                         <View>

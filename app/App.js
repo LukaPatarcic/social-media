@@ -1,5 +1,5 @@
 import React from 'react';
-import {AuthProvider} from "./src/context/AuthProvider";
+import {AuthContext, AuthProvider} from "./src/context/AuthProvider";
 import Router from "./src/config/router";
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import PushNotification from 'react-native-push-notification'
@@ -71,14 +71,26 @@ export default class App extends React.Component {
 
     }
 
+    static contextType = AuthContext;
+
     render() {
+        const auth = this.context;
         return(
             <AuthProvider>
-                <WebsocketProvider>
-                    <PaperProvider theme={theme}>
-                        <Router />
-                    </PaperProvider>
-                </WebsocketProvider>
+                <AuthContext>
+                    {({isAuth}) => (
+                        isAuth ?
+                            <WebsocketProvider>
+                                <PaperProvider theme={theme}>
+                                    <Router />
+                                </PaperProvider>
+                            </WebsocketProvider>
+                            :
+                            <PaperProvider theme={theme}>
+                                <Router />
+                            </PaperProvider>
+                    )}
+                </AuthContext>
             </AuthProvider>
         );
     }

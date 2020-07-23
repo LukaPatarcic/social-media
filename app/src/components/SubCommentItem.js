@@ -1,6 +1,7 @@
 import {Image, Text, View} from "react-native";
 import TimeAgo from "react-native-timeago";
 import React from "react";
+import {formatImage} from "../helpers/functions";
 
 export default class SubCommentItem extends React.Component {
     constructor(props) {
@@ -24,7 +25,7 @@ export default class SubCommentItem extends React.Component {
                 <View style={{flexDirection:'row',alignItems: 'flex-start',justifyContent: 'flex-start'}}>
                     <View>
                         <View>
-                            <Image style = {{height: 40, width: 40, margin: 5 }} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+comment.firstName+'+'+comment.lastName}} />
+                            <Image style = {{height: 40, width: 40, margin: 5, borderRadius: 20,overflow: 'hidden' }} source={{uri: formatImage(comment.profilePicture,comment.firstName,comment.lastName)}} />
                         </View>
                     </View>
                     <View>

@@ -4,7 +4,7 @@ import {WS_URL} from "../config";
 import {AsyncStorage} from "react-native";
 export const WebsocketContext = React.createContext({ io: null });
 
-export class WebsocketProvider extends React.PureComponent {
+export class WebsocketProvider extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,6 +20,7 @@ export class WebsocketProvider extends React.PureComponent {
                 this.setState({
                     id: id
                 },() => {
+                    console.log(id);
                     this.setState({
                         io: socketIOClient.connect(WS_URL,{query: `id=${this.state.id}`})
                     })

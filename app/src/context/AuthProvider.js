@@ -4,7 +4,7 @@ import {BASE_URL} from "../config";
 
 export const AuthContext = React.createContext({ isAuth: false,token: null,isLoading: true });
 
-export class AuthProvider extends React.PureComponent {
+export class AuthProvider extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -52,7 +52,6 @@ export class AuthProvider extends React.PureComponent {
                         if(data.error === 'Authentication Required' || data.error === 'Invalid JWT Token') {
                             this.setState({isAuth:false})
                         } else {
-                            console.log(data.id.toString());
                             AsyncStorage.setItem("id",data.id.toString())
                             this.setState({isAuth:true})
                         }
@@ -65,7 +64,7 @@ export class AuthProvider extends React.PureComponent {
 
     render() {
         return (
-            <AuthContext.Provider value={{state: this.state,setIsAuth: this.setIsAuth}}>
+            <AuthContext.Provider value={{...this.state,setIsAuth: this.setIsAuth}}>
                 {this.props.children}
             </AuthContext.Provider>
         );

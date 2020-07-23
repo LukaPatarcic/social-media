@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import {ActivityIndicator, AsyncStorage, FlatList, ImageBackground, Text, View} from "react-native";
+import {ActivityIndicator, AsyncStorage, FlatList, ImageBackground, Text, ToastAndroid, View} from "react-native";
 import {BASE_URL} from "../config";
 import SingleMessageItem from "./SingleMessageItem";
 import {IconButton, TextInput} from "react-native-paper";
@@ -36,12 +36,18 @@ export default class MessagesWithUser extends Component{
     }
 
     sendMessage() {
+        if(this.state.message.trim() == "") {
+            ToastAndroid.show("Please enter a message",ToastAndroid.SHORT);
+        }
         const ws = this.context;
         const message = {
             "toUser": this.props.route.params.user.id,
             "message": this.state.message
         }
         ws.io.send(message, {"token": this.state.token})
+        this.setState({
+            message: ''
+        })
     }
 
     getData() {
@@ -116,16 +122,12 @@ export default class MessagesWithUser extends Component{
                                     />
                                 </View>
                                 <View style={{width: '15%'}}>
-                                    {loading ?
-                                        <ActivityIndicator color={'#f00'} size={25} />
-                                        :
-                                        <IconButton
-                                            icon="send"
-                                            color={'red'}
-                                            size={30}
-                                            onPress={this.handleSubmit}
-                                        />
-                                    }
+                                    <IconButton
+                                        icon="send"
+                                        color={'red'}
+                                        size={30}
+                                        onPress={this.sendMessage}
+                                    />
                                 </View>
                             </View>
                         </>
