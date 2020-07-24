@@ -4,7 +4,9 @@
 namespace App\Controller;
 
 
+use App\Entity\FriendshipRequest;
 use App\Services\PushNotification;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

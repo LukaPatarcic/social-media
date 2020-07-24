@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Splash from "../screens/Splash";
 import Login from "../screens/Login";
 import Register from "../screens/Register";
@@ -10,7 +10,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Profile from "../screens/Profile";
 import RegisterTwo from "../screens/RegisterTwo";
 import RegisterThree from "../screens/RegisterThree";
-import {Easing, Image, ImageBackground, Linking, Text, View} from "react-native";
+import {AsyncStorage, Easing, Image, ImageBackground, Linking, Text, View} from "react-native";
 import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
 import Search from "../screens/Search";
 import Notifications from "../screens/Notifications";
@@ -21,6 +21,7 @@ import AddPost from "../components/AddPost";
 import Messages from "../screens/Messages";
 import MessagesWithUser from "../components/MessagesWithUser";
 import NewMessage from "../components/NewMessage";
+import {BASE_URL} from "./index";
 
 
 export default class Router extends React.Component{
@@ -302,13 +303,23 @@ const TabsScreen = () => (
                 tabBarActiveTextColor: '#000',
                 tabBarBadgeStyle: {color: 'black'},
                 tabBarIcon: ({ color }) => {
+                    const badge = [];
+                    AsyncStorage.getItem("access-token")
+                        .then(token => {
+                            fetch(BASE_URL+'/friend/request/count')
+                                .then(response => response.json())
+                                .then(data => {
+                                    badge.push(data.count);
+                                })
+                        })
                     return (
                         <>
                             <Icon size={26} color={color} name={'bell'} />
-
                             <Badge
                                 style={{ position: 'absolute', top: -8, right: -8,backgroundColor:'#000' }}
-                            >10</Badge>
+                            >
+                                {1}
+                            </Badge>
                         </>
                     )
                 },

@@ -2,6 +2,7 @@ import { Image, StyleSheet, ToastAndroid, View} from "react-native";
 import React from "react";
 import {Card, IconButton, Avatar, Button} from "react-native-paper";
 import {BASE_URL} from "../config";
+import {formatImage} from "../helpers/functions";
 
 export default class SendFriendRequest extends React.Component{
     constructor(props) {
@@ -29,7 +30,7 @@ export default class SendFriendRequest extends React.Component{
             .then((response => response.json()))
             .then((data => {
                 this.setState({loading: false});
-                this.props.getFriends();
+                this.props.sendFriendRequestChangeState(friend.id);
                 if(data.error) {
                     ToastAndroid.show('Failed to follow friend...', ToastAndroid.SHORT);
                 }
@@ -40,27 +41,41 @@ export default class SendFriendRequest extends React.Component{
             })
     }
 
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     return JSON.stringify(nextProps) !== JSON.stringify(this.props) || JSON.stringify(nextState) !== JSON.stringify(this.state);
+    // }
+
     render() {
         const {friend} = this.props;
         const {loading} = this.state;
-        console.log(this.props.navigation);
+        console.log("requested " + friend.requested);
         return (
             <Card onPress={this.props.message ? () => this.props.navigation.navigate('MessagesWithUser',{user:friend}) : null} style={{marginVertical: 5,backgroundColor:'#fff'}}>
-                {this.props.message
-                    ?
-                    <Card.Title
-                        title={friend.firstName+' '+friend.lastName}
-                        subtitle={friend.profileName}
-                        left={(props) => <Avatar.Image {...props} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+friend.firstName+'+'+friend.lastName}} />}
-                    />
+                <Card.Title
+                    title={friend.firstName+' '+friend.lastName}
+                    subtitle={friend.profileName}
+                    left={(props) => <Avatar.Image {...props} source={{uri: formatImage(friend.profilePicture,friend.firstName,friend.lastName)}} />}
+                    right={(props) => this.props.message
+                        ?
+                        null
                     :
-                    <Card.Title
-                        title={friend.firstName+' '+friend.lastName}
-                        subtitle={friend.profileName}
-                        left={(props) => <Avatar.Image {...props} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+friend.firstName+'+'+friend.lastName}} />}
-                        right={(props) => <Button onPress={this.sendFriendRequest} {...props} mode={'outlined'} color={'red'} style={{fontSize:10}} uppercase={false} disabled={friend.requested || friend.following}>{loading ? "Loading...":(friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))}</Button>}
-                    />
-                }
+                        <Button
+                            onPress={this.sendFriendRequest}
+                            {...props}
+                            mode={'outlined'}
+                            color={'red'}
+                            style={{fontSize:10}}
+                            uppercase={false}
+                            disabled={friend.requested || friend.following}
+                        >
+                            {loading ?
+                                "Loading...":(friend.requested ? 'Requested'
+                                    :
+                                (friend.following ? 'Following' : 'Follow'))
+                            }
+                        </Button>
+                    }
+                />
 
             </Card>
         );

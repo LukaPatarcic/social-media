@@ -8,6 +8,7 @@ use App\Entity\FriendshipRequest;
 use App\Entity\User;
 use App\Form\FriendRequestType;
 use App\Form\FriendshipFormType;
+use App\Services\Image;
 use App\Services\PushNotification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,6 +33,9 @@ class FriendRequestController extends BaseController
         $user = $this->getUser();
         /** @var FriendshipRequest $requests */
         $requests = $this->getDoctrine()->getRepository(FriendshipRequest::class)->findUsersFriends($user);
+        foreach ($requests as $k => $v) {
+            $requests[$k]['profilePicture'] = Image::getProfilePicture($v['profileName'],$v['profilePicture'],45,45);
+        }
 
         if(!$requests) {
             return  $this->json([], Response::HTTP_OK);
@@ -138,5 +142,17 @@ class FriendRequestController extends BaseController
         $this->getDoctrine()->getManager()->flush();
 
         return  $this->json(['success' => $message],Response::HTTP_CREATED);
+    }
+
+
+    /**
+     * @Route("/friend/request/count", methods="GET")
+     */
+    public function getNotificationCount()
+    {
+        $user = $this->getUser();
+        /*** FriendRequest $count */
+        $count = $this->getDoctrine()->getRepository(FriendshipRequest::class)->findAmountOfRequests($user);
+        return $this->json($count);
     }
 }

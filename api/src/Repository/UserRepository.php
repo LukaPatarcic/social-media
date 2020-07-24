@@ -51,7 +51,7 @@ class UserRepository extends ServiceEntityRepository
     {
 
         return $this->createQueryBuilder('u')
-            ->select('u.id,u.profileName,u.firstName,u.lastName')
+            ->select('u.id,u.profileName,u.firstName,u.lastName,u.profilePicture')
             ->orWhere('u.firstName LIKE :q')
             ->orWhere('u.lastName LIKE :q')
             ->orWhere('u.profileName LIKE :q')
@@ -62,7 +62,7 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.firstName','ASC')
             ->orderBy('u.lastName','ASC')
             ->getQuery()
-            ->getResult(AbstractQuery::HYDRATE_OBJECT);
+            ->getArrayResult();
     }
 
 

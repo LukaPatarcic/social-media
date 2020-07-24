@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\LikePost;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Services\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,11 +62,11 @@ class SearchController extends BaseController
                 }
 
             }
+
+            $q[$k]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],45,45);
         }
 
-        return $this->json($q,Response::HTTP_OK,[],[
-            ObjectNormalizer::GROUPS => ['search'],
-        ]);
+        return $this->json($q,Response::HTTP_OK);
     }
 
     /**

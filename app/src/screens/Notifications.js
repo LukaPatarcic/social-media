@@ -1,11 +1,22 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, ScrollView, Button, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {
+    View,
+    StyleSheet,
+    ImageBackground,
+    ScrollView,
+    Button,
+    ActivityIndicator,
+    TouchableOpacity,
+    ToastAndroid
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Text } from 'native-base';
 import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.android";
 import TimeAgo from "react-native-timeago";
 import {Avatar, Card, IconButton} from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import {formatImage} from "../helpers/functions";
+import {BASE_URL} from "../config";
 
 export default class Notifications extends React.Component {
     constructor(props) {
@@ -24,11 +35,11 @@ export default class Notifications extends React.Component {
                 if(loading) {
                     this.setState({loading: true});
                 }
-                fetch('https://api.allshak.lukaku.tech/friend/request', {
+                fetch(BASE_URL+'/friend/request', {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'X-AUTH-TOKEN': val
+                        'Authorization': 'Bearer '+val
                     },
                     method: "GET",
                 })
@@ -59,11 +70,11 @@ export default class Notifications extends React.Component {
             if (!val) {
                 // this.props.history.push('/login');
             } else {
-                fetch('https://api.allshak.lukaku.tech/friend/request',{
+                fetch(BASE_URL + '/friend/request',{
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'X-AUTH-TOKEN': val
+                        'Authorization': 'Bearer '+val
                     },
                     method: "PATCH",
                     body: JSON.stringify({id})
@@ -74,6 +85,7 @@ export default class Notifications extends React.Component {
                         if(data.error) {
                             this.setState({error: true})
                         }
+                        ToastAndroid.show("You accepted the request",ToastAndroid.SHORT);
 
                     }))
                     .catch(err => {
@@ -90,11 +102,11 @@ export default class Notifications extends React.Component {
             if (!val) {
                 // this.props.history.push('/login');
             } else {
-                fetch('https://api.allshak.lukaku.tech/friend/request',{
+                fetch(BASE_URL + '/friend/request',{
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'X-AUTH-TOKEN': val
+                        'Authorization ': 'Bearer ' + val
                     },
                     method: "DELETE",
                     body: JSON.stringify({id})
@@ -118,98 +130,99 @@ export default class Notifications extends React.Component {
         const {notifications,loading} = this.state;
         return (
             <ImageBackground
-                style={{width: '100%', height: '100%',zIndex: -1,resizeMode: 'cover'}}
-                source={{uri: 'https://allshak.lukaku.tech/images/background.png'}}>
-                        {loading
-                            ?
+                style={{width: '100%', height: '100%'}}
+                source={require('../../assets/images/background-01.png')}
+            >
+                {loading
+                    ?
 
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',position: 'absolute', width: '100%', height: '100%'}}>
-                                <ActivityIndicator size={70} color="#f00" />
-                            </View>
-                            :
-                            notifications.length
-                                ?
-                                <ScrollView>
-                                    <PTRViewAndroid onRefresh={this.getNotifications.bind(this)}>
-                                        <View style={{marginBottom: 20}}>
-                                            <Card>
-                                                <Card.Title
-                                                    subtitleStyle={{fontFamily: 'font'}}
-                                                    titleStyle={{fontFamily: 'font'}}
-                                                    title={'Notifications (' + notifications.length + ')'}
-                                                />
-                                            </Card>
-                                        </View>
-                                        {notifications.map((notification,index) =>
-                                            <Card key={index} style={{marginBottom: 20}}>
-                                                <Card.Content>
-                                                    <View style={{flex:1, alignContent: 'flex-start',flexDirection: 'row'}}>
-                                                        <View>
-                                                            <Avatar.Image
-                                                                size={50}
-                                                                source={{
-                                                                    uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+notification.firstName+'+'+notification.lastName
-                                                                }}
-                                                            />
-                                                        </View>
-                                                        <View style={{marginLeft: 10, alignContent: 'center',justifyContent: 'center'}}>
-                                                            <View>
-                                                                <Text style={{fontFamily: 'font', fontSize: 16}}>{notification.firstName + " " + notification.lastName + ' sent you a follow request'}</Text>
-                                                            </View>
-                                                            <View>
-                                                                <Text style={{fontFamily: 'font', fontSize: 12, color: 'grey'}}><TimeAgo time={notification.createdAt}/></Text>
-                                                            </View>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{flex:1, flexDirection: 'row', alignContent: 'center'}}>
-                                                        <View>
-                                                            <TouchableOpacity
-                                                                onPress={() => this.acceptFollow(notification.id)}
-                                                                id={notification.id}
-                                                                activeOpacity={0.8}
-                                                                style={{
-                                                                    alignItems:'center',
-                                                                    justifyContent:'center',
-                                                                    width:55,
-                                                                    height:55,
-                                                                    backgroundColor:'white',
-                                                                    borderRadius:50,
-                                                                }}
-                                                            >
-                                                                <Icon name={'check'} size={25} color={'red'} />
-                                                            </TouchableOpacity>
-                                                        </View>
-                                                        <View>
-                                                            <TouchableOpacity
-                                                                onPress={() => this.declineFollow(notification.id)}
-                                                                id={notification.id}
-                                                                activeOpacity={0.8}
-                                                                style={{
-                                                                    alignItems:'center',
-                                                                    justifyContent:'center',
-                                                                    width:55,
-                                                                    height:55,
-                                                                    backgroundColor:'white',
-                                                                    borderRadius:50,
-                                                                }}
-                                                            >
-                                                                <Icon name={'times'} size={25} color={'grey'} />
-                                                            </TouchableOpacity>
-                                                        </View>
-                                                    </View>
-                                                </Card.Content>
-                                            </Card>
-                                        )}
-                                    </PTRViewAndroid>
-                                </ScrollView>
-                                :
-                                <PTRViewAndroid onRefresh={this.getNotifications.bind(this)}>
-                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
-                                    <Text style={{fontFamily: 'font', fontSize: 24, padding: 20, textAlign: 'center', color: '#fff'}}>No notifications...</Text>
-                                    <Icon color={'white'} size={80} name={'sad-tear'} />
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',position: 'absolute', width: '100%', height: '100%'}}>
+                        <ActivityIndicator size={70} color="#f00" />
+                    </View>
+                    :
+                    notifications.length
+                        ?
+                        <ScrollView>
+                            <PTRViewAndroid onRefresh={this.getNotifications.bind(this)}>
+                                <View style={{marginBottom: 20}}>
+                                    <Card>
+                                        <Card.Title
+                                            subtitleStyle={{fontFamily: 'font'}}
+                                            titleStyle={{fontFamily: 'font'}}
+                                            title={'Notifications (' + notifications.length + ')'}
+                                        />
+                                    </Card>
                                 </View>
-                                </PTRViewAndroid>
-                        }
+                                {notifications.map((notification,index) =>
+                                    <Card key={index} style={{marginBottom: 20}}>
+                                        <Card.Content>
+                                            <View style={{flex:1, alignContent: 'flex-start',flexDirection: 'row'}}>
+                                                <View>
+                                                    <Avatar.Image
+                                                        size={50}
+                                                        source={{
+                                                            uri: formatImage(notification.profilePicture,notification.firstName,notification.lastName)
+                                                        }}
+                                                    />
+                                                </View>
+                                                <View style={{marginLeft: 10, alignContent: 'center',justifyContent: 'center'}}>
+                                                    <View>
+                                                        <Text style={{fontFamily: 'font', fontSize: 16}}>{notification.firstName + " " + notification.lastName + ' sent you a follow request'}</Text>
+                                                    </View>
+                                                    <View>
+                                                        <Text style={{fontFamily: 'font', fontSize: 12, color: 'grey'}}><TimeAgo time={notification.createdAt}/></Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            <View style={{flex:1, flexDirection: 'row', alignContent: 'center'}}>
+                                                <View>
+                                                    <TouchableOpacity
+                                                        onPress={() => this.acceptFollow(notification.id)}
+                                                        id={notification.id}
+                                                        activeOpacity={0.8}
+                                                        style={{
+                                                            alignItems:'center',
+                                                            justifyContent:'center',
+                                                            width:55,
+                                                            height:55,
+                                                            backgroundColor:'white',
+                                                            borderRadius:50,
+                                                        }}
+                                                    >
+                                                        <Icon name={'check'} size={25} color={'red'} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View>
+                                                    <TouchableOpacity
+                                                        onPress={() => this.declineFollow(notification.id)}
+                                                        id={notification.id}
+                                                        activeOpacity={0.8}
+                                                        style={{
+                                                            alignItems:'center',
+                                                            justifyContent:'center',
+                                                            width:55,
+                                                            height:55,
+                                                            backgroundColor:'white',
+                                                            borderRadius:50,
+                                                        }}
+                                                    >
+                                                        <Icon name={'times'} size={25} color={'grey'} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        </Card.Content>
+                                    </Card>
+                                )}
+                            </PTRViewAndroid>
+                        </ScrollView>
+                        :
+                        <PTRViewAndroid onRefresh={this.getNotifications.bind(this)}>
+                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
+                            <Text style={{fontFamily: 'font', fontSize: 24, padding: 20, textAlign: 'center', color: '#fff'}}>No notifications...</Text>
+                            <Icon color={'white'} size={80} name={'sad-tear'} />
+                        </View>
+                        </PTRViewAndroid>
+                }
             </ImageBackground>
         );
     }

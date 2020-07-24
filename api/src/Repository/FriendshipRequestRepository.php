@@ -30,11 +30,24 @@ class FriendshipRequestRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('f')
             ->join('f.fromUser','fu')
             ->join('f.toUser','tu')
-            ->select('f.id, fu.firstName, fu.lastName, fu.profileName, f.createdAt')
+            ->select('f.id, fu.firstName, fu.lastName, fu.profileName, fu.profilePicture, f.createdAt')
             ->where('f.toUser = :user')
             ->setParameter(':user',$user)
             ->getQuery()
             ->getArrayResult()
+            ;
+    }
+
+    public function findAmountOfRequests($user)
+    {
+        return $this->createQueryBuilder('f')
+            ->join('f.fromUser','fu')
+            ->join('f.toUser','tu')
+            ->select('COUNT(f.id) as count')
+            ->where('f.toUser = :user')
+            ->setParameter(':user',$user)
+            ->getQuery()
+            ->getSingleResult()
             ;
     }
 

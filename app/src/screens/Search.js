@@ -21,6 +21,7 @@ export default class Search extends React.Component {
         };
 
         this.getFriends = debounce(this.getFriends,400);
+        this.sendFriendRequestChangeState = this.sendFriendRequestChangeState.bind(this);
     }
 
     componentDidMount() {
@@ -66,13 +67,26 @@ export default class Search extends React.Component {
             })
     }
 
+    sendFriendRequestChangeState(id) {
+        this.setState((prevState) => {
+            prevState.searchQuery.filter((friend,index) => {
+                if(friend.id == id) {
+                    friend.requested = true;
+                    return friend;
+                }
+
+                return friend;
+            })
+            return {searchQuery: prevState.searchQuery}
+        })
+    }
+
     updateSearch(q) {
         this.setState({ q },() => this.getFriends());
     };
 
     render() {
-        console.log(this.props.message);
-        const {q,searchQuery,loading,loadingButton,token} = this.state;
+        const {q,searchQuery,loading,token} = this.state;
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%'}}
@@ -97,12 +111,20 @@ export default class Search extends React.Component {
                             data={searchQuery}
                             ListEmptyComponent={q.length > 0 ?
                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
-                                    <Text style={{fontFamily: 'font',fontSize: 20,color: '#fff'}}>No comments found...</Text>
+                                    <Text style={{fontFamily: 'font',fontSize: 20,color: '#fff'}}>No people found...</Text>
                                 </View>
                                 : null
                             }
                             renderItem={({item,index}) => (
-                                <SendFriendRequest friend={item} key={index} getFriends={this.getFriends.bind(this)} token={token} message={this.props.message} navigation={this.props.navigation} />
+                                <SendFriendRequest
+                                    friend={item}
+                                    key={index}
+                                    getFriends={this.getFriends.bind(this)}
+                                    token={token}
+                                    message={this.props.message}
+                                    sendFriendRequestChangeState={this.sendFriendRequestChangeState}
+                                    navigation={this.props.navigation}
+                                />
                             )}
                         />
                     }
