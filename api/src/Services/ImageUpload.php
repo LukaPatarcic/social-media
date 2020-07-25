@@ -20,6 +20,9 @@ class ImageUpload
 
     private function validateImage(string $image): bool
     {
+        if(!preg_match('#^data:image/\w+;base64,#i',$image)) {
+            $image = 'data:image/jpeg;base64,'.$image;
+        }
         return (bool)exif_imagetype($image);
     }
 

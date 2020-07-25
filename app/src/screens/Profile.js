@@ -6,9 +6,11 @@ import {
     TouchableOpacity,
     ScrollView,
     ActivityIndicator,
-    FlatList,
+    FlatList, ToastAndroid,
 } from 'react-native';
 import { Text } from 'native-base';
+import ImageResizer from 'react-native-image-resizer';
+import RNFS from 'react-native-fs';
 import AsyncStorage from "@react-native-community/async-storage";
 import {Avatar, Card, FAB, IconButton, Paragraph} from 'react-native-paper';
 import PostItem from "../components/PostItem";
@@ -16,6 +18,7 @@ import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.a
 import {BASE_URL} from "../config";
 import {AuthContext} from "../context/AuthProvider";
 import {formatImage} from "../helpers/functions";
+import PhotoUpload from "react-native-photo-upload";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -32,7 +35,9 @@ export default class Profile extends React.Component {
             refreshing: false,
             hasMore: true,
             loadingMore: false,
-            offset: 0
+            offset: 0,
+            newProfilePicture: '',
+            loadingNewProfilePicture: false,
         }
 
         this.getUserData = this.getUserData.bind(this);
@@ -141,7 +146,7 @@ export default class Profile extends React.Component {
    static contextType = AuthContext
 
     render() {
-        const {user,posts,refreshing,loading,hasMore,loadingMore} = this.state;
+        const {user,posts,refreshing,loading,hasMore,loadingMore,newProfilePicture,loadingNewProfilePicture} = this.state;
 
         if(loading) {
             return (
@@ -170,14 +175,76 @@ export default class Profile extends React.Component {
                                 title={user.profileName}
                                 subtitle={user.firstName + " " + user.lastName}
                                 left={(props) =>
-                                    <Avatar.Image
-                                        size={50}
-                                        source={{uri: formatImage(user.profilePicture,user.firstName,user.lastName)}}/>
+                                    <PhotoUpload
+                                        onStart={() => this.setState({loadingNewProfilePicture: true})}
+                                        onResizedImageUri={(image) => {
+                                            console.log(ImageResizer.createResizedImage(image.uri, 100, 100, 'JPEG', 70)
+                                                .then(response => {
+                                                    RNFS.readFile(response.path, 'base64')
+                                                        .then(res =>{
+                                                            fetch(BASE_URL+'/user/edit/picture',{
+                                                                headers: {
+                                                                    'Accept': 'application/json',
+                                                                    'Content-Type': 'application/json',
+                                                                    'Authorization': 'Bearer '+this.state.token
+                                                                },
+                                                                method: "PATCH",
+                                                                body: JSON.stringify({image: res})
+                                                            })
+                                                                .then(response => response.json())
+                                                                .then(data => {
+                                                                    console.log(data);
+                                                                    if(data.error) {
+                                                                        ToastAndroid.show("Oops... Something went wrong while processing your image",ToastAndroid.SHORT);
+                                                                        this.setState({loadingNewProfilePicture: false})
+                                                                    } else {
+                                                                        ToastAndroid.show("Profile picture changed",ToastAndroid.SHORT);
+                                                                        this.setState({newProfilePicture: res,loadingNewProfilePicture: false})
+                                                                    }
+                                                                })
+                                                                .catch(err => {
+                                                                    console.log(err);
+                                                                    ToastAndroid.show("Oops... Something went wrong while processing your image",ToastAndroid.SHORT);
+                                                                    this.setState({loadingNewProfilePicture: false})
+                                                                })
+                                                        });
+                                                })
+                                                .catch(err => {
+                                                   ToastAndroid.show("Oops... Something went wrong while processing your image",ToastAndroid.SHORT);
+                                                }));
+                                        }}
+                                        onError={() => {
+                                            ToastAndroid.show("Oops... Something went wrong while processing your image",ToastAndroid.SHORT);
+                                        }}
+                                    >
+                                        {loadingNewProfilePicture ?
+                                            <ActivityIndicator color={'red'} size={30} />
+                                            :
+                                            <Avatar.Image
+                                                size={50}
+                                                source={{uri: newProfilePicture ? `data:image/jpeg;base64,${newProfilePicture}` : formatImage(user.profilePicture,user.firstName,user.lastName)}}/>
+                                        }
+                                    </PhotoUpload>
+
                                 }
                                 right={() =>
                                     <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center',alignItems: 'center',marginRight: 30}}>
-                                        <View style={{marginRight: 10}}><Text style={{textAlign: 'center',fontFamily: 'font'}}>Followers</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.followers}</Text></View>
-                                        <View><Text style={{textAlign: 'center',fontFamily: 'font'}}>Following</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.following}</Text></View>
+                                        <View style={{marginRight: 10}}>
+                                            <TouchableOpacity
+                                                style={{backgroundColor: '#c3c3c3',padding: 2}}
+                                                onPress={() => this.props.navigation.navigate("Follow",{followers: true})}
+                                            >
+                                                <Text style={{textAlign: 'center',fontFamily: 'font'}}>Followers</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.followers}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View>
+                                            <TouchableOpacity
+                                                style={{backgroundColor: '#c3c3c3',padding: 2}}
+                                                onPress={() => this.props.navigation.navigate("Follow",{followers: false})}
+                                            >
+                                                <Text style={{textAlign: 'center',fontFamily: 'font'}}>Following</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.following}</Text>
+                                            </TouchableOpacity>
+                                            </View>
                                     </View>
                                 }
                             />
