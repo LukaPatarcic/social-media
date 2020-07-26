@@ -19,15 +19,11 @@ io.on('connection', (client) => {
             function (error, response, body) {
                 if (!error && response.statusCode == 201) {
                     var message = JSON.parse(body);
-                    console.log(users);
                     users.filter(user => {
-                        console.log(user.id,message.toUser);
                         if(user.id == message.toUser) {
-                            console.log('here');
                             message.isMe = false;
                             io.to(user.socketId).emit('message',message);
                         } else if (user.id == message.fromUser) {
-                            console.log('here2');
                             message.isMe = true;
                             io.to(user.socketId).emit('message',message);
                         }

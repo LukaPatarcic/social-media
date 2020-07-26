@@ -91,6 +91,7 @@ export default class Profile extends React.Component {
                     </View>
                     :
                     <FlatList
+                        style={{paddingTop: 10}}
                         refreshing={refreshing}
                         onRefresh={() => this.handleRefresh()}
                         data={posts}

@@ -95,7 +95,7 @@ class ProfileController extends BaseController
         $user = $this->getUser();
 
         $image = new ImageUpload($user->getProfileName());
-        $upload = $image->uploadProfilePic($data['image']);
+        $upload = $image->uploadProfilePic($data['image'] ?? []);
         if($upload) {
             $user->setProfilePicture($image->getUploadedImagesNames()[0]);
             $this->getDoctrine()->getManager()->flush();

@@ -216,23 +216,6 @@ const FeedStackScreen = (navigation) => (
             initialParams={{test: 1}}
             options={{
                 headerShown: false
-                // headerStyle: {
-                //     backgroundColor: '#fff',
-                // },
-                // headerTintColor: '#fff',
-                // headerTransparent: true,
-                // headerTitle: false,
-                // headerLeft: (e) => (<Icon name={'times'} style={{marginLeft: 10}} size={25} color={'#fff'}  onPress={ () => e.onPress() } />),
-                //
-                // headerRight: () => (
-                //     <Icon
-                //         onPress={() => alert('This is a button!')}
-                //         name={'send'}
-                //         size={30}
-                //         color={'#fff'}
-                //         style={{marginRight: 10}}
-                //     />
-                // ),
             }}
         />
     </FeedStack.Navigator>

@@ -74,7 +74,8 @@ export default class Messages extends Component{
                             keyExtractor={(contact, index) => String(index)}
                             renderItem={({item}) => (
                                 <MessageUserItem navigation={this.props.navigation} user={item}/>
-                            )}/>
+                            )}
+                        />
                         <FAB
                             style={{
                                 position: 'absolute',
@@ -83,7 +84,7 @@ export default class Messages extends Component{
                                 right: 0,
                                 bottom: 0,
                             }}
-                            icon="pencil"
+                            icon={"account-plus"}
                             color={'white'}
                             onPress={() => this.props.navigation.navigate('NewMessage')}
                         />

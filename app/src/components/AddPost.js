@@ -3,7 +3,7 @@ import {
     ImageBackground, PermissionsAndroid,
     StyleSheet,
     Text,
-    ToastAndroid,
+    ToastAndroid, TouchableOpacity, TouchableWithoutFeedback,
     View
 } from "react-native";
 import React from "react";
@@ -13,6 +13,9 @@ import CameraRoll from "@react-native-community/cameraroll";
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {TextInput} from "react-native-paper";
 import ImagePicker from 'react-native-image-picker';
+import RNFS from "react-native-fs";
+import { v4 as uuidv4 } from 'uuid';
+import ImageOverlay from "react-native-image-overlay";
 
 export default class AddPost extends React.Component{
 
@@ -23,7 +26,8 @@ export default class AddPost extends React.Component{
             disabled: false,
             visible: false,
             text: '',
-            photos: []
+            photos: [],
+            photosForUpload: []
         };
 
         this.sendPost = this.sendPost.bind(this);
@@ -33,6 +37,10 @@ export default class AddPost extends React.Component{
         const {text} = this.state;
         if(text.trim() < 1) {
             ToastAndroid.show('Please enter a message', ToastAndroid.SHORT);
+            return;
+        }
+        if(text.trim() > 255) {
+            ToastAndroid.show('Message too long', ToastAndroid.SHORT);
             return;
         }
         AsyncStorage.getItem('access-token', (err, val) => {
@@ -52,6 +60,7 @@ export default class AddPost extends React.Component{
                     ToastAndroid.show('Post sent to timeline',ToastAndroid.SHORT);
                 }))
                 .catch(err => {
+                    ToastAndroid.show('Oops something went wrong while posting to your timeline',ToastAndroid.SHORT);
                     this.setState({error: true,loading: false});
                 })
         })
@@ -61,12 +70,11 @@ export default class AddPost extends React.Component{
         try {
             const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log("You can use the camera");
             } else {
-                console.log("Camera permission denied");
+                ToastAndroid.show("Camera permission denied",ToastAndroid.SHORT);
             }
         } catch (err) {
-            console.warn(err);
+            ToastAndroid.show("An error occurred while retrieving photos",ToastAndroid.SHORT);
         }
     }
 
@@ -75,8 +83,16 @@ export default class AddPost extends React.Component{
             first: 15,
             assetType: 'Photos',
         })
-            .then(r => {
-                this.setState({photos: r.edges});
+            .then(response => {
+                let imagesArray = [];
+                response.edges.map((image,index) => {
+                    RNFS.readFile(image.node.image.uri, 'base64')
+                        .then(res =>{
+                            imagesArray.push({selected: false,image:res,id: index})
+                        })
+                        .catch(err => {})
+                });
+                this.setState({photos: imagesArray});
             })
             .catch((err) => {
                 ToastAndroid.show('Something went wrong while loading images...',ToastAndroid.SHORT);
@@ -89,11 +105,12 @@ export default class AddPost extends React.Component{
 
     render() {
         const options = {
-            title: 'Select Avatar',
-            customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+            title: null,
+            mediaType: 'photo',
+            quality: 0.8,
             storageOptions: {
-                skipBackup: true,
-                path: 'images',
+                skipBackup: false,
+                path: null,
             },
         };
 
@@ -106,7 +123,11 @@ export default class AddPost extends React.Component{
                 <View style={{flex:1}}>
                     <View style={{justifyContent: 'space-between',flexDirection:'row',marginTop:10}}>
                         <Icon name={'times'} style={{marginLeft: 10}} size={25} color={'#fff'}  onPress={ () => this.props.navigation.navigate('Feed') } />
-                        <Icon onPress={() => this.sendPost()} name={'send'} size={30} color={'#fff'} style={{marginRight: 10}}/>
+                        {loading ?
+                            <ActivityIndicator color={'red'} size={40} style={{marginRight: 10}} />
+                            :
+                            <Icon onPress={() => this.sendPost()} name={'paper-plane'} size={30} color={'#fff'} style={{marginRight: 10}}/>
+                        }
                     </View>
                     <View style={{marginTop:20}}>
                         <TextInput
@@ -114,7 +135,8 @@ export default class AddPost extends React.Component{
                             mode={'outlined'}
                             label={'Write something here...'}
                             theme={{ colors: { primary: 'red',underlineColor:'transparent'}}}
-                            value={this.state.text}
+                            value={text}
+                            blurOnSubmit={false}
                             multiline={true}
                             numberOfLines={7}
                             autoCapitalize={'sentences'}
@@ -137,18 +159,15 @@ export default class AddPost extends React.Component{
                             data={photos}
                             ListEmptyComponent={
                                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
-                                    <Text style={{fontFamily: 'font',fontSize: 20}}>Grant permission to see your photos...</Text>
+                                    <Text style={{fontFamily: 'font',fontSize: 20,color:'white',textAlign: 'center'}}>Grant permission to see your photos...</Text>
                                 </View>
                             }
+                            keyboardDismissMode={'none'}
+                            keyboardShouldPersistTaps={'always'}
                             style={{marginTop: 10}}
-                            // style={{marginTop: 5}}
-                            // ListFooterComponent={hasMore ?
-                            //     loadingMore ? <ActivityIndicator size={60} color={'red'} /> : null
-                            //     :
-                            //     <Text style={{textAlign: 'center',fontFamily: 'font',fontSize: 16,color: '#fff'}}>No more posts...</Text>}
-                            // onEndReached={() => this.getPosts(true)}
                             keyExtractor={(contact, index) => String(index)}
                             horizontal={true}
+                            showsHorizontalScrollIndicator={false}
                             renderItem={({item,index}) => {
                                 if(index === 0) {
                                     return (
@@ -156,12 +175,15 @@ export default class AddPost extends React.Component{
                                             style={{width:100,height:100,backgroundColor: '#fff',flex:1,alignItems:'center',justifyContent: 'center',borderRadius: 5}}
 
                                         >
-                                            <Icon onPress={() => ImagePicker.launchCamera(options, (response) => {
-                                                console.log(response);
+                                            <Icon
+                                                onPress={() => ImagePicker.launchCamera(options, (response) => {
+                                                    this.setState((prevState) => ({
+                                                        photos: [{selected:true,image: response.data},...prevState.photos]
+                                                    }))
                                                 })}
-                                                  name={'camera'}
-                                                  size={30}
-                                                  color={'red'}
+                                                name={'camera'}
+                                                size={30}
+                                                color={'red'}
                                             />
                                         </View>
                                     )
@@ -174,7 +196,9 @@ export default class AddPost extends React.Component{
                                             <Icon
                                                 onPress={() => {
                                                     ImagePicker.launchImageLibrary(options, (response) => {
-                                                        // Same code as in above section!
+                                                        this.setState((prevState) => ({
+                                                            photos: [{selected:true,image: response.data,id: prevState.photos.length},...prevState.photos]
+                                                        }))
                                                     });
                                                 }}
                                                 name={'images'}
@@ -186,32 +210,43 @@ export default class AddPost extends React.Component{
                                 }
 
                                 return (
-                                    <Image style={{width:100,height:100,marginHorizontal: 5,borderRadius: 5}} source={{uri: item.node.image.uri}} />
+                                    <TouchableOpacity
+                                        activeOpacity={1}
+                                        onPress={() => {this.setState((prevState) => {
+                                            var photos = [];
+                                            prevState.photos.filter((photo) => {
+                                                if(photo.id === item.id) {
+                                                    if(!photo.selected) {
+                                                        photos = [...prevState.photosForUpload,photo.image];
+                                                    } else {
+                                                        photos = prevState.photosForUpload.filter((image) => image !== photo.image)
+                                                    }
+                                                    photo.selected = !photo.selected;
+                                                }
+                                                return photo;
+                                            })
+                                            console.log(photos.length);
+                                            return {
+                                                photos: prevState.photos,
+                                                photosForUpload: photos
+                                            }
+                                        })}}
+                                    >
+                                        <ImageOverlay
+                                            onPress={() => console.log('pressed')}
+                                            containerStyle={{width: 100,height:100,marginHorizontal: 5,borderRadius: 5}}
+                                            source={{uri: 'data:image/jpeg;base64,'+item.image}}
+                                            style={{width:100,height:100}}
+                                            overlayColor={item.selected ? 'red' : null}
+                                            overlayAlpha={0.5}
+                                            contentPosition="center"
+                                            title={item.selected ? <Icon name={'check'} color={'white'} size={30} /> : null}
+                                        >
+                                        </ImageOverlay>
+                                    </TouchableOpacity>
                                 )
                             }}
                         />
-                    </View>
-                    <View style={{marginTop: 30, flex: 1, justifyContent: 'space-between', flexDirection: 'row'}}>
-                        <View style={{width: 300,marginLeft: 10, flex:1, justifyContent:'flex-start',flexDirection:'row'}}>
-                            <View style={{width:90, height:90}}>
-                                {/*<Button*/}
-                                {/*    // title={'Images'}*/}
-                                {/*    title={<Icon name={'image'} color={'white'} size={25} />}*/}
-                                {/*    buttonStyle={{backgroundColor: 'red'}}*/}
-                                {/*    onPress={() => ToastAndroid.show('Photos',ToastAndroid.SHORT)}*/}
-                                {/*/>*/}
-                            </View>
-                            <View style={{width:90,height:100,marginLeft: 20}}>
-                                {/*<Button*/}
-                                {/*    title={<Icon name={'camera'} color={'white'} size={25} />}*/}
-                                {/*    // title={'Camera'}*/}
-                                {/*    buttonStyle={{backgroundColor: 'red'}}*/}
-                                {/*    onPress={() => ToastAndroid.show('Camera',ToastAndroid.SHORT)}*/}
-                                {/*/>*/}
-                            </View>
-                        </View>
-                        <View style={{width: 100}}>
-                        </View>
                     </View>
                 </View>
             </ImageBackground>
@@ -239,4 +274,4 @@ const styles = StyleSheet.create({
     fabAdd: {
         backgroundColor: 'red',
     }
-});
+})
