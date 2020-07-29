@@ -32,7 +32,7 @@ export default class PostItem extends React.Component{
         const {post} = this.props;
         const {likes,comments} = this.state;
         return (
-            <Card style={{marginBottom: 20,marginHorizontal: 10,fontFamily: 'font'}}>
+            <Card style={{marginBottom: 20,marginHorizontal: 10,fontFamily: 'font'}} onPress={() => this.props.navigation.navigate('Profile',{profileName: post.profileName})}>
                 <Card.Title subtitleStyle={{fontFamily: 'font'}} titleStyle={{fontFamily: 'font'}}  title={post.profileName} subtitle={<TimeAgo onLongPress={() => ToastAndroid.show(post.createdAt,ToastAndroid.SHORT)} time={post.createdAt}/>} left={(props) => <Avatar.Image size={50} source={{uri: formatImage(post.profilePicture,post.firstName,post.lastName)}}/>} />
                 <Card.Content>
                     <Paragraph  style={{fontFamily: 'font', fontSize: 18}}>

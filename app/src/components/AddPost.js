@@ -89,7 +89,7 @@ export default class AddPost extends React.Component{
     getPhotos() {
         this.setState({loadingPhotos: true});
         CameraRoll.getPhotos({
-            first: 15,
+            first: 10,
             assetType: 'Photos',
         })
             .then(response => {
@@ -177,23 +177,6 @@ export default class AddPost extends React.Component{
                             :
                             <FlatList
                                 data={photos}
-                                ListEmptyComponent={
-                                    <View style={{
-                                        flex: 1,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        marginTop: 100
-                                    }}>
-                                        <Text style={{
-                                            fontFamily: 'font',
-                                            fontSize: 20,
-                                            color: 'white',
-                                            textAlign: 'center'
-                                        }}>
-                                            {errorPhotos ? "Something went wrong while displaying your photos" : "No photos found"}
-                                        </Text>
-                                    </View>
-                                }
                                 keyboardDismissMode={'none'}
                                 keyboardShouldPersistTaps={'always'}
                                 style={{marginTop: 10}}
@@ -217,12 +200,21 @@ export default class AddPost extends React.Component{
                                             >
                                                 <Icon
                                                     onPress={() => ImagePicker.launchCamera(options, (response) => {
-                                                        this.setState((prevState) => ({
-                                                            photos: [{
-                                                                selected: true,
-                                                                image: response.data
-                                                            }, ...prevState.photos]
-                                                        }))
+                                                        if (response.didCancel) {
+                                                            //nothing
+                                                        } else if (response.error) {
+                                                            ToastAndroid.show("Something went wrong while taking a picture...", ToastAndroid.SHORT);
+                                                        } else if (response.customButton) {
+                                                            //nothing
+                                                        } else {
+                                                            this.setState((prevState) => ({
+                                                                photos: [{
+                                                                    id: prevState.photos.length,
+                                                                    selected: true,
+                                                                    image: response.data
+                                                                }, ...prevState.photos]
+                                                            }))
+                                                        }
                                                     })}
                                                     name={'camera'}
                                                     size={30}

@@ -38,6 +38,7 @@ class FriendController extends BaseController
         $data = [];
         foreach ($friends as $friend) {
             $data[] = [
+                'id' => $friend['id'],
                 'firstName' => $friend['firstName'],
                 'lastName' => $friend['lastName'],
                 'profileName' => $friend['profileName'],
@@ -67,6 +68,7 @@ class FriendController extends BaseController
         $data = [];
         foreach ($friends as $friend) {
             $data[] = [
+                'id' => $friend['id'],
                 'firstName' => $friend['firstName'],
                 'lastName' => $friend['lastName'],
                 'profileName' => $friend['profileName'],
@@ -80,20 +82,24 @@ class FriendController extends BaseController
 
 
     /**
-     * @Route("/friend", name="friend_delete", methods={"DELETE"})
-     * @param Request $request
+     * @Route("/friend/{id}", name="friend_delete", methods={"DELETE"})
+     * @param int $id
      * @return JsonResponse
      */
-    public function deleteFriend(Request $request)
+    public function deleteFriend(int $id)
     {
-        $data = json_decode($request->getContent(),true);
-        if(!$data['id']) {
+        $user = $this->getUser();
+        if(!$id) {
             return $this->json([],Response::HTTP_BAD_REQUEST);
         }
-        $friendRequest = $this->getDoctrine()
-            ->getRepository(FriendshipRequest::class)
-            ->findOneBy(['id' => $data['id']]);
-        $this->getDoctrine()->getManager()->remove($friendRequest);
+        $friend = $this->getDoctrine()
+            ->getRepository(Friendship::class)
+            ->findOneBy(['user' => $user,'friend' => $id]);
+
+        if(!$friend) {
+            return $this->json([],Response::HTTP_NOT_FOUND);
+        }
+        $this->getDoctrine()->getManager()->remove($friend);
         $this->getDoctrine()->getManager()->flush();
 
         return $this->json(['success' => 1], Response::HTTP_OK);

@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     ScrollView,
     ActivityIndicator,
-    FlatList, ToastAndroid,
+    FlatList, ToastAndroid, SafeAreaView,
 } from 'react-native';
 import { Text } from 'native-base';
 import ImageResizer from 'react-native-image-resizer';
@@ -40,6 +40,7 @@ export default class Profile extends React.Component {
         }
 
         this.getUserData = this.getUserData.bind(this);
+        this.handleRefresh = this.handleRefresh.bind(this);
     }
 
     componentDidMount() {
@@ -50,9 +51,26 @@ export default class Profile extends React.Component {
         });
     }
 
+    handleRefresh() {
+        this.getUserData();
+        this.getPostsData();
+    }
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        console.log(nextProps.route);
+        if(this.props.route.params !== nextProps.route.params) {
+            this.getUserData();
+            this.getPostsData();
+        }
+        return true;
+    }
+
     getUserData() {
         this.setState({loading: true});
-        fetch(BASE_URL+'/user',{
+        const params = this.props.route.params ?? null;
+        const url = params ? BASE_URL+'/user?profileName='+params.profileName : BASE_URL+'/user';
+        console.log(this.props.route.params);
+        fetch(url,{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -167,77 +185,77 @@ export default class Profile extends React.Component {
                 style={{width: '100%', height: '100%'}}
                 source={require('../../assets/images/background-01.png')}
             >
-                <PTRViewAndroid onRefresh={() => this.getUserData()}>
-                    <ScrollView>
-                        <Card style={{marginVertical: 30,fontFamily: 'font'}}>
-                            <Card.Title
-                                subtitleStyle={{fontFamily: 'font'}}
-                                titleStyle={{fontFamily: 'font'}}
-                                title={user.profileName}
-                                subtitle={user.firstName + " " + user.lastName}
-                                left={(props) => <ProfilePicture user={user} token={this.state.token} />}
-                                right={() =>
-                                    <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center',alignItems: 'center',marginRight: 30}}>
-                                        <View style={{marginRight: 10}}>
-                                            <TouchableOpacity
-                                                style={{padding: 2}}
-                                                onPress={() => this.props.navigation.navigate("Follow",{following: false})}
-                                            >
-                                                <Text style={{textAlign: 'center',fontFamily: 'font'}}>Followers</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.followers}</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View>
-                                            <TouchableOpacity
-                                                style={{padding: 2}}
-                                                onPress={() => this.props.navigation.navigate("Follow",{following: true})}
-                                            >
-                                                <Text style={{textAlign: 'center',fontFamily: 'font'}}>Following</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.following}</Text>
-                                            </TouchableOpacity>
+                <SafeAreaView>
+                    <FlatList
+                        refreshing={refreshing}
+                        onRefresh={() => this.handleRefresh()}
+                        ListHeaderComponent={() => (
+                            <>
+                            <Card style={{marginVertical: 30,fontFamily: 'font'}}>
+                                <Card.Title
+                                    subtitleStyle={{fontFamily: 'font'}}
+                                    titleStyle={{fontFamily: 'font'}}
+                                    title={user.profileName}
+                                    subtitle={user.firstName + " " + user.lastName}
+                                    left={(props) => <ProfilePicture user={user} token={this.state.token} />}
+                                    right={() =>
+                                        <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center',alignItems: 'center',marginRight: 30}}>
+                                            <View style={{marginRight: 10}}>
+                                                <TouchableOpacity
+                                                    style={{padding: 2}}
+                                                    onPress={() => this.props.navigation.navigate("Follow",{following: false})}
+                                                >
+                                                    <Text style={{textAlign: 'center',fontFamily: 'font'}}>Followers</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.followers}</Text>
+                                                </TouchableOpacity>
                                             </View>
-                                    </View>
-                                }
-                            />
-                            <Card.Content>
-                                <TouchableOpacity
-                                    activeOpacity={0.8}
-                                    style={{backgroundColor: '#f00',padding: 8,width: 100, alignItems: 'center'}}
-                                    onPress={this.logout.bind(this)}
-                                >
-                                    {logoutLoading
-                                        ?
-                                        <ActivityIndicator color={'white'} size={20} />
-                                        :
-                                        <Text style={{fontFamily: 'font', color: '#fff', fontSize: 13}}>Logout</Text>
+                                            <View>
+                                                <TouchableOpacity
+                                                    style={{padding: 2}}
+                                                    onPress={() => this.props.navigation.navigate("Follow",{following: true})}
+                                                >
+                                                    <Text style={{textAlign: 'center',fontFamily: 'font'}}>Following</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.following}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
                                     }
-                                </TouchableOpacity>
-                            </Card.Content>
-                        </Card>
-                        <View>
-                            <Card style={{marginBottom: 30}}>
-                                <Card.Title titleStyle={{fontFamily: 'font'}} title={'Posts'}/>
+                                />
+                                <Card.Content>
+                                    <TouchableOpacity
+                                        activeOpacity={0.8}
+                                        style={{backgroundColor: '#f00',padding: 8,width: 100, alignItems: 'center'}}
+                                        onPress={this.logout.bind(this)}
+                                    >
+                                        {logoutLoading
+                                            ?
+                                            <ActivityIndicator color={'white'} size={20} />
+                                            :
+                                            <Text style={{fontFamily: 'font', color: '#fff', fontSize: 13}}>Logout</Text>
+                                        }
+                                    </TouchableOpacity>
+                                </Card.Content>
                             </Card>
-                            <FlatList
-                                refreshing={refreshing}
-                                onRefresh={() => this.handleRefresh()}
-                                data={posts}
-                                ListEmptyComponent={
-                                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
-                                        <Text style={{fontFamily: 'font',fontSize: 20,color: 'white'}}>No posts found...</Text>
-                                    </View>
-                                }
-                                onEndReachedThreshold={0.6}
-                                ListFooterComponent={hasMore ?
-                                    loadingMore ? <ActivityIndicator size={60} color={'red'} /> : null
-                                    :
-                                    <Text style={{textAlign: 'center',fontFamily: 'font',fontSize: 16,color: '#fff'}}>No more posts...</Text>}
-                                onEndReached={() => this.getPostsData(true)}
-                                keyExtractor={(contact, index) => String(index)}
-                                renderItem={({item}) => (
-                                    <PostItem navigation={this.props.navigation} post={item} />
-                                )} />
-                        </View>
-                    </ScrollView>
-                </PTRViewAndroid>
+                            <Card style={{marginBottom: 30}}>
+                            <Card.Title titleStyle={{fontFamily: 'font'}} title={'Posts'}/>
+                            </Card>
+                            </>
+                        )}
+                        data={posts}
+                        ListEmptyComponent={
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
+                                <Text style={{fontFamily: 'font',fontSize: 20,color: 'white'}}>No posts found...</Text>
+                            </View>
+                        }
+                        onEndReachedThreshold={0.6}
+                        ListFooterComponent={hasMore ?
+                            loadingMore ? <ActivityIndicator size={60} color={'red'} /> : null
+                            :
+                            <Text style={{textAlign: 'center',fontFamily: 'font',fontSize: 16,color: '#fff'}}>No more posts...</Text>}
+                        onEndReached={() => this.getPostsData(true)}
+                        keyExtractor={(contact, index) => String(index)}
+                        renderItem={({item}) => (
+                            <PostItem navigation={this.props.navigation} post={item} />
+                        )}
+                    />
                 <FAB
                     style={{
                         position: 'absolute',
@@ -250,6 +268,7 @@ export default class Profile extends React.Component {
                     color={'white'}
                     onPress={() => this.props.navigation.navigate('Post')}
                 />
+                </SafeAreaView>
             </ImageBackground>
         );
     }
