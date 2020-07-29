@@ -180,16 +180,16 @@ export default class Profile extends React.Component {
                                     <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center',alignItems: 'center',marginRight: 30}}>
                                         <View style={{marginRight: 10}}>
                                             <TouchableOpacity
-                                                style={{backgroundColor: '#c3c3c3',padding: 2}}
-                                                onPress={() => this.props.navigation.navigate("Follow",{followers: true})}
+                                                style={{padding: 2}}
+                                                onPress={() => this.props.navigation.navigate("Follow",{following: false})}
                                             >
                                                 <Text style={{textAlign: 'center',fontFamily: 'font'}}>Followers</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.followers}</Text>
                                             </TouchableOpacity>
                                         </View>
                                         <View>
                                             <TouchableOpacity
-                                                style={{backgroundColor: '#c3c3c3',padding: 2}}
-                                                onPress={() => this.props.navigation.navigate("Follow",{followers: false})}
+                                                style={{padding: 2}}
+                                                onPress={() => this.props.navigation.navigate("Follow",{following: true})}
                                             >
                                                 <Text style={{textAlign: 'center',fontFamily: 'font'}}>Following</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.following}</Text>
                                             </TouchableOpacity>
@@ -212,21 +212,6 @@ export default class Profile extends React.Component {
                                 </TouchableOpacity>
                             </Card.Content>
                         </Card>
-                        {/*<Card style={{marginVertical: 30,fontFamily: 'font'}}>*/}
-                        {/*    <Card.Title titleStyle={{fontFamily: 'font'}}  title={'Followers (' + user.followerCount +')'} />*/}
-                        {/*    <Card.Content>*/}
-                        {/*        {followers.map((follower,index) =>*/}
-                        {/*            <View key={index} style={{flex: 1, justifyContent: 'flex-start', flexDirection: 'row',marginBottom: 5}}>*/}
-                        {/*                <View>*/}
-                        {/*                    <Avatar.Image size={30} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+follower.firstName+'+'+follower.lastName}}/>*/}
-                        {/*                </View>*/}
-                        {/*                <View style={{marginTop: 7, marginLeft: 3}}>*/}
-                        {/*                    <Text style={{fontFamily: 'font',fontSize: 14}}>{follower.firstName + " " + follower.lastName} ({follower.profileName})</Text>*/}
-                        {/*                </View>*/}
-                        {/*            </View>*/}
-                        {/*        )}*/}
-                        {/*    </Card.Content>*/}
-                        {/*</Card>*/}
                         <View>
                             <Card style={{marginBottom: 30}}>
                                 <Card.Title titleStyle={{fontFamily: 'font'}} title={'Posts'}/>

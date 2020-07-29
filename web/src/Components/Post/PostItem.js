@@ -57,8 +57,8 @@ export default class PostItem extends Component{
                                     <Link  to={'/profile/' + post.profileName}>
                                         <img
                                             className={'img-fluid rounded-circle'}
+                                            style={{width: 45,height:45}}
                                             src={post.profilePicture ? post.profilePicture : setProfilePicture(post.firstName,post.lastName)}
-                                            alt={''}
                                         />
                                     </Link>
                                 </MDBCol>

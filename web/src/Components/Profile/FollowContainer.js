@@ -63,7 +63,6 @@ export default class FollowContainer extends Component{
     }
 
     render() {
-        console.log(this.props);
         const {loading,followers,following} = this.props;
         const {modal,data,hasMoreUsers,loadingMoreUsers,header} = this.state;
         return (
@@ -87,7 +86,7 @@ export default class FollowContainer extends Component{
                         {data.map((user,index) => (
                             <MDBRow key={index} className={'mb-3'}>
                                 <MDBCol size={2} className={'pr-0 d-flex justify-content-start align-items-center'}>
-                                    <Link  to={'/profile/' + user.profileName}>
+                                    <Link onClick={() => this.setState({modal: false})}  to={'/profile/' + user.profileName}>
                                         <img
                                             className={'img-fluid rounded-circle'}
                                             src={user.profilePicture ? user.profilePicture : setProfilePicture(user.firstName,user.lastName,45)}
@@ -99,6 +98,7 @@ export default class FollowContainer extends Component{
                                     <h5 className={'mb-0'}>
                                         <MDBTooltip>
                                             <Link
+                                                onClick={() => this.setState({modal: false})}
                                                 className={'text-dark'}
                                                 to={'/profile/' + user.profileName}
                                             >

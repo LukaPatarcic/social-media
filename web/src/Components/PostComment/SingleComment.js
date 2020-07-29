@@ -43,6 +43,7 @@ export default class SingleComment extends React.Component {
                 <MDBCol md={1} lg={1} xl={1} className={'pr-0 d-flex align-items-start justify-content-center'}>
                     <Link to={'/profile/'+comment.profileName}>
                         <img
+                            style={{width: 36,height:36}}
                             className={'img-fluid mb-2 rounded-circle'}
                             src={comment.profilePicture ? comment.profilePicture : setProfilePicture(comment.firstName,comment.lastName,36)}
                             alt={''}
@@ -75,6 +76,7 @@ export default class SingleComment extends React.Component {
                         <SubCommentInput
                             profileName={comment.profileName}
                             inputVisibility={inputVisibility}
+                            sendingCommentReplyId={sendingCommentReplyId}
                             onHandleCommentReply={onHandleCommentReply}
                             sendingCommentReply={sendingCommentReply}
                             commentId={comment.id}

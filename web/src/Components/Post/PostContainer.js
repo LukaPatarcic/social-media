@@ -225,6 +225,7 @@ export default class PostContainer extends React.Component{
     }
 
     handleCommentReply(id,reply) {
+        this.setState({sendingCommentReply: true,sendingCommentReplyId: id});
         commentReply(id,reply)
             .then(response => {
                 this.setState((prevState => {
@@ -235,8 +236,7 @@ export default class PostContainer extends React.Component{
                                     comment.subComments = [response.comment, ...comment.subComments];
                                 }
                                 return comment;
-                            })
-                            return post;
+                            });
                         }
                         return post;
                     });
@@ -246,6 +246,9 @@ export default class PostContainer extends React.Component{
             .catch(err => err.response.json().then(err => {
                 toastr.error(err.error);
             }))
+            .finally(() => {
+                this.setState({sendingCommentReply: false,sendingCommentReplyId: 0});
+            })
     }
 
     handleCommentLike(id,liked) {

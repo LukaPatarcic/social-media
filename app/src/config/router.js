@@ -22,6 +22,7 @@ import Messages from "../screens/Messages";
 import MessagesWithUser from "../components/MessagesWithUser";
 import NewMessage from "../components/NewMessage";
 import {BASE_URL} from "./index";
+import Follow from "../screens/Follow";
 
 
 export default class Router extends React.Component{
@@ -246,6 +247,13 @@ const ProfileStackScreen = () => (
         <ProfileStack.Screen
             name="Profile"
             component={Profile}
+        />
+        <ProfileStack.Screen
+            name="Follow"
+            component={Follow}
+            options={(navigation) => ({
+                headerTitle: navigation.route.params.following ? "Following" : "Followers"
+            })}
         />
     </ProfileStack.Navigator>
 );

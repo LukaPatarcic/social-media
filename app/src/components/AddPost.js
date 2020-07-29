@@ -11,10 +11,9 @@ import AsyncStorage from "@react-native-community/async-storage";
 import {BASE_URL} from "../config";
 import CameraRoll from "@react-native-community/cameraroll";
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import {TextInput} from "react-native-paper";
+import {Card, TextInput} from "react-native-paper";
 import ImagePicker from 'react-native-image-picker';
 import RNFS from "react-native-fs";
-import { v4 as uuidv4 } from 'uuid';
 import ImageOverlay from "react-native-image-overlay";
 
 export default class AddPost extends React.Component{
@@ -23,6 +22,8 @@ export default class AddPost extends React.Component{
         super(props);
         this.state = {
             loading: false,
+            loadingPhotos: false,
+            errorPhotos: false,
             disabled: false,
             visible: false,
             text: '',
@@ -34,7 +35,7 @@ export default class AddPost extends React.Component{
     }
 
     sendPost() {
-        const {text} = this.state;
+        const {text,photosForUpload,photos} = this.state;
         if(text.trim() < 1) {
             ToastAndroid.show('Please enter a message', ToastAndroid.SHORT);
             return;
@@ -52,12 +53,18 @@ export default class AddPost extends React.Component{
                     'Authorization': 'Bearer '+ val
                 },
                 method: "POST",
-                body: JSON.stringify({text})
+                body: JSON.stringify({text,images: photosForUpload})
             })
                 .then((response => response.json()))
                 .then((data => {
                     this.setState({loading: false, text: ''});
                     ToastAndroid.show('Post sent to timeline',ToastAndroid.SHORT);
+                    this.setState({
+                        photos: photos.map(photo => {
+                            photo.selected = false;
+                            return photo;
+                        })
+                    });
                 }))
                 .catch(err => {
                     ToastAndroid.show('Oops something went wrong while posting to your timeline',ToastAndroid.SHORT);
@@ -70,6 +77,7 @@ export default class AddPost extends React.Component{
         try {
             const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                this.getPhotos();
             } else {
                 ToastAndroid.show("Camera permission denied",ToastAndroid.SHORT);
             }
@@ -79,6 +87,7 @@ export default class AddPost extends React.Component{
     }
 
     getPhotos() {
+        this.setState({loadingPhotos: true});
         CameraRoll.getPhotos({
             first: 15,
             assetType: 'Photos',
@@ -95,12 +104,15 @@ export default class AddPost extends React.Component{
                 this.setState({photos: imagesArray});
             })
             .catch((err) => {
+                this.setState({errorPhotos: true});
                 ToastAndroid.show('Something went wrong while loading images...',ToastAndroid.SHORT);
-            });
+            })
+            .finally(() => {
+                this.setState({loadingPhotos: false})
+            })
     }
     async componentDidMount() {
         await this.permission();
-        this.getPhotos()
     }
 
     render() {
@@ -114,7 +126,7 @@ export default class AddPost extends React.Component{
             },
         };
 
-        const {text,loading,photos} = this.state;
+        const {text,loading,photos,loadingPhotos,errorPhotos} = this.state;
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%'}}
@@ -129,124 +141,184 @@ export default class AddPost extends React.Component{
                             <Icon onPress={() => this.sendPost()} name={'paper-plane'} size={30} color={'#fff'} style={{marginRight: 10}}/>
                         }
                     </View>
-                    <View style={{marginTop:20}}>
-                        <TextInput
-                            autoFocus={true}
-                            mode={'outlined'}
-                            label={'Write something here...'}
-                            theme={{ colors: { primary: 'red',underlineColor:'transparent'}}}
-                            value={text}
-                            blurOnSubmit={false}
-                            multiline={true}
-                            numberOfLines={7}
-                            autoCapitalize={'sentences'}
-                            placeholderTextColor={'white'}
-                            spellCheck={true}
-                            maxLength={180}
-                            onSubmitEditing={this.sendPost}
-                            style={{fontSize: 20, fontFamily: 'font',color: 'white',borderBottomColor:'red',borderBottomWidth: 2}}
-                            onChangeText={(text) => {
-                                if(text.length >= 180) {
-                                    ToastAndroid.show('Maximum amount of characters is 180', ToastAndroid.SHORT)
-                                } else {
-                                    this.setState({ text })
+                    <Card style={{padding: 1,marginTop: 5,marginHorizontal: 5}}>
+                        <Card.Content style={{padding: 1}}>
+                            <TextInput
+                                autoFocus={true}
+                                mode={''}
+                                label={'Write something here...'}
+                                theme={{ colors: { primary: 'red',underlineColor:'transparent'}}}
+                                value={text}
+                                blurOnSubmit={false}
+                                multiline={true}
+                                numberOfLines={5}
+                                autoCapitalize={'sentences'}
+                                placeholderTextColor={'white'}
+                                spellCheck={true}
+                                maxLength={180}
+                                onSubmitEditing={this.sendPost}
+                                style={{fontSize: 20, fontFamily: 'font',color: 'white',borderBottomColor:'red'}}
+                                onChangeText={(text) => {
+                                    if(text.length >= 180) {
+                                        ToastAndroid.show('Maximum amount of characters is 180', ToastAndroid.SHORT)
+                                    } else {
+                                        this.setState({ text })
+                                    }
+                                }}
+                            />
+                        </Card.Content>
+                    </Card>
+
+                    <View style={{marginVertical: 5}}>
+                        {loadingPhotos ?
+                            <View>
+                                <ActivityIndicator color={'red'} size={50}/>
+                            </View>
+                            :
+                            <FlatList
+                                data={photos}
+                                ListEmptyComponent={
+                                    <View style={{
+                                        flex: 1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginTop: 100
+                                    }}>
+                                        <Text style={{
+                                            fontFamily: 'font',
+                                            fontSize: 20,
+                                            color: 'white',
+                                            textAlign: 'center'
+                                        }}>
+                                            {errorPhotos ? "Something went wrong while displaying your photos" : "No photos found"}
+                                        </Text>
+                                    </View>
                                 }
-                            }}
-                        />
-                    </View>
-                    <View>
-                        <FlatList
-                            data={photos}
-                            ListEmptyComponent={
-                                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
-                                    <Text style={{fontFamily: 'font',fontSize: 20,color:'white',textAlign: 'center'}}>Grant permission to see your photos...</Text>
-                                </View>
-                            }
-                            keyboardDismissMode={'none'}
-                            keyboardShouldPersistTaps={'always'}
-                            style={{marginTop: 10}}
-                            keyExtractor={(contact, index) => String(index)}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({item,index}) => {
-                                if(index === 0) {
-                                    return (
-                                        <View
-                                            style={{width:100,height:100,backgroundColor: '#fff',flex:1,alignItems:'center',justifyContent: 'center',borderRadius: 5}}
-
-                                        >
-                                            <Icon
-                                                onPress={() => ImagePicker.launchCamera(options, (response) => {
-                                                    this.setState((prevState) => ({
-                                                        photos: [{selected:true,image: response.data},...prevState.photos]
-                                                    }))
-                                                })}
-                                                name={'camera'}
-                                                size={30}
-                                                color={'red'}
-                                            />
-                                        </View>
-                                    )
-
-                                }
-
-                                if(index === photos.length-1) {
-                                    return (
-                                        <View style={{width:100,height:100,backgroundColor: '#fff',flex:1,alignItems:'center',justifyContent: 'center',borderRadius: 5}}>
-                                            <Icon
-                                                onPress={() => {
-                                                    ImagePicker.launchImageLibrary(options, (response) => {
-                                                        this.setState((prevState) => ({
-                                                            photos: [{selected:true,image: response.data,id: prevState.photos.length},...prevState.photos]
-                                                        }))
-                                                    });
+                                keyboardDismissMode={'none'}
+                                keyboardShouldPersistTaps={'always'}
+                                style={{marginTop: 10}}
+                                keyExtractor={(contact, index) => String(index)}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                renderItem={({item, index}) => {
+                                    if (index === 0) {
+                                        return (
+                                            <View
+                                                style={{
+                                                    width: 100,
+                                                    height: 100,
+                                                    backgroundColor: '#fff',
+                                                    flex: 1,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    borderRadius: 5
                                                 }}
-                                                name={'images'}
-                                                size={30}
-                                                color={'red'}
-                                            />
-                                        </View>
-                                    )
-                                }
 
-                                return (
-                                    <TouchableOpacity
-                                        activeOpacity={1}
-                                        onPress={() => {this.setState((prevState) => {
-                                            var photos = [];
-                                            prevState.photos.filter((photo) => {
-                                                if(photo.id === item.id) {
-                                                    if(!photo.selected) {
-                                                        photos = [...prevState.photosForUpload,photo.image];
-                                                    } else {
-                                                        photos = prevState.photosForUpload.filter((image) => image !== photo.image)
+                                            >
+                                                <Icon
+                                                    onPress={() => ImagePicker.launchCamera(options, (response) => {
+                                                        this.setState((prevState) => ({
+                                                            photos: [{
+                                                                selected: true,
+                                                                image: response.data
+                                                            }, ...prevState.photos]
+                                                        }))
+                                                    })}
+                                                    name={'camera'}
+                                                    size={30}
+                                                    color={'red'}
+                                                />
+                                            </View>
+                                        )
+
+                                    }
+
+                                    if (index === photos.length - 1) {
+                                        return (
+                                            <View style={{
+                                                width: 100,
+                                                height: 100,
+                                                backgroundColor: '#fff',
+                                                flex: 1,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                borderRadius: 5
+                                            }}>
+                                                <Icon
+                                                    name={'images'}
+                                                    size={30}
+                                                    color={'red'}
+                                                    onPress={() => {
+                                                        ImagePicker.launchImageLibrary(options, (response) => {
+                                                            if (response.didCancel) {
+                                                                //nothing
+                                                            } else if (response.error) {
+                                                                ToastAndroid.show("Something went wrong while selecting your image...", ToastAndroid.SHORT);
+                                                            } else if (response.customButton) {
+                                                                //nothing
+                                                            } else {
+                                                                this.setState((prevState) => ({
+                                                                    photos: [{
+                                                                        selected: true,
+                                                                        image: response.data,
+                                                                        id: prevState.photos.length
+                                                                    }, ...prevState.photos]
+                                                                }))
+                                                            }
+                                                        });
+                                                    }}
+                                                />
+                                            </View>
+                                        )
+                                    }
+
+                                    return (
+                                        <TouchableOpacity
+                                            activeOpacity={1}
+                                            onPress={() => {
+                                                this.setState((prevState) => {
+                                                    var photos = [];
+                                                    prevState.photos.filter((photo) => {
+                                                        if (photo.id === item.id) {
+                                                            if (!photo.selected) {
+                                                                photos = [...prevState.photosForUpload, photo.image];
+                                                            } else {
+                                                                photos = prevState.photosForUpload.filter((image) => image !== photo.image)
+                                                            }
+                                                            photo.selected = !photo.selected;
+                                                        }
+                                                        return photo;
+                                                    })
+                                                    console.log(photos.length);
+                                                    return {
+                                                        photos: prevState.photos,
+                                                        photosForUpload: photos
                                                     }
-                                                    photo.selected = !photo.selected;
-                                                }
-                                                return photo;
-                                            })
-                                            console.log(photos.length);
-                                            return {
-                                                photos: prevState.photos,
-                                                photosForUpload: photos
-                                            }
-                                        })}}
-                                    >
-                                        <ImageOverlay
-                                            onPress={() => console.log('pressed')}
-                                            containerStyle={{width: 100,height:100,marginHorizontal: 5,borderRadius: 5}}
-                                            source={{uri: 'data:image/jpeg;base64,'+item.image}}
-                                            style={{width:100,height:100}}
-                                            overlayColor={item.selected ? 'red' : null}
-                                            overlayAlpha={0.5}
-                                            contentPosition="center"
-                                            title={item.selected ? <Icon name={'check'} color={'white'} size={30} /> : null}
+                                                })
+                                            }}
                                         >
-                                        </ImageOverlay>
-                                    </TouchableOpacity>
-                                )
-                            }}
-                        />
+                                            <ImageOverlay
+                                                onPress={() => console.log('pressed')}
+                                                containerStyle={{
+                                                    width: 100,
+                                                    height: 100,
+                                                    marginHorizontal: 5,
+                                                    borderRadius: 5
+                                                }}
+                                                source={{uri: 'data:image/jpeg;base64,' + item.image}}
+                                                style={{width: 100, height: 100}}
+                                                overlayColor={item.selected ? 'red' : null}
+                                                overlayAlpha={0.5}
+                                                contentPosition="center"
+                                                title={item.selected ?
+                                                    <Icon name={'check'} color={'white'} size={30}/> : null}
+                                            >
+                                            </ImageOverlay>
+                                        </TouchableOpacity>
+                                    )
+                                }}
+                            />
+                        }
                     </View>
                 </View>
             </ImageBackground>

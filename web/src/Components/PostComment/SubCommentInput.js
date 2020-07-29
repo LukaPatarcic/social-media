@@ -19,17 +19,17 @@ export default class SubCommentInput extends Component{
         this.inputRef = createRef();
     }
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        if(nextState.comment !== this.state.comment) {
-            return true;
-        }
-
-        if(nextState.sendingCommentReply !== this.props.sendingCommentReply) {
-            return true;
-        }
-
-        return nextProps.inputVisibility !== this.props.inputVisibility
-    }
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     if(nextState.comment !== this.state.comment) {
+    //         return true;
+    //     }
+    //
+    //     if(nextState.sendingCommentReply !== this.props.sendingCommentReply) {
+    //         return true;
+    //     }
+    //
+    //     return nextProps.inputVisibility !== this.props.inputVisibility
+    // }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(!prevProps.inputVisibility) {
@@ -58,7 +58,7 @@ export default class SubCommentInput extends Component{
 
 
     render() {
-        const {inputVisibility,sendingCommentReply,profileName} = this.props;
+        const {inputVisibility,sendingCommentReply,profileName,sendingCommentReplyId,commentId} = this.props;
         const {comment} = this.state;
 
         return (
@@ -81,15 +81,18 @@ export default class SubCommentInput extends Component{
                         <MDBCol size={2} className={'d-flex align-items-center justify-content-center pl-0'}>
                             <MDBBtn color={'white'} block={true} className={'text-center'} style={{boxShadow: 'none'}} onClick={this.validateForm}>
                                 {
-                                    sendingCommentReply ?
-                                        <ClipLoader
-                                            sizeUnit={"px"}
-                                            size={20}
-                                            color={'#f00'}
-                                            loading={sendingCommentReply}
-                                        />
-                                        :
-                                        <MDBIcon  far={true} style={{color: 'red'}} icon={'paper-plane'} size={'2x'}/>
+                                    sendingCommentReplyId === commentId ?
+                                        sendingCommentReply ?
+                                            <ClipLoader
+                                                sizeUnit={"px"}
+                                                size={20}
+                                                color={'#f00'}
+                                                loading={sendingCommentReply}
+                                            />
+                                            :
+                                            <MDBIcon  far={true} style={{color: 'red'}} icon={'paper-plane'} size={'2x'}/>
+                                    :
+                                    <MDBIcon  far={true} style={{color: 'red'}} icon={'paper-plane'} size={'2x'}/>
                                 }
                             </MDBBtn>
                         </MDBCol>
@@ -108,7 +111,8 @@ SubCommentInput.propTypes = {
     inputVisibility: PropTypes.bool.isRequired,
     onHandleCommentReply: PropTypes.func.isRequired,
     sendingCommentReply: PropTypes.bool.isRequired,
+    sendingCommentReplyId: PropTypes.number.isRequired,
     commentId: PropTypes.number.isRequired,
     profileName: PropTypes.string.isRequired,
     fromCommentList: PropTypes.bool
-}
+};

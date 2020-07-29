@@ -13,6 +13,7 @@ export default class SingleSubComment extends Component {
                     <Link to={'/profile/'+comment.profileName}>
                         <img
                             className={'img-fluid mb-2 rounded-circle'}
+                            style={{width: 30,height:30}}
                             src={comment.profilePicture ? comment.profilePicture : setProfilePicture(comment.firstName,comment.lastName,30)}
                             alt={''}
                         />
