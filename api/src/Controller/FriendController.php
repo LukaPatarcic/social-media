@@ -6,6 +6,7 @@ use App\Entity\Friendship;
 use App\Entity\FriendshipRequest;
 use App\Entity\User;
 use App\Form\FriendshipFormType;
+use App\Services\DataTransformer;
 use App\Services\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +26,7 @@ class FriendController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function listFollowers(Request $request)
+    public function listFollowers(Request $request, DataTransformer $transformer)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -35,17 +36,7 @@ class FriendController extends BaseController
         if(!$friends) {
             return  $this->json([], Response::HTTP_NO_CONTENT);
         }
-        $data = [];
-        foreach ($friends as $friend) {
-            $data[] = [
-                'id' => $friend['id'],
-                'firstName' => $friend['firstName'],
-                'lastName' => $friend['lastName'],
-                'profileName' => $friend['profileName'],
-                'createdAt' => $friend['createdAt'],
-                'profilePicture' => Image::getProfilePicture($friend['profileName'],$friend['profilePicture'],45,45)
-            ];
-        }
+        $data = $transformer->friendListDataTransformer($friends);
 
         return  $this->json($data,Response::HTTP_OK,[]);
     }
@@ -55,7 +46,7 @@ class FriendController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function listFollowing(Request $request)
+    public function listFollowing(Request $request, DataTransformer $transformer)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -65,17 +56,7 @@ class FriendController extends BaseController
         if(!$friends) {
             return  $this->json([], Response::HTTP_NO_CONTENT);
         }
-        $data = [];
-        foreach ($friends as $friend) {
-            $data[] = [
-                'id' => $friend['id'],
-                'firstName' => $friend['firstName'],
-                'lastName' => $friend['lastName'],
-                'profileName' => $friend['profileName'],
-                'createdAt' => $friend['createdAt'],
-                'profilePicture' => Image::getProfilePicture($friend['profileName'],$friend['profilePicture'],45,45)
-            ];
-        }
+        $data = $transformer->friendListDataTransformer($friends);
 
         return  $this->json($data,Response::HTTP_OK,[]);
     }

@@ -28,6 +28,10 @@ class Mailer
 
     public function verificationEmail(string $email, string $fullName, string  $verificationCode)
     {
+        if(!filter_var($email,FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
         return $this->mailTemplate(
             'Account Verification',
             'emails/registration.html.twig',
@@ -51,6 +55,14 @@ class Mailer
 
     public function contactEmail(array $data)
     {
+        if(!$this->checkIfInArray($data)) {
+            return  false;
+        }
+
+        if(!filter_var($data['email'],FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
         return $this->mailTemplate(
             'Contact Message',
             'emails/contact.html.twig', $data
@@ -68,5 +80,16 @@ class Mailer
             );
 
         return (bool)$this->mailer->send($message);
+    }
+
+    private function checkIfInArray($data): bool
+    {
+        $params = ['name','email','subject','message'];
+        foreach ($data as $key => $value) {
+            if(!in_array($key,$params)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

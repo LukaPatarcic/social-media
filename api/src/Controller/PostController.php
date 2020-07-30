@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Form\PostType;
 use App\Form\RegistrationFormType;
+use App\Services\DataTransformer;
 use App\Services\Image;
 use App\Services\ImageUpload;
 use App\Services\PushNotification;
@@ -30,46 +31,16 @@ class PostController extends BaseController
     /**
      * @Route("/post", name="post_feed_list", methods={"GET"})
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse|Response
-     * @throws NonUniqueResultException
      */
-    public function postsFeedList(Request $request)
+    public function postsFeedList(Request $request, DataTransformer $transformer)
     {
         $user = $this->getUser();
         $offset = $request->query->getInt('offset',0);
         $profile = $request->query->getInt('profile',null);
         $posts = $this->getDoctrine()->getRepository(Post::class)->findPosts($user,10,$offset,$profile);
-        $data = [];
-        foreach ($posts as $k => $post) {
-            $data[$k]['id'] = +$post['postId'];
-            $data[$k]['firstName'] = $post['firstName'];
-            $data[$k]['lastName'] =$post['lastName'];
-            $data[$k]['profileName'] =$post['profileName'];
-            $data[$k]['text'] = $post['text'];
-            $data[$k]['profilePicture'] = Image::getProfilePicture($post['profileName'],$post['profilePicture'],45,45);
-            $data[$k]['createdAt'] = $post['createdAt'];
-            $data[$k]['likes'] = intval($post['likes']);
-            $data[$k]['liked'] = (bool)$post['liked'];
-            $data[$k]['images'] = unserialize($post['images']) ?? [];
-            $comment = $this->getDoctrine()->getRepository(Comment::class)->findByPost($post['postId'],$user,1,0,'DESC') ?? null;
-            $data[$k]['comments'] = [];
-            if($comment) {
-                $data[$k]['comments'][0] = [
-                    'id' => intval($comment['id']),
-                    'firstName' => $comment['firstName'],
-                    'lastName' => $comment['lastName'],
-                    'profileName' => $comment['profileName'],
-                    'profilePicture' => Image::getProfilePicture($comment['profileName'],$comment['profilePicture'],45,45),
-                    'text' => $comment['text'],
-                    'createdAt' => $comment['createdAt'],
-                    'likes' => intval($comment['likes']),
-                    'liked' => (bool)$comment['liked'],
-                    'subCommentCount' => intval($comment['subCommentCount']),
-                    'subComments' => []
-                ];
-            }
-            $data[$k]['commentCount'] = intval($post['commentCount']);
-        }
+        $data = $transformer->postListDataTransformer($posts,$user);
 
         return $this->json($data,Response::HTTP_OK);
     }
@@ -85,23 +56,11 @@ class PostController extends BaseController
     }
 
     /**
-     * @Route("/post/{$id}/likes", name="post_likes", methods={"GET"})
-     */
-    public function postLikes($id, Request $request)
-    {
-        $offset = $request->query->getInt('offset',0);
-        $limit = $request->query->getInt('limit',10);
-        $likes = $this->getDoctrine()->getRepository(Post::class)->findPostLikes($id,$offset,$limit,'ASC');
-    }
-
-
-
-    /**
      * @Route("/post", name="post_add", methods={"POST"})
      * @param Request $request
      * @return JsonResponse|Response
      */
-    public function postsAdd(Request $request)
+    public function postsAdd(Request $request, DataTransformer $transformer)
     {
         $data = json_decode($request->getContent(),true);
         $user = $this->getUser();
@@ -136,21 +95,108 @@ class PostController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $em->persist($post);
         $em->flush();
-        $arr = $images->getAllAbsoluteUrlsToImages();
-        $data = [
-           'id' => +$post->getId(),
-            'firstName' =>  $post->getUser()->getFirstName(),
-            'lastName' => $post->getUser()->getLastName(),
-            'profileName' => $post->getUser()->getProfileName(),
-            'text' =>  $post->getText(),
-            'createdAt' =>  $post->getCreatedAt(),
-            'images' => $arr,
-            'likes' =>  0,
-            'liked' =>  false,
-            'comments' => [],
-            'commentCount' => 0
-        ];
+        $data = $transformer->postAddDataTransformer($post,$images->getAllAbsoluteUrlsToImages());
 
         return $this->json(['success' => 1,'post' => $data],Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/like/post", name="like_get", methods={"GET"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function likeGet(Request $request)
+    {
+        $id = $request->query->getInt('id');
+        $offset = $request->query->getInt('offset',0);
+        $post = $this->getDoctrine()->getRepository(Post::class)->findOneBy(['id' => $id]);
+        if(!isset($id)) {
+            return $this->json(['error' => 'Bad request',Response::HTTP_BAD_REQUEST]);
+        }
+        if(!$post) {
+            return $this->json(['error' => 'Post not found',Response::HTTP_NOT_FOUND]);
+        }
+        $likes = $this->getDoctrine()->getRepository(LikePost::class)->findByPost($post,$offset,10);
+        foreach ($likes as $key => $like) {
+            $likes[$key]['profilePicture'] = Image::getProfilePicture($like['profileName'],$like['profilePicture'],45,45);
+        }
+
+        return $this->json($likes,Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/post/{id}", name="post_delete", methods={"DELETE"})
+     */
+    public function deletePost(Post $post)
+    {
+        $user = $this->getUser();
+        if($user->getId() !== $post->getUser()->getId()) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+
+        $this->getDoctrine()->getManager()->remove($post);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json([],Response::HTTP_NO_CONTENT);
+
+    }
+
+    /**
+     * @Route("/like/post", name="like_post_add", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function likeAdd(Request $request)
+    {
+        $user = $this->getUser();
+        $id = json_decode($request->getContent(),true);
+        if(!isset($id['id'])) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+        $post = $this->getDoctrine()->getRepository(Post::class)->findOneBy(['id' => $id['id']]);
+        if(!$post) {
+            return $this->json(['error' => 'Post does not exist'],Response::HTTP_BAD_REQUEST);
+        }
+        $liked = $this->getDoctrine()->getRepository(LikePost::class)->findOneBy(['post' => $post, 'user' => $user]);
+        if($liked) {
+            return $this->json(['error' => 'Post already liked'],Response::HTTP_BAD_REQUEST);
+        }
+        $like = new LikePost();
+        $like->setUser($user)
+            ->setPost($post);
+        $post->addLikePost($like);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($like);
+        $em->flush();
+
+        return $this->json([],Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/like/post", name="like_post_delete", methods={"DELETE"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function likeDelete(Request $request)
+    {
+        $user = $this->getUser();
+        $id = json_decode($request->getContent(),true);
+        if(!isset($id['id'])) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+        $post = $this->getDoctrine()->getRepository(Post::class)->findOneBy(['id' => $id['id']]);
+        if(!$post) {
+            return $this->json(['error' => 'Post does not exist'],Response::HTTP_BAD_REQUEST);
+        }
+        $liked = $this->getDoctrine()->getRepository(LikePost::class)->findOneBy(['post' => $post, 'user' => $user]);
+        if(!$liked) {
+            return $this->json(['error' => 'Something went wrong...'],Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($liked);
+        $em->flush();
+
+        return $this->json([],Response::HTTP_OK);
     }
 }

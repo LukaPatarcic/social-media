@@ -57,7 +57,6 @@ export default class Profile extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        console.log(nextProps.route);
         if(this.props.route.params !== nextProps.route.params) {
             this.getUserData();
             this.getPostsData();
@@ -69,7 +68,6 @@ export default class Profile extends React.Component {
         this.setState({loading: true});
         const params = this.props.route.params ?? null;
         const url = params ? BASE_URL+'/user?profileName='+params.profileName : BASE_URL+'/user';
-        console.log(this.props.route.params);
         fetch(url,{
             headers: {
                 'Accept': 'application/json',
@@ -166,6 +164,7 @@ export default class Profile extends React.Component {
 
     render() {
         const {user,posts,refreshing,loading,hasMore,loadingMore,logoutLoading} = this.state;
+        const {isMe,profileName} = this.props.route.params;
 
         if(loading) {
             return (
@@ -220,18 +219,20 @@ export default class Profile extends React.Component {
                                     }
                                 />
                                 <Card.Content>
-                                    <TouchableOpacity
-                                        activeOpacity={0.8}
-                                        style={{backgroundColor: '#f00',padding: 8,width: 100, alignItems: 'center'}}
-                                        onPress={this.logout.bind(this)}
-                                    >
-                                        {logoutLoading
-                                            ?
-                                            <ActivityIndicator color={'white'} size={20} />
-                                            :
-                                            <Text style={{fontFamily: 'font', color: '#fff', fontSize: 13}}>Logout</Text>
-                                        }
-                                    </TouchableOpacity>
+                                    {isMe &&
+                                        <TouchableOpacity
+                                            activeOpacity={0.8}
+                                            style={{backgroundColor: '#f00',padding: 8,width: 100, alignItems: 'center'}}
+                                            onPress={this.logout.bind(this)}
+                                        >
+                                            {logoutLoading
+                                                ?
+                                                <ActivityIndicator color={'white'} size={20} />
+                                                :
+                                                <Text style={{fontFamily: 'font', color: '#fff', fontSize: 13}}>Logout</Text>
+                                            }
+                                        </TouchableOpacity>
+                                    }
                                 </Card.Content>
                             </Card>
                             <Card style={{marginBottom: 30}}>

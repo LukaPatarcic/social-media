@@ -35,12 +35,12 @@ class Post
     private $text;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\LikePost", mappedBy="post", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="App\Entity\LikePost", mappedBy="post", fetch="EXTRA_LAZY",cascade={"remove"})
      */
     private $likePosts;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", fetch="EXTRA_LAZY",cascade={"remove"})
      */
     private $comments;
 

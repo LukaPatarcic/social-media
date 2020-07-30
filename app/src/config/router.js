@@ -247,6 +247,11 @@ const ProfileStackScreen = () => (
         <ProfileStack.Screen
             name="Profile"
             component={Profile}
+            initialParams={{ profileName: '', isMe: true }}
+            options={({route}) => ({
+                    title: route.params.profileName === '' ? 'Profile' : route.params.profileName
+                })
+            }
         />
         <ProfileStack.Screen
             name="Follow"

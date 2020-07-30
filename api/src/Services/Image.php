@@ -15,8 +15,13 @@ class Image
             return null;
         }
 
-        $filename = 'assets/images/profilePicture/'.strtolower($username).'/'.$profilePicture;
-        list($orig_width, $orig_height) = getimagesize($filename);
+        $filename = $_ENV['BACKEND_URL'].'assets/images/profilePicture/'.strtolower($username).'/'.$profilePicture;
+
+        try {
+            list($orig_width, $orig_height) = getimagesize($filename);
+        } catch (\Exception $e) {
+            return null;
+        }
 
         $width = $orig_width;
         $height = $orig_height;

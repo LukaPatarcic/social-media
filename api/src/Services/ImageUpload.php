@@ -23,10 +23,16 @@ class ImageUpload
         if(!preg_match('#^data:image/\w+;base64,#i',$image)) {
             $image = 'data:image/jpeg;base64,'.$image;
         }
-        return (bool)exif_imagetype($image);
+
+        try {
+            $response = (bool)exif_imagetype($image);
+        } catch (\Exception $exception) {
+            $response = false;
+        }
+        return $response;
     }
 
-    public function uploadImages($images): bool
+    public function uploadImages(array $images): bool
     {
         if(!file_exists($this->postsPath)) {
             mkdir($this->postsPath,0777,true);

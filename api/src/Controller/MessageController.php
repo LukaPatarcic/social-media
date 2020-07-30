@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Message;
 use App\Form\MessageType;
 use App\Repository\MessageRepository;
+use App\Services\DataTransformer;
 use App\Services\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,48 +25,13 @@ class MessageController extends BaseController
     /**
      * @Route("/message/users", name="message_users", methods="GET")
      */
-    public function getUsers()
+    public function getUsers(DataTransformer $transformer)
     {
         $user = $this->getUser();
         $data = $this->getDoctrine()->getRepository(Message::class)->findUsersByUser($user);
-        $users = [];
-        foreach ($data as $key => $value) {
-            if($value['fromUserProfileName'] == $user->getProfileName()) {
-                unset($data[$key]['fromUserProfileName']);
-                unset($data[$key]['fromUserProfilePicture']);
-            }
-            if ($value['toUserProfileName'] == $user->getProfileName()) {
-                unset($data[$key]['toUserProfileName']);
-                unset($data[$key]['toUserProfilePicture']);
-            }
+        $users = $transformer->messageUsersListDataTransformer($data,$user);
 
-        }
-        $keyCounter = 0;
-        foreach ($data as $key => $value) {
-            $message = $this->getDoctrine()
-                ->getRepository(Message::class)
-                ->findLastUsersMessage($value['fromUserId'],$value['toUserId']);
-            $id = $user->getId() == $value['fromUserId'] ? $value['toUserId'] : $value['fromUserId'];
-            $profileName = $user->getId() == $value['fromUserId'] ? $value['toUserProfileName'] : $value['fromUserProfileName'];
-            $firstName = $user->getId() == $value['fromUserId'] ? $value['toUserFirstName'] : $value['fromUserFirstName'];
-            $lastName = $user->getId() == $value['fromUserId'] ? $value['toUserLastName'] : $value['fromUserLastName'];
-            $profilePicture = $user->getId() == $value['fromUserId'] ? $value['toUserProfilePicture'] : $value['fromUserProfilePicture'];
-            $userData = [
-                'id' => $id,
-                'profileName' => $profileName,
-                'firstName' => $firstName,
-                'lastName' => $lastName,
-                'profilePicture' => Image::getProfilePicture($profileName,$profilePicture,45,45)
-            ];
-            $ifProfileAlreadyInArray = array_column($users, 'profileName');
-            if(in_array($profileName,$ifProfileAlreadyInArray)) {
-                unset($ifProfileAlreadyInArray);
-                continue;
-            }
-            $users[$keyCounter] = array_merge($message[0],$userData);
-            $keyCounter = $keyCounter+1;
-        }
-        return $this->json($users);
+        return $this->json($users,Response::HTTP_OK);
     }
 
     /**
@@ -73,7 +39,7 @@ class MessageController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getMessages(Request $request)
+    public function getMessages(Request $request, DataTransformer $transformer)
     {
         $user = $this->getUser();
         $friend = $request->query->getInt('id',0);
@@ -84,14 +50,9 @@ class MessageController extends BaseController
         }
 
         $messages = $this->getDoctrine()->getRepository(Message::class)->findMessages($user,$friend,$offset);
-        foreach ($messages as $key => $message) {
-            $profilePicture = Image::getProfilePicture($message['profileName'],$message['profilePicture'],45,45);
-            unset($messages[$key]['profilePicture']);
-            $messages[$key]['profilePicture'] = $profilePicture;
-            $messages[$key]['isMe'] = $user->getProfileName() == $message['profileName'] ? true : false;
-        }
+        $response = $transformer->messageListDataTransformer($messages,$user);
 
-        return $this->json($messages);
+        return $this->json($response, Response::HTTP_OK);
     }
 
     /**
@@ -99,7 +60,7 @@ class MessageController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function postMessage(Request $request)
+    public function postMessage(Request $request, DataTransformer $transformer)
     {
         $data = json_decode($request->getContent(),true);
         $message = new Message();
@@ -113,17 +74,7 @@ class MessageController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $em->persist($message);
         $em->flush();
-        $response = [
-            "id" => $message->getId(),
-            "fromUser" => $message->getFromUser()->getId(),
-            "toUser" => $message->getToUser()->getId(),
-            "message" => $message->getMessage(),
-            "createdAt" => $message->getCreatedAt(),
-            "firstName" => $message->getFromUser()->getFirstName(),
-            "lastName" => $message->getFromUser()->getLastName(),
-            "profileName" => $message->getFromUser()->getProfileName(),
-            "profilePicture" => Image::getProfilePicture($message->getFromUser()->getProfileName(),$message->getFromUser()->getProfilePicture(),45,45),
-        ];
+        $response = $transformer->messageAddDataTransformer($message);
 
         return $this->json($response,Response::HTTP_CREATED);
 

@@ -103,4 +103,20 @@ class SubCommentController extends BaseController
 
         return $this->json(['success' => 1, 'comment' => $com], Response::HTTP_OK);
     }
+
+    /**
+     * @Route("/subcomment/{id}", name="delete_subcomment", methods={"DELETE"})
+     */
+    public function deleteSubcomment(SubComment $subComment)
+    {
+        $user = $this->getUser();
+
+        if($user->getId() != $subComment->getUser()->getId()) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+
+        $this->getDoctrine()->getManager()->remove($subComment);
+        $this->getDoctrine()->getManager()->flush();
+
+    }
 }

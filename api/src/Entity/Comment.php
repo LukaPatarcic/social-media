@@ -45,12 +45,12 @@ class Comment
     private $post;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CommentLike", mappedBy="comment", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="App\Entity\CommentLike", mappedBy="comment", fetch="EXTRA_LAZY", cascade={"remove"})
      */
     private $likes;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SubComment", mappedBy="comment")
+     * @ORM\OneToMany(targetEntity="App\Entity\SubComment", mappedBy="comment", cascade={"remove"})
      */
     private $subComments;
 
