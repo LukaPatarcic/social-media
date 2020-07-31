@@ -24,9 +24,10 @@ class FriendController extends BaseController
     /**
      * @Route("/following", name="following_list", methods={"GET"})
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse
      */
-    public function listFollowers(Request $request, DataTransformer $transformer)
+    public function listFollowing(Request $request, DataTransformer $transformer)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -38,15 +39,16 @@ class FriendController extends BaseController
         }
         $data = $transformer->friendListDataTransformer($friends);
 
-        return  $this->json($data,Response::HTTP_OK,[]);
+        return  $this->json($data,Response::HTTP_OK);
     }
 
     /**
      * @Route("/followers", name="followers_list", methods={"GET"})
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse
      */
-    public function listFollowing(Request $request, DataTransformer $transformer)
+    public function listFollowers(Request $request, DataTransformer $transformer)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -56,18 +58,19 @@ class FriendController extends BaseController
         if(!$friends) {
             return  $this->json([], Response::HTTP_NO_CONTENT);
         }
+
         $data = $transformer->friendListDataTransformer($friends);
 
-        return  $this->json($data,Response::HTTP_OK,[]);
+        return  $this->json($data,Response::HTTP_OK);
     }
 
 
     /**
      * @Route("/friend/{id}", name="friend_delete", methods={"DELETE"})
-     * @param int $id
+     * @param $id
      * @return JsonResponse
      */
-    public function deleteFriend(int $id)
+    public function deleteFriend($id)
     {
         $user = $this->getUser();
         if(!$id) {
@@ -83,7 +86,7 @@ class FriendController extends BaseController
         $this->getDoctrine()->getManager()->remove($friend);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->json(['success' => 1], Response::HTTP_OK);
+        return $this->json(['success' => 1], Response::HTTP_NO_CONTENT);
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Message;
+use App\Entity\User;
 use App\Form\MessageType;
 use App\Repository\MessageRepository;
 use App\Services\DataTransformer;
@@ -24,19 +25,26 @@ class MessageController extends BaseController
 {
     /**
      * @Route("/message/users", name="message_users", methods="GET")
+     * @param DataTransformer $transformer
+     * @return JsonResponse
      */
     public function getUsers(DataTransformer $transformer)
     {
         $user = $this->getUser();
         $data = $this->getDoctrine()->getRepository(Message::class)->findUsersByUser($user);
-        $users = $transformer->messageUsersListDataTransformer($data,$user);
 
+        if(!$data) {
+            return $this->json([],Response::HTTP_NOT_FOUND);
+        }
+
+        $users = $transformer->messageUsersListDataTransformer($data,$user);
         return $this->json($users,Response::HTTP_OK);
     }
 
     /**
      * @Route("/message", name="message_get", methods="GET")
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse
      */
     public function getMessages(Request $request, DataTransformer $transformer)
@@ -50,6 +58,11 @@ class MessageController extends BaseController
         }
 
         $messages = $this->getDoctrine()->getRepository(Message::class)->findMessages($user,$friend,$offset);
+
+        if(!$messages) {
+            return $this->json([],Response::HTTP_NOT_FOUND);
+        }
+
         $response = $transformer->messageListDataTransformer($messages,$user);
 
         return $this->json($response, Response::HTTP_OK);
@@ -58,11 +71,13 @@ class MessageController extends BaseController
     /**
      * @Route("/message", name="message_post", methods="POST")
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse
      */
     public function postMessage(Request $request, DataTransformer $transformer)
     {
         $data = json_decode($request->getContent(),true);
+        $user = $this->getUser();
         $message = new Message();
         $form = $this->createForm(MessageType::class,$message);
         $form->submit($data);
@@ -70,7 +85,8 @@ class MessageController extends BaseController
         if($errors = $this->getErrorMessages($form)) {
             return $this->json(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
-        $message->setFromUser($this->getUser());
+
+        $message->setFromUser($user);
         $em = $this->getDoctrine()->getManager();
         $em->persist($message);
         $em->flush();

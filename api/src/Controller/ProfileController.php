@@ -27,6 +27,8 @@ class ProfileController extends BaseController
 {
     /**
      * @Route("/user", name="user_profile", methods={"GET"})
+     * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse
      */
     public function user(Request $request, DataTransformer $transformer)

@@ -28,7 +28,9 @@ class CommentController extends BaseController
      * @Route("/comment/{id}", name="comment_post_list", methods={"GET"})
      * @param $id
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse|Response
+     * @throws NonUniqueResultException
      */
     public function commentPostList($id, Request $request, DataTransformer $transformer)
     {
@@ -73,6 +75,7 @@ class CommentController extends BaseController
     /**
      * @Route("/comment", name="comment_add", methods={"POST"})
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse|Response
      */
     public function commentAdd(Request $request, DataTransformer $transformer)
@@ -85,7 +88,7 @@ class CommentController extends BaseController
         $form->submit($data);
 
         if ($errors = $this->getErrorMessages($form)) {
-            return $this->json(['error' => $errors], Response::HTTP_OK);
+            return $this->json(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
         $comment->setUser($user);
@@ -98,12 +101,13 @@ class CommentController extends BaseController
         $notification->setBody($user->getFirstName() . ' ' . $user->getLastName() . '(' . $user->getProfileName() . ') has commented on your post');
         $notification->setToMultiple($sendTo);
         $notification->sendNotification();
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($comment);
         $em->flush();
 
         $com = $transformer->commentAddDataTransformer($comment,$user);
-        return $this->json(['success' => 1, 'comment' => $com], Response::HTTP_OK);
+        return $this->json(['success' => 1, 'comment' => $com], Response::HTTP_CREATED);
     }
 
     /**
@@ -116,6 +120,7 @@ class CommentController extends BaseController
         $data = json_decode($request->getContent(),true);
         if(!isset($data['id']))
             return $this->json(['error' => 'Bad request'],Response::HTTP_BAD_REQUEST);
+
         $user = $this->getUser();
         $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(['id' => $data['id']]);
 
@@ -135,7 +140,7 @@ class CommentController extends BaseController
         $em->persist($commentLike);
         $em->flush();
 
-        return $this->json(['success' => 1]);
+        return $this->json(['success' => 1],Response::HTTP_CREATED);
     }
 
     /**
@@ -158,6 +163,6 @@ class CommentController extends BaseController
         $em->remove($commentLike);
         $em->flush();
 
-        return $this->json(['success' => 1]);
+        return $this->json([],Response::HTTP_NO_CONTENT);
     }
 }

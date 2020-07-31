@@ -61,7 +61,6 @@ class CreateUserCommand extends Command
         $user = new User();
         $user
             ->setEmail($email)
-            ->setRoles(['ROLE_API_USER'])
             ->setPassword($this->passwordEncoder->encodePassword($user, $password));
         $this->entityManager->persist($user);
         $this->entityManager->flush();

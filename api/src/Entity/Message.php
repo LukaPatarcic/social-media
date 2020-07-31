@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
@@ -32,6 +33,8 @@ class Message
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Please enter a message")
+     * @Assert\Length(max="255",maxMessage="Message cannot be longer than 255 characters")
      */
     private $message;
 

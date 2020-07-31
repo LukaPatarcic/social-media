@@ -3,12 +3,10 @@
 
 namespace App\Services;
 
-
 use App\Entity\Comment;
-use App\Entity\CommentLike;
 use App\Entity\Message;
+use App\Entity\SubComment;
 use App\Entity\User;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DataTransformer
@@ -212,5 +210,74 @@ class DataTransformer
             'followers' => $user->getFriendsWithMe()->count(),
             'following' => $user->getFriends()->count()
         ];
+    }
+
+    public function searchQueryDataTransformer($q,$user)
+    {
+        $friends = $user->getFriends()->toArray();
+        $requests = $user->getFromUser()->toArray();
+
+        foreach ($q as $k=>$value) {
+            if(!$friends) {
+                $q[$k]['following'] = false;
+            } else {
+                foreach ($friends as $friend) {
+                    if ($friend->getFriend()->getId() == $value['id']) {
+                        $q[$k]['following'] = true;
+                        break;
+                    } else {
+                        $q[$k]['following'] = false;
+                    }
+                }
+            }
+
+            if(!$requests) {
+                $q[$k]['requested'] = false;
+            } else {
+
+                foreach($requests as $request) {
+                    if($request->getToUser()->getId() == $value['id']) {
+                        $q[$k]['requested'] = true;
+                        break;
+                    } else {
+                        $q[$k]['requested'] = false;
+                    }
+                }
+
+            }
+
+            $q[$k]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],45,45);
+        }
+
+        return $q;
+    }
+
+    public function subCommentListDataTransformer($subComments)
+    {
+        $data = [];
+        foreach ($subComments as $key => $value) {
+            $data[$key]['id'] = $value['id'];
+            $data[$key]['firstName'] = $value['firstName'];
+            $data[$key]['lastName'] = $value['lastName'];
+            $data[$key]['profileName'] = $value['profileName'];
+            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],45,45);
+            $data[$key]['text'] = $value['text'];
+            $data[$key]['createdAt'] = $value['createdAt'];
+        }
+
+        return $data;
+    }
+
+    public function subCommentAddDataTransformer(SubComment $subComment)
+    {
+        $com['id'] = $subComment->getId();
+        $com['firstName'] = $subComment->getUser()->getFirstName();
+        $com['lastName'] = $subComment->getUser()->getLastName();
+        $com['profileName'] = $subComment->getUser()->getProfileName();
+        $com['text'] = $subComment->getText();
+        $com['profilePicture'] = Image::getProfilePicture($subComment->getUser()->getProfileName(),$subComment->getUser()->getProfilePicture(),30,30);
+        $com['createdAt'] = $subComment->getCreatedAt();
+
+        return $com;
     }
 }

@@ -2,12 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\FriendRequest;
 use App\Entity\Friendship;
 use App\Entity\FriendshipRequest;
 use App\Entity\User;
-use App\Form\FriendRequestType;
-use App\Form\FriendshipFormType;
 use App\Services\Image;
 use App\Services\PushNotification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -38,7 +35,7 @@ class FriendRequestController extends BaseController
         }
 
         if(!$requests) {
-            return  $this->json([], Response::HTTP_OK);
+            return  $this->json([], Response::HTTP_NOT_FOUND);
         }
 
         return  $this->json($requests,Response::HTTP_OK);
@@ -55,6 +52,10 @@ class FriendRequestController extends BaseController
         $user = $this->getUser();
         $data = json_decode($request->getContent(),true);
         $friend = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $data['id']]);
+
+        if(!$friend) {
+            return  $this->json([],Response::HTTP_NOT_FOUND);
+        }
         $friendship = new FriendshipRequest();
         $friendship->setFromUser($user)
             ->setToUser($friend);
@@ -93,7 +94,7 @@ class FriendRequestController extends BaseController
     {
         $data = json_decode($request->getContent(),true);
 
-        if(!$data['id']) {
+        if(!isset($data['id'])) {
             return $this->json(['error' => 'Bad request'],Response::HTTP_BAD_REQUEST);
         }
 
@@ -108,7 +109,7 @@ class FriendRequestController extends BaseController
         $this->getDoctrine()->getManager()->remove($friendRequest);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->json(['success' => 1],Response::HTTP_OK);
+        return $this->json(['success' => 1],Response::HTTP_NO_CONTENT);
     }
 
     /**

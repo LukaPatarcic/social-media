@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Entity\SubComment;
 use App\Form\CommentType;
 use App\Form\SubCommentType;
+use App\Services\DataTransformer;
 use App\Services\Image;
 use App\Services\PushNotification;
 use Doctrine\ORM\NonUniqueResultException;
@@ -28,9 +29,10 @@ class SubCommentController extends BaseController
      * @Route("/subcomment/{id}", name="sub_comment_post_list", methods={"GET"})
      * @param $id
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse|Response
      */
-    public function subCommentPostList($id, Request $request)
+    public function subCommentPostList($id, Request $request, DataTransformer $transformer)
     {
         $offset = $request->query->getInt('offset') ?? 0;
         $limit = $request->query->getInt('limit') ? $request->query->getInt('limit') : 3;
@@ -46,16 +48,7 @@ class SubCommentController extends BaseController
         if (!$subComments) {
             return $this->json([], Response::HTTP_OK);
         }
-        $data = [];
-        foreach ($subComments as $key => $value) {
-            $data[$key]['id'] = $value['id'];
-            $data[$key]['firstName'] = $value['firstName'];
-            $data[$key]['lastName'] = $value['lastName'];
-            $data[$key]['profileName'] = $value['profileName'];
-            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],45,45);
-            $data[$key]['text'] = $value['text'];
-            $data[$key]['createdAt'] = $value['createdAt'];
-        }
+        $data = $transformer->subCommentListDataTransformer($subComments);
 
         return $this->json($data, Response::HTTP_OK);
     }
@@ -63,9 +56,10 @@ class SubCommentController extends BaseController
     /**
      * @Route("/subcomment", name="sub_comment_add", methods={"POST"})
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse|Response
      */
-    public function subCommentAdd(Request $request)
+    public function subCommentAdd(Request $request, DataTransformer $transformer)
     {
         $data = json_decode($request->getContent(), true);
         $user = $this->getUser();
@@ -80,7 +74,6 @@ class SubCommentController extends BaseController
 
         $subComment->setUser($user);
 
-
 //        $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(['id' => $data['id']]);
 //        $sendTo = $post->getUser()->getPushNotifications()->toArray();
 //
@@ -93,21 +86,15 @@ class SubCommentController extends BaseController
         $em->persist($subComment);
         $em->flush();
 
-        $com['id'] = $subComment->getId();
-        $com['firstName'] = $subComment->getUser()->getFirstName();
-        $com['lastName'] = $subComment->getUser()->getLastName();
-        $com['profileName'] = $subComment->getUser()->getProfileName();
-        $com['text'] = $subComment->getText();
-        $com['profilePicture'] = Image::getProfilePicture($subComment->getUser()->getProfileName(),$subComment->getUser()->getProfilePicture(),30,30);
-        $com['createdAt'] = $subComment->getCreatedAt();
+       $comment = $transformer->subCommentAddDataTransformer($subComment);
 
-        return $this->json(['success' => 1, 'comment' => $com], Response::HTTP_OK);
+        return $this->json(['success' => 1, 'comment' => $comment], Response::HTTP_OK);
     }
 
     /**
      * @Route("/subcomment/{id}", name="delete_subcomment", methods={"DELETE"})
      */
-    public function deleteSubcomment(SubComment $subComment)
+    public function deleteSubComment(SubComment $subComment)
     {
         $user = $this->getUser();
 

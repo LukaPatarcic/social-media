@@ -2,24 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\Comment;
 use App\Entity\LikePost;
 use App\Entity\Post;
-use App\Entity\User;
 use App\Form\PostType;
-use App\Form\RegistrationFormType;
 use App\Services\DataTransformer;
 use App\Services\Image;
 use App\Services\ImageUpload;
 use App\Services\PushNotification;
-use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class PostController
@@ -46,33 +40,29 @@ class PostController extends BaseController
     }
 
     /**
-     * @Route("/post/{$id}", name="post_id", methods={"GET"})
-     * @param Post $post
-     * @return JsonResponse|Response
-     */
-    public function postShow(Post $post)
-    {
-        return $this->json($post,Response::HTTP_OK);
-    }
-
-    /**
      * @Route("/post", name="post_add", methods={"POST"})
      * @param Request $request
+     * @param DataTransformer $transformer
      * @return JsonResponse|Response
      */
     public function postsAdd(Request $request, DataTransformer $transformer)
     {
         $data = json_decode($request->getContent(),true);
+
+        if(!$data) {
+            return  $this->json([],Response::HTTP_BAD_REQUEST);
+        }
         $user = $this->getUser();
         $post = new Post();
-//        $form = $this->createForm(PostType::class, $post);
-//        $form->submit($data['text']);
-//
-//        if($errors = $this->getErrorMessages($form)) {
-//            return $this->json(['error' => $errors], Response::HTTP_OK);
-//        }
+        $form = $this->createForm(PostType::class, $post);
+        $form->submit(['text' => $data['text']]);
+
+        if($errors = $this->getErrorMessages($form)) {
+            return $this->json(['error' => $errors], Response::HTTP_BAD_REQUEST);
+        }
+
         $images = new ImageUpload($user->getProfileName());
-        $images->uploadImages($data['images']);
+        $images->uploadImages($data['images'] ?? []);
         $post->setText($data['text']);
         $post->setImages($images->getUploadedImagesNames());
         $post->setUser($user);
@@ -126,6 +116,8 @@ class PostController extends BaseController
 
     /**
      * @Route("/post/{id}", name="post_delete", methods={"DELETE"})
+     * @param Post $post
+     * @return JsonResponse
      */
     public function deletePost(Post $post)
     {
@@ -155,7 +147,7 @@ class PostController extends BaseController
         }
         $post = $this->getDoctrine()->getRepository(Post::class)->findOneBy(['id' => $id['id']]);
         if(!$post) {
-            return $this->json(['error' => 'Post does not exist'],Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Post does not exist'],Response::HTTP_NOT_FOUND);
         }
         $liked = $this->getDoctrine()->getRepository(LikePost::class)->findOneBy(['post' => $post, 'user' => $user]);
         if($liked) {
@@ -169,7 +161,7 @@ class PostController extends BaseController
         $em->persist($like);
         $em->flush();
 
-        return $this->json([],Response::HTTP_OK);
+        return $this->json([],Response::HTTP_CREATED);
     }
 
     /**

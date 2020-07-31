@@ -33,7 +33,7 @@ class SecurityController extends BaseController
     }
 
     /**
-     * @Route("/register", name="app_register")
+     * @Route("/register", name="app_register", methods={"POST"})
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param Mailer $mailer
@@ -127,7 +127,7 @@ class SecurityController extends BaseController
     }
 
     /**
-     * @Route("/logout/android", name="app__android_logout", methods={"POST"})
+     * @Route("/logout/android", name="app_android_logout", methods={"POST"})
      * @IsGranted("ROLE_USER")
      * @param Request $request
      * @return JsonResponse
@@ -136,15 +136,16 @@ class SecurityController extends BaseController
     {
         $user = $this->getUser();
         $data = json_decode($request->getContent(),true);
-        $phone = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['user' => $user,'phone' => $data['phone']]);
+        $phone = $this->getDoctrine()->getRepository(PushNotification::class)->findOneBy(['user' => $user,'phone' => $data['phone'] ?? null]);
         if(!$phone) {
-            return $this->json([],Response::HTTP_BAD_REQUEST);
+            return $this->json([],Response::HTTP_NOT_FOUND);
         }
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($phone);
         $em->flush();
 
-        return $this->json([],Response::HTTP_OK);
+        return $this->json([],Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -167,31 +168,5 @@ class SecurityController extends BaseController
             return $this->render('redirectToMobile.html.twig');
         }
         return $this->redirect($_ENV['FRONTEND_URL'].'login?verified=true');
-    }
-
-    /**
-     * @Route("/password/forgotten", name="forgotten_password")
-     * @throws Exception
-     */
-    public function forgottenPassword(Request $request, Mailer $mailer)
-    {
-        $data = json_decode($request->getContent(),true);
-        $sendMail = $mailer->forgottenPasswordEmail($data['email']);
-    }
-
-    /**
-     * @Route("/verify/user", name="verify_user", methods={"POST"})
-     */
-    public function verifyUser(Request $request)
-    {
-        $data = json_decode($request->getContent(),true);
-        if(!isset($data['profileName']) || !isset($data['email']) || (!isset($data['secret']) && $data!='app')) {
-            return $this->json([],Response::HTTP_BAD_REQUEST);
-        }
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        $profileName = $repository->findOneBy(['profileName' => $data['profileName']]);
-        $email = $repository->findOneBy(['email' => $data['email']]);
-
-        return $this->json(['profileName' => (bool)$profileName, 'email' => (bool)$email]);
     }
 }
