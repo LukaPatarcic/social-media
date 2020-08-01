@@ -32,7 +32,7 @@ class PostController extends BaseController
     {
         $user = $this->getUser();
         $offset = $request->query->getInt('offset',0);
-        $profile = $request->query->getInt('profile',null);
+        $profile = $request->query->get('profile') ? $request->query->get('profile') : null;
         $posts = $this->getDoctrine()->getRepository(Post::class)->findPosts($user,10,$offset,$profile);
         $data = $transformer->postListDataTransformer($posts,$user);
 
@@ -75,7 +75,6 @@ class PostController extends BaseController
                 $sendTo[] = $device->getPhone();
             }
         }
-
         $notification = new PushNotification();
         $notification->setTitle('Post');
         $notification->setBody($user->getFirstName().' '.$user->getLastName().'('.$user->getProfileName().') has posted on their timeline');

@@ -34,6 +34,7 @@ export default class Comments extends React.Component {
         this.getFollows = this.getFollows.bind(this);
         this.handleRefresh = this.handleRefresh.bind(this);
         this.unfollow = this.unfollow.bind(this);
+        this.redirectToUser = this.redirectToUser.bind(this);
         this.flatListRef = React.createRef();
     }
 
@@ -115,6 +116,11 @@ export default class Comments extends React.Component {
         });
     }
 
+    redirectToUser(profileName) {
+        this.props.navigation.push("Profile",{profileName})
+        this.props.navigation.navigate('Profile')
+    }
+
     render() {
         const {following} = this.props.route.params;
         const {follows,loading,loadingMore,hasMore,refreshing,dialogue,loadingDeleting} = this.state;
@@ -153,7 +159,7 @@ export default class Comments extends React.Component {
                                         title={item.firstName + " " + item.lastName}
                                         subtitle={item.profileName}
                                         left={() => (
-                                            <Avatar.Image size={40} source={{uri: formatImage(item.profilePicture,item.firstName,item.lastName)}} />
+                                            <Avatar.Image onPress={() => this.redirectToUser(item.profileName)} size={40} source={{uri: formatImage(item.profilePicture,item.firstName,item.lastName)}} />
                                         )}
                                         right={(props) => (
                                             following ?

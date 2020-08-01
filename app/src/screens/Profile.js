@@ -49,6 +49,10 @@ export default class Profile extends React.Component {
                 this.getUserData();
             });
         });
+
+        AsyncStorage.getItem("id",(err,val) => {
+            this.setState({id: val})
+        })
     }
 
     handleRefresh() {
@@ -94,13 +98,13 @@ export default class Profile extends React.Component {
 
    getPostsData(more = false) {
        const {offset,refreshing,loadingMore,hasMore,token} = this.state;
+       const params = this.props.route.params.profileName ? this.props.route.params.profileName : 'me';
        if(loadingMore || !hasMore)
            return;
        if(more) {
            this.setState({loadingMore: true})
        }
-
-       fetch(BASE_URL+'/post?offset='+offset+'&profile='+this.state.user.id,{
+       fetch(BASE_URL+'/post?offset='+offset+'&profile='+params,{
            headers: {
                'Accept': 'application/json',
                'Content-Type': 'application/json',
@@ -163,7 +167,7 @@ export default class Profile extends React.Component {
    static contextType = AuthContext
 
     render() {
-        const {user,posts,refreshing,loading,hasMore,loadingMore,logoutLoading} = this.state;
+        const {user,posts,refreshing,loading,hasMore,loadingMore,logoutLoading,id} = this.state;
         const {isMe,profileName} = this.props.route.params;
 
         if(loading) {
@@ -254,7 +258,7 @@ export default class Profile extends React.Component {
                         onEndReached={() => this.getPostsData(true)}
                         keyExtractor={(contact, index) => String(index)}
                         renderItem={({item}) => (
-                            <PostItem navigation={this.props.navigation} post={item} />
+                            <PostItem navigation={this.props.navigation} post={item} id={id} />
                         )}
                     />
                 <FAB

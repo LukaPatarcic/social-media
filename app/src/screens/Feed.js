@@ -21,7 +21,8 @@ export default class Profile extends React.Component {
             loadingMore: false,
             offset: 0,
             hasMore: true,
-            refreshing: false
+            refreshing: false,
+            id: null
         }
     }
 
@@ -74,11 +75,13 @@ export default class Profile extends React.Component {
                 this.getPosts();
             })
         })
+        AsyncStorage.getItem('id',(err,val) => {
+            this.setState({id: val});
+        })
     }
 
     render() {
-        const {posts,loading,refreshing,hasMore,loadingMore} = this.state;
-        console.log('here')
+        const {posts,loading,refreshing,hasMore,loadingMore,id} = this.state;
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%'}}
@@ -109,7 +112,7 @@ export default class Profile extends React.Component {
                         onEndReached={() => this.getPosts(true)}
                         keyExtractor={(contact, index) => String(index)}
                         renderItem={({item}) => (
-                            <PostItem navigation={this.props.navigation} post={item} />
+                            <PostItem navigation={this.props.navigation} post={item} id={id} />
                         )} />
                 }
                 <FAB

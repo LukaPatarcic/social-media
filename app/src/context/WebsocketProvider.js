@@ -26,11 +26,6 @@ export class WebsocketProvider extends React.Component {
                     })
                 })
             })
-            .finally(() => {
-                this.state.io.on("message", (response) => {
-                    console.log(response);
-                })
-            })
 
     }
 

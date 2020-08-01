@@ -1,5 +1,5 @@
 import React from "react";
-import {Avatar, Card, IconButton, Paragraph, Text} from "react-native-paper";
+import {Avatar, Card, Dialog, IconButton, Paragraph, Portal, Text} from "react-native-paper";
 import {ToastAndroid, View, StyleSheet} from "react-native";
 import TimeAgo from 'react-native-timeago';
 import LikeButton from "./LikeButton";
@@ -13,11 +13,13 @@ export default class PostItem extends React.Component{
         super(props);
         this.state = {
             likes: this.props.post.likes,
-            comments: this.props.post.commentCount
+            comments: this.props.post.commentCount,
+            dialogue: false
         }
 
         this.handleLikes = this.handleLikes.bind(this);
         this.handleComments = this.handleComments.bind(this);
+        this.redirectToUser = this.redirectToUser.bind(this);
     }
 
     handleLikes(e) {
@@ -28,15 +30,31 @@ export default class PostItem extends React.Component{
         this.setState((prevState) => ({comments: prevState.comments + 1}))
     }
 
+    redirectToUser() {
+        this.props.navigation.push('Profile',{profileName: this.props.post.profileName});
+        this.props.navigation.navigate('Profile');
+    }
+
     render() {
-        const {post} = this.props;
-        const {likes,comments} = this.state;
+        const {post,id} = this.props;
+        const {likes,comments,dialogue} = this.state;
         return (
-            <Card style={{marginBottom: 20,marginHorizontal: 10,fontFamily: 'font'}} onPress={() => {
-                this.props.navigation.push('Profile',{profileName: post.profileName, isMe: false});
-                this.props.navigation.navigate('Profile');
-            }}>
-                <Card.Title subtitleStyle={{fontFamily: 'font'}} titleStyle={{fontFamily: 'font'}}  title={post.profileName} subtitle={<TimeAgo onLongPress={() => ToastAndroid.show(post.createdAt,ToastAndroid.SHORT)} time={post.createdAt}/>} left={(props) => <Avatar.Image size={50} source={{uri: formatImage(post.profilePicture,post.firstName,post.lastName)}}/>} />
+            <Card style={{marginBottom: 20,marginHorizontal: 10,fontFamily: 'font'}}>
+                <Portal>
+                    <Dialog visible={dialogue} onDismiss={() => this.setState({dialogue: false})}>
+                        <Dialog.Content>
+                            <Paragraph>Delete</Paragraph>
+                        </Dialog.Content>
+                    </Dialog>
+                </Portal>
+                <Card.Title
+                    subtitleStyle={{fontFamily: 'font'}}
+                    titleStyle={{fontFamily: 'font'}}
+                    title={<Text onPress={this.redirectToUser}>{post.profileName}</Text>}
+                    subtitle={<TimeAgo onLongPress={() => ToastAndroid.show(post.createdAt,ToastAndroid.SHORT)} time={post.createdAt}/>}
+                    left={(props) => <Avatar.Image size={50} source={{uri: formatImage(post.profilePicture,post.firstName,post.lastName)}}/>}
+                    right={(props) => id == post.userId ? <IconButton {...props} icon="dots-vertical" onPress={() => this.setState({dialogue: true})} /> : null}
+                />
                 <Card.Content>
                     <Paragraph  style={{fontFamily: 'font', fontSize: 18}}>
                         {post.text}

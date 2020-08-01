@@ -12,6 +12,7 @@ export default class SendFriendRequest extends React.Component{
         }
 
         this.sendFriendRequest = this.sendFriendRequest.bind(this);
+        this.redirectToUser = this.redirectToUser.bind(this);
     }
 
 
@@ -41,6 +42,10 @@ export default class SendFriendRequest extends React.Component{
             })
     }
 
+    redirectToUser() {
+        this.props.navigation.push("Profile",{profileName: this.props.friend.profileName})
+        this.props.navigation.navigate('Profile')
+    }
     // shouldComponentUpdate(nextProps, nextState, nextContext) {
     //     return JSON.stringify(nextProps) !== JSON.stringify(this.props) || JSON.stringify(nextState) !== JSON.stringify(this.state);
     // }
@@ -48,13 +53,12 @@ export default class SendFriendRequest extends React.Component{
     render() {
         const {friend} = this.props;
         const {loading} = this.state;
-        console.log("requested " + friend.requested);
         return (
-            <Card onPress={this.props.message ? () => this.props.navigation.navigate('MessagesWithUser',{user:friend}) : null} style={{marginVertical: 5,backgroundColor:'#fff'}}>
+            <Card onPress={this.props.message ? () => this.props.navigation.navigate('MessagesWithUser',{user:friend}) : () => this.redirectToUser()} style={{marginVertical: 5,backgroundColor:'#fff'}}>
                 <Card.Title
                     title={friend.firstName+' '+friend.lastName}
                     subtitle={friend.profileName}
-                    left={(props) => <Avatar.Image {...props} source={{uri: formatImage(friend.profilePicture,friend.firstName,friend.lastName)}} />}
+                    left={(props) => <Avatar.Image onPress={this.redirectToUser} {...props} source={{uri: formatImage(friend.profilePicture,friend.firstName,friend.lastName)}} />}
                     right={(props) => this.props.message
                         ?
                         null

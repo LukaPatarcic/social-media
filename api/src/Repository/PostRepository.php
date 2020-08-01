@@ -48,14 +48,14 @@ class PostRepository extends ServiceEntityRepository
             $stm = $em->prepare("
                 SELECT
                 p.id as postId,p.id as id,p.text,p.created_at as createdAt,u.first_name as firstName,u.last_name as lastName,
-                u.profile_name as profileName, u.profile_picture as profilePicture, p.images as images,
+                u.profile_name as profileName, u.profile_picture as profilePicture, u.id as userId, p.images as images,
                 (SELECT l.id IS NOT NULL FROM like_post l JOIN post p ON p.id = l.post_id WHERE l.user_id = :user AND l.post_id = postId) as liked,
                 (SELECT COUNT(c.id) FROM comment c JOIN post p ON p.id = c.post_id WHERE c.post_id = postId) as commentCount,
                 (SELECT COUNT(l.id) as likes FROM like_post l JOIN post p ON p.id = l.post_id WHERE l.post_id = postId) as likes
                 FROM post p
                 JOIN user u ON p.user_id = u.id
                 ".($profile ? " " : "JOIN friendship f ON u.id = f.friend_id").
-                ($profile ? " WHERE p.user_id= :profile " : " WHERE p.user_id != :user AND f.user_id = :user ")
+                ($profile ? " WHERE u.profile_name= :profile " : " WHERE p.user_id != :user AND f.user_id = :user ")
                 ."ORDER BY p.created_at DESC
                 LIMIT :limit
                 OFFSET :offset
@@ -63,10 +63,10 @@ class PostRepository extends ServiceEntityRepository
         } catch (DBALException $e) {
             return ['error' => $e->getMessage()];
         }
-        $id = $profile === $user->getId() ? $user->getId() : $profile;
         $stm->bindValue('user',$user->getId());
+        $profileName = $profile === 'me' ? $user->getProfileName() : $profile;
         if($profile) {
-            $stm->bindParam('profile',$id);
+            $stm->bindParam('profile',$profileName);
         }
         $stm->bindValue('limit',(int)$limit,\PDO::PARAM_INT);
         $stm->bindValue('offset',(int)$offset,\PDO::PARAM_INT);

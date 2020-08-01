@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Entity\Comment;
 use App\Entity\Message;
+use App\Entity\Post;
 use App\Entity\SubComment;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -150,7 +151,8 @@ class DataTransformer
     {
         $data = [];
         foreach ($posts as $k => $post) {
-            $data[$k]['id'] = +$post['postId'];
+            $data[$k]['id'] = $post['postId'];
+            $data[$k]['userId'] = $post['userId'];
             $data[$k]['firstName'] = $post['firstName'];
             $data[$k]['lastName'] =$post['lastName'];
             $data[$k]['profileName'] =$post['profileName'];
@@ -183,10 +185,11 @@ class DataTransformer
         return $data;
     }
 
-    public function postAddDataTransformer($post,$images)
+    public function postAddDataTransformer(Post $post,$images)
     {
         return [
-            'id' => +$post->getId(),
+            'id' => $post->getId(),
+            'userId' => $post->getUser()->getId(),
             'firstName' =>  $post->getUser()->getFirstName(),
             'lastName' => $post->getUser()->getLastName(),
             'profileName' => $post->getUser()->getProfileName(),
