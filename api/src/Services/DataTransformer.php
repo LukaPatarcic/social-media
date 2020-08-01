@@ -24,6 +24,7 @@ class DataTransformer
     public function commentAddDataTransformer(Comment $comment, User $user): array
     {
         $com['id'] = $comment->getId();
+        $com['userId'] = $user->getId();
         $com['firstName'] = $comment->getUser()->getFirstName();
         $com['lastName'] = $comment->getUser()->getLastName();
         $com['profileName'] = $comment->getUser()->getProfileName();
@@ -43,6 +44,7 @@ class DataTransformer
         $data = [];
         foreach ($comments as $key => $value) {
             $data[$key]['id'] = $value['id'];
+            $data[$key]['userId'] = $value['userId'];
             $data[$key]['firstName'] = $value['firstName'];
             $data[$key]['lastName'] = $value['lastName'];
             $data[$key]['profileName'] = $value['profileName'];
@@ -257,6 +259,7 @@ class DataTransformer
         $data = [];
         foreach ($subComments as $key => $value) {
             $data[$key]['id'] = $value['id'];
+            $data[$key]['userId'] = $value['userId'];
             $data[$key]['firstName'] = $value['firstName'];
             $data[$key]['lastName'] = $value['lastName'];
             $data[$key]['profileName'] = $value['profileName'];
@@ -271,6 +274,7 @@ class DataTransformer
     public function subCommentAddDataTransformer(SubComment $subComment)
     {
         $com['id'] = $subComment->getId();
+        $com['userId'] = $subComment->getUser()->getId();
         $com['firstName'] = $subComment->getUser()->getFirstName();
         $com['lastName'] = $subComment->getUser()->getLastName();
         $com['profileName'] = $subComment->getUser()->getProfileName();

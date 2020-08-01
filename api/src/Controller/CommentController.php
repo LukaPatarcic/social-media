@@ -69,7 +69,7 @@ class CommentController extends BaseController
         $this->getDoctrine()->getManager()->remove($comment);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->json([],Response::HTTP_NO_CONTENT);
+        return $this->json([],Response::HTTP_OK);
     }
 
     /**

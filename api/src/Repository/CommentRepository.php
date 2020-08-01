@@ -35,7 +35,7 @@ class CommentRepository extends ServiceEntityRepository
     public function findByPost($post,User $user,$limit = 10,$offset = 0,$sort = 'ASC')
     {
         $q = $this->createQueryBuilder('c')
-            ->select('c.id, u.firstName, u.lastName, u.profileName, u.profilePicture, c.text, c.createdAt, COUNT(l.id) as likes')
+            ->select('c.id, u.firstName, u.lastName, u.profileName, u.profilePicture, u.id as userId, c.text, c.createdAt, COUNT(l.id) as likes')
             ->addSelect('(SELECT lk.id FROM App\Entity\CommentLike lk WHERE lk.user = :user and lk.comment = c.id) as liked')
             ->addSelect('(SELECT COUNT(sc.id) FROM App\Entity\SubComment sc WHERE sc.comment = c.id) as subCommentCount')
             ->andWhere('c.post = :post')

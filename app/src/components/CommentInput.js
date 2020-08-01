@@ -57,7 +57,6 @@ export default class CommentInput extends React.Component {
                 .then((data => {
                     this.setState({text: '', loading: false});
                     if(replyTo === null) {
-
                         this.props.setNewComment(data.comment);
                         this.props.scrollTopTop();
                     } else {
@@ -68,6 +67,7 @@ export default class CommentInput extends React.Component {
                 }))
                 .catch(err => {
                     this.setState({error: 'Oops... Something went wrong!', loading: false});
+                    ToastAndroid.show('Oops... Something went wrong!',ToastAndroid.SHORT);
                 });
         })
     }

@@ -35,7 +35,7 @@ class SubCommentRepository extends ServiceEntityRepository
     public function findByComment(Comment $comment, $limit = 3, $offset = 0, $sort = 'ASC')
     {
         return $this->createQueryBuilder('sc')
-            ->select('sc.id, u.firstName, u.lastName, u.profileName, u.profilePicture, sc.text, sc.createdAt')
+            ->select('sc.id, u.firstName, u.lastName, u.profileName, u.profilePicture, u.id as userId, sc.text, sc.createdAt')
             ->andWhere('sc.comment = :comment')
             ->join('sc.user', 'u')
             ->setParameter('comment', $comment)

@@ -19,7 +19,6 @@ export default class Comments extends React.Component {
             refreshing: false,
             replyTo: null
         };
-
         this.getComments = this.getComments.bind(this);
         this.setNewComment = this.setNewComment.bind(this);
         this.updateComment = this.updateComment.bind(this);
@@ -28,11 +27,19 @@ export default class Comments extends React.Component {
         this.scrollTopTop = this.scrollTopTop.bind(this);
         this.setReplyTo = this.setReplyTo.bind(this);
         this.setReplyToToNull = this.setReplyToToNull.bind(this);
+        this.removeComment = this.removeComment.bind(this);
+        this.removeSubComment = this.removeSubComment.bind(this);
         this.flatListRef = React.createRef();
     }
 
     componentDidMount() {
         this.getComments();
+    }
+
+    removeComment(id) {
+        this.setState((prevState) => (
+            {comments: prevState.comments.filter(comment => comment.id !== id)}
+        ))
     }
 
     scrollTopTop() {
@@ -72,6 +79,16 @@ export default class Comments extends React.Component {
         let comments = this.state.comments;
         comments[index] = comment;
         this.setState({comments: comments})
+    }
+
+    removeSubComment(id) {
+        this.setState((prevState) => {
+            const newComments = prevState.comments.filter(comment => {
+                comment.subComments = comment.subComments.filter(subComment => subComment.id !== id)
+                return comment;
+            });
+            return {comments: newComments};
+        });
     }
 
     getComments(more = false) {
@@ -156,6 +173,8 @@ export default class Comments extends React.Component {
                                     key={index}
                                     index={index}
                                     comment={item}
+                                    removeSubComment={this.removeSubComment}
+                                    removeComment={this.removeComment}
                                     updateComment={this.updateComment}
                                     setReplyTo={this.setReplyTo}
                                 />
