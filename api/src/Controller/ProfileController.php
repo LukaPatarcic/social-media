@@ -54,11 +54,15 @@ class ProfileController extends BaseController
         /** * @User $user */
         $user = $this->getUser();
 
-        $user->setProfileName($data['profileName'])
-            ->setEmail($data['email'])
-            ->setFirstName($data['firstName'])
-            ->setLastName($data['lastName']);
-        if($data['password']['first']) {
+        if(!$this->checkIfInArray($data)) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+
+        $user->setProfileName($data['profileName'] ?? $user->getProfileName())
+            ->setEmail($data['email'] ?? $user->getEmail())
+            ->setFirstName($data['firstName'] ?? $user->getFirstName())
+            ->setLastName($data['lastName'] ?? $user->getLastName());
+        if(isset($data['password']['first'])) {
             $password = $passwordEncoder->encodePassword($user, $data['password']['first']);
             $user->setPassword($password);
         }
@@ -70,12 +74,8 @@ class ProfileController extends BaseController
             return $this->json(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
-
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
-
+        $this->getDoctrine()->getManager()->flush();
         return $this->json(['success' => 1],Response::HTTP_OK);
-
     }
 
     /**
@@ -89,7 +89,7 @@ class ProfileController extends BaseController
         $user = $this->getUser();
 
         $image = new ImageUpload($user->getProfileName());
-        $upload = $image->uploadProfilePic($data['image'] ?? []);
+        $upload = $image->uploadProfilePic($data['image'] ?? '');
         if($upload) {
             $user->setProfilePicture($image->getUploadedImagesNames()[0]);
             $this->getDoctrine()->getManager()->flush();
@@ -97,5 +97,16 @@ class ProfileController extends BaseController
         }
 
         return $this->json(['error' => 'Oops... Something went wrong!'],Response::HTTP_BAD_REQUEST);
+    }
+
+    private function checkIfInArray(array $array): bool
+    {
+        $check = ['profileName','firstName','lastName','email','password'];
+        $arrayKeys = array_keys($array);
+        if(array_diff($check,$arrayKeys)) {
+            return false;
+        }
+
+        return true;
     }
 }

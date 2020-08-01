@@ -40,13 +40,13 @@ class SubCommentController extends BaseController
 
         $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(['id' => $id]);
         if (!$comment) {
-            return $this->json([], Response::HTTP_BAD_REQUEST);
+            return $this->json([], Response::HTTP_NOT_FOUND);
         }
 
         $subComments = $this->getDoctrine()->getRepository(SubComment::class)->findByComment($comment, $limit, $offset, $sort);
 
         if (!$subComments) {
-            return $this->json([], Response::HTTP_OK);
+            return $this->json([], Response::HTTP_NO_CONTENT);
         }
         $data = $transformer->subCommentListDataTransformer($subComments);
 
@@ -88,11 +88,13 @@ class SubCommentController extends BaseController
 
        $comment = $transformer->subCommentAddDataTransformer($subComment);
 
-        return $this->json(['success' => 1, 'comment' => $comment], Response::HTTP_OK);
+        return $this->json(['success' => 1, 'comment' => $comment], Response::HTTP_CREATED);
     }
 
     /**
      * @Route("/subcomment/{id}", name="delete_subcomment", methods={"DELETE"})
+     * @param SubComment $subComment
+     * @return JsonResponse
      */
     public function deleteSubComment(SubComment $subComment)
     {
@@ -105,5 +107,6 @@ class SubCommentController extends BaseController
         $this->getDoctrine()->getManager()->remove($subComment);
         $this->getDoctrine()->getManager()->flush();
 
+        return $this->json(['success' => 1],Response::HTTP_OK);
     }
 }

@@ -63,10 +63,11 @@ class ImageUpload
             $upload = file_put_contents($this->profilePicPath.$name,$data);
             if($upload) {
                 $this->uploadedImagesNameArray[] = $name;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     public function getUploadedImagesNames(): array
