@@ -45,9 +45,8 @@ export default class Notifications extends React.Component {
                 })
                     .then((response => response.json()))
                     .then((data => {
-                        console.log(data);
                         this.setState({notifications: data, loading: false});
-                        // this.props.getFriends();
+                        this.props.route.params.getCount();
                         if (data.error) {
                             this.setState({error: true})
                         }
@@ -56,9 +55,6 @@ export default class Notifications extends React.Component {
                         this.setState({error: true, loading: false});
                     })
             }
-
-            // this.props.getNotifications();
-            // this.props.jumpTo('notifications');
         })
     }
     componentDidMount() {
@@ -81,7 +77,9 @@ export default class Notifications extends React.Component {
                 })
                     .then((response => response.json()))
                     .then((data => {
-                        this.setState({loading: false});
+                        this.setState((prevState) =>
+                            ({loading: false,notifications: prevState.notifications.filter(notification => notification.id !== id)})
+                        );
                         if(data.error) {
                             this.setState({error: true})
                         }
@@ -91,7 +89,7 @@ export default class Notifications extends React.Component {
                     .catch(err => {
                         this.setState({error: true,loading: false});
                     })
-                this.getNotifications(false);
+                this.props.route.params.getCount();
             }
         })
 
@@ -106,22 +104,26 @@ export default class Notifications extends React.Component {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization ': 'Bearer ' + val
+                        'Authorization': 'Bearer ' + val
                     },
                     method: "DELETE",
                     body: JSON.stringify({id})
                 })
                     .then((response => response.json()))
                     .then((data => {
-                        this.setState({loading: false});
+                        this.setState((prevState) =>
+                            ({loading: false,notifications: prevState.notifications.filter(notification => notification.id !== id)})
+                    );
                         if(data.error) {
                             this.setState({error: true})
                         }
                     }))
                     .catch(err => {
+                        console.log(err);
+                        ToastAndroid.show('Oops... Something went wrong!',ToastAndroid.SHORT);
                         this.setState({error: true,loading: false});
                     })
-                this.getNotifications(false);
+                this.props.route.params.getCount();
             }
         })
     }

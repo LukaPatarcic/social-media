@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Splash from "../screens/Splash";
 import Login from "../screens/Login";
 import Register from "../screens/Register";
@@ -10,7 +10,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Profile from "../screens/Profile";
 import RegisterTwo from "../screens/RegisterTwo";
 import RegisterThree from "../screens/RegisterThree";
-import {AsyncStorage, Easing, Image, ImageBackground, Linking, Text, View} from "react-native";
+import {AsyncStorage, Easing, Image, ImageBackground, Linking, Text, ToastAndroid, View} from "react-native";
 import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs";
 import Search from "../screens/Search";
 import Notifications from "../screens/Notifications";
@@ -25,46 +25,46 @@ import {BASE_URL} from "./index";
 import Follow from "../screens/Follow";
 
 
-export default class Router extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            url: null
+export default function Router(){
+    const linking = {
+        prefixes: ['https://allshack.lukauku.tech/','allshack://'],
+        config: {
+            screens: {
+                TabsScreen: {
+                    screens: {
+                        FeedStack: {
+                            screens: {
+                                Feed: 'FeedPath',
+                                MessagesWithUser: {
+                                    path: 'messages/:user',
+                                    params: {user: {}}
+                                },
+                                AddPost: 'addpost'
+                            }
+                        }
+                    }
+                },
+                Profile: {
+                    path: 'profile/:profile',
+                    params: {profileName: 'me'}
+                },
+                Notifications: 'notifications',
+
+            }
         }
     }
 
-    componentDidMount() {
-        Linking.getInitialURL().then(url => {
-            if(url) {
-                this._handleOpenURL(url)
-            }
-        });
-
-        Linking.addEventListener('url', (e) =>this._handleOpenURL(e.url));
-    }
-
-    componentWillUnmount() {
-        Linking.removeEventListener('url', (e) =>this._handleOpenURL(e.url));
-    }
-
-    _handleOpenURL(url) {
-        console.log(url);
-    }
-
-    render() {
-
-        return (
-            <AuthContext.Consumer>
-                {(context) => {
-                    return(
-                        <NavigationContainer>
-                            <RootStackScreen state={{...context,...this.state}} />
-                        </NavigationContainer>
-                    )
-                }}
-            </AuthContext.Consumer>
-        )
-    }
+    return (
+        <AuthContext.Consumer>
+            {(context) => {
+                return(
+                    <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+                        <RootStackScreen state={{...context}} />
+                    </NavigationContainer>
+                )
+            }}
+        </AuthContext.Consumer>
+    )
 }
 
 const SplashStack = createStackNavigator();
@@ -165,7 +165,7 @@ const SearchStack = createStackNavigator();
 const NotificationStack = createStackNavigator();
 
 const FeedStackScreen = (navigation) => (
-    <FeedStack.Navigator initialRoute={'Post'}>
+    <FeedStack.Navigator>
         <FeedStack.Screen
             name="Feed"
             component={Feed}
@@ -232,11 +232,12 @@ const SearchStackScreen = () => (
     </SearchStack.Navigator>
 );
 
-const NotificationStackScreen = () => (
+const NotificationStackScreen = (getCount) => (
     <NotificationStack.Navigator>
         <NotificationStack.Screen
             name="Notifications"
             component={Notifications}
+            initialParams={{getCount}}
             options={{headerShown: false}}
         />
     </NotificationStack.Navigator>
@@ -264,76 +265,89 @@ const ProfileStackScreen = () => (
 );
 
 const Tabs = createMaterialBottomTabNavigator();
-const TabsScreen = () => (
-    <Tabs.Navigator  initialRouteName="Feed"
-                     activeColor="#fff"
-                     backBehavior={'initialRoute'}
-    >
-        <Tabs.Screen
-            name="Feed"
-            options={{
-                tabBarLabel: 'Feed',
-                tabBarColor: '#f00',
-                tabBarIcon: ({ color }) => (
-                    <Icon name="home" color={color} size={26} />
-                ),
-            }}
-            component={FeedStackScreen}
-        />
-        <Tabs.Screen
-            name="Search"
-            options={{
-                tabBarLabel: 'Search',
-                tabBarColor: '#f00',
-                tabBarIcon: ({ color }) => (
-                    <Icon name="search" color={color} size={26} />
+const TabsScreen = () => {
+    const [count,setCount] = useState(0);
+
+    const getCount = () => {
+        AsyncStorage.getItem("access-token")
+            .then(token => {
+                fetch(BASE_URL+'/friend/request/count',{
+                    headers: {
+                        'Authorization': 'Bearer '+token
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => setCount(data.count))
+                    .catch(err => ToastAndroid.show('Oops... Something went wrong!',ToastAndroid.SHORT));
+            })
+    }
+
+    useEffect(() => {
+        getCount()
+    },[])
+
+    return (
+        <Tabs.Navigator  initialRouteName="Feed"
+                         activeColor="#fff"
+                         backBehavior={'initialRoute'}
+        >
+            <Tabs.Screen
+                name="Feed"
+                options={{
+                    tabBarLabel: 'Feed',
+                    tabBarColor: '#f00',
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="home" color={color} size={26} />
+                    ),
+                }}
+                component={FeedStackScreen}
+            />
+            <Tabs.Screen
+                name="Search"
+                options={{
+                    tabBarLabel: 'Search',
+                    tabBarColor: '#f00',
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="search" color={color} size={26} />
                     )
-            }}
-            component={SearchStackScreen} />
-        <Tabs.Screen
-            name="Notifications"
-            component={NotificationStackScreen}
-            options={{
-                tabBarLabel: 'Notifications',
-                tabBarColor: '#f00',
-                tabBarActiveTextColor: '#000',
-                tabBarBadgeStyle: {color: 'black'},
-                tabBarIcon: ({ color }) => {
-                    const badge = [];
-                    AsyncStorage.getItem("access-token")
-                        .then(token => {
-                            fetch(BASE_URL+'/friend/request/count')
-                                .then(response => response.json())
-                                .then(data => {
-                                    badge.push(data.count);
-                                })
-                        })
-                    return (
-                        <>
-                            <Icon size={26} color={color} name={'bell'} />
-                            <Badge
-                                style={{ position: 'absolute', top: -8, right: -8,backgroundColor:'#000' }}
-                            >
-                                {1}
-                            </Badge>
-                        </>
-                    )
-                },
-            }}
-        />
-        <Tabs.Screen
-            name="Profile"
-            options={{
-                tabBarLabel: 'Profile',
-                tabBarColor: '#f00',
-                tabBarIcon: ({ color }) => (
-                    <Icon name="user" color={color} size={26} />
-                ),
-            }}
-            component={ProfileStackScreen}
-        />
-    </Tabs.Navigator>
-);
+                }}
+                component={SearchStackScreen} />
+            <Tabs.Screen
+                name="Notifications"
+                component={() => NotificationStackScreen(getCount)}
+                options={{
+                    tabBarLabel: 'Notifications',
+                    tabBarColor: '#f00',
+                    tabBarActiveTextColor: '#000',
+                    tabBarBadgeStyle: {color: 'black'},
+                    tabBarIcon: ({ color }) => {
+                        return (
+                            <>
+                                <Icon size={26} color={color} name={'bell'} />
+                                <Badge
+                                    style={{ position: 'absolute', top: -8, right: -8,backgroundColor:'#000' }}
+                                >
+                                    {count}
+                                </Badge>
+                            </>
+                        )
+                    },
+                }}
+            />
+            <Tabs.Screen
+                name="Profile"
+                options={{
+                    tabBarLabel: 'Profile',
+                    tabBarColor: '#f00',
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="user" color={color} size={26} />
+                    ),
+                }}
+                component={ProfileStackScreen}
+            />
+        </Tabs.Navigator>
+    )
+}
 
 const RootStack = createStackNavigator();
 const RootStackScreen = ({ state }) => (

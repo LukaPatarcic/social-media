@@ -66,12 +66,13 @@ class FriendController extends BaseController
 
 
     /**
-     * @Route("/friend/{id}", name="friend_delete", methods={"DELETE"})
+     * @Route(path="/friend/{id}", name="friend_delete", methods={"DELETE"}, requirements={"id"="\d+"})
      * @param $id
      * @return JsonResponse
      */
     public function deleteFriend($id)
     {
+        dd('whoa');
         $user = $this->getUser();
         if(!$id) {
             return $this->json([],Response::HTTP_BAD_REQUEST);

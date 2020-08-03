@@ -102,6 +102,7 @@ class FriendRequestController extends BaseController
             ->getRepository(FriendshipRequest::class)
             ->findOneBy(['id' => $data['id']]);
 
+
         if(!$friendRequest) {
             return $this->json(['error' => 'Follow request not found'],Response::HTTP_BAD_REQUEST);
         }
@@ -109,7 +110,7 @@ class FriendRequestController extends BaseController
         $this->getDoctrine()->getManager()->remove($friendRequest);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->json(['success' => 1],Response::HTTP_NO_CONTENT);
+        return $this->json(['success' => 1],Response::HTTP_OK);
     }
 
     /**
@@ -147,7 +148,7 @@ class FriendRequestController extends BaseController
 
 
     /**
-     * @Route("/friend/request/count", methods="GET")
+     * @Route("/friend/request/count", name="friend_request_count", methods="GET")
      */
     public function getNotificationCount()
     {

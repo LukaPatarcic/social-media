@@ -43,12 +43,9 @@ export default class SendFriendRequest extends React.Component{
     }
 
     redirectToUser() {
-        this.props.navigation.push("Profile",{profileName: this.props.friend.profileName})
+        this.props.navigation.push("Profile",{profileName: this.props.friend.profileName,id: this.props.friend.id})
         this.props.navigation.navigate('Profile')
     }
-    // shouldComponentUpdate(nextProps, nextState, nextContext) {
-    //     return JSON.stringify(nextProps) !== JSON.stringify(this.props) || JSON.stringify(nextState) !== JSON.stringify(this.state);
-    // }
 
     render() {
         const {friend} = this.props;
@@ -85,34 +82,3 @@ export default class SendFriendRequest extends React.Component{
         );
     }
 }
-
-// <View style={styles.card}>
-//     {/*<UserProfile friend={friend} token={this.props.token} />*/}
-//     <Image style = {{height: 40, width: 40, margin: 5 }} source={{uri: 'https://eu.ui-avatars.com/api/?rounded=true&background=f44336&color=ffffff&size=128&name='+friend.firstName+'+'+friend.lastName}} />
-//     <Text style={{fontFamily: 'font',fontSize: 18}} onLongPress={() => ToastAndroid.show(friend.profileName,ToastAndroid.SHORT)}>{friend.firstName+' '+friend.lastName}</Text>
-//     {/*<Button*/}
-//     {/*    id={friend.id}*/}
-//     {/*    disabled={friend.requested ? true : (friend.following ? true : false)}*/}
-//     {/*    onPress={this.sendFriendRequest.bind(this)}*/}
-//     {/*    color={'#f00'}*/}
-//     {/*    title={loading ? "Loading...":(friend.requested ? 'Requested' : (friend.following ? 'Following' : 'Follow'))}*/}
-//     {/*/>*/}
-//     {/**/}
-// </View>
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        shadowOffset:{  width: 10,  height: 10,  },
-        shadowColor: 'black',
-        shadowOpacity: 1.0,
-    },
-    card: {
-        backgroundColor: '#fff',
-        margin: 20,
-        marginVertical: 10,
-        padding: 20
-    }
-});
