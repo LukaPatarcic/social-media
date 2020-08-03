@@ -43,7 +43,10 @@ export default class PostItem extends React.Component{
                 <Portal>
                     <Dialog visible={dialogue} onDismiss={() => this.setState({dialogue: false})}>
                         <Dialog.Content>
-                            <Paragraph>Delete</Paragraph>
+                            <Paragraph onPress={() => {
+                                this.props.onDeletePost(post.id)
+                                this.setState({dialogue: false})
+                            }}>Delete</Paragraph>
                         </Dialog.Content>
                     </Dialog>
                 </Portal>

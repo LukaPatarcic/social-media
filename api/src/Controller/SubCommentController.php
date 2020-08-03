@@ -74,14 +74,22 @@ class SubCommentController extends BaseController
 
         $subComment->setUser($user);
 
-//        $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(['id' => $data['id']]);
-//        $sendTo = $post->getUser()->getPushNotifications()->toArray();
-//
-//        $notification = new PushNotification();
-//        $notification->setTitle('Comment');
-//        $notification->setBody($user->getFirstName() . ' ' . $user->getLastName() . '(' . $user->getProfileName() . ') has commented on your post');
-//        $notification->setToMultiple($sendTo);
-//        $notification->sendNotification();
+        $comment = $this->getDoctrine()->getRepository(Comment::class)->findOneBy(['id' => $data['comment']]);
+
+        if(!$comment) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+        $arr = $comment->getUser()->getPushNotifications()->toArray();
+        $sendTo = [];
+        foreach ($arr as $value) {
+            $sendTo[] = $value->getPhone();
+        }
+
+        $notification = new PushNotification();
+        $notification->setTitle('Comment');
+        $notification->setBody($user->getFirstName() . ' ' . $user->getLastName() . '(' . $user->getProfileName() . ') has replied to your comment');
+        $notification->setToMultiple($sendTo);
+        $notification->sendNotification();
         $em = $this->getDoctrine()->getManager();
         $em->persist($subComment);
         $em->flush();

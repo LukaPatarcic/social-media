@@ -128,8 +128,7 @@ class PostController extends BaseController
         $this->getDoctrine()->getManager()->remove($post);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->json([],Response::HTTP_NO_CONTENT);
-
+        return $this->json([],Response::HTTP_OK);
     }
 
     /**
@@ -152,9 +151,20 @@ class PostController extends BaseController
         if($liked) {
             return $this->json(['error' => 'Post already liked'],Response::HTTP_BAD_REQUEST);
         }
+
+        $userTo = $post->getUser()->getPushNotifications();
+        $sendTo = [];
+        foreach ($userTo as $val) {
+            $sendTo[] = $val->getPhone();
+        }
+        $notification = new PushNotification();
+        $notification->setTitle('Post');
+        $notification->setBody($user->getFirstName().' '.$user->getLastName().'('.$user->getProfileName().') liked your post');
+        $notification->setToMultiple($sendTo);
+        $notification->sendNotification();
+
         $like = new LikePost();
-        $like->setUser($user)
-            ->setPost($post);
+        $like->setUser($user)->setPost($post);
         $post->addLikePost($like);
         $em = $this->getDoctrine()->getManager();
         $em->persist($like);

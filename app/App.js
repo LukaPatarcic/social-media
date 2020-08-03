@@ -6,6 +6,8 @@ import PushNotification from 'react-native-push-notification'
 import messaging from '@react-native-firebase/messaging'
 import firebase from '@react-native-firebase/app'
 import {WebsocketProvider} from "./src/context/WebsocketProvider";
+import {AsyncStorage, ToastAndroid} from "react-native";
+import {BASE_URL} from "./src/config";
 
 const fontConfig = {
     default: {
@@ -42,6 +44,7 @@ export default class App extends React.Component {
         messaging()
             .getToken()
             .then(token => {
+                AsyncStorage.setItem('notification-key',token);
                 console.log(token);
             });
 
@@ -63,6 +66,29 @@ export default class App extends React.Component {
                     console.log('exited app')
                 }
             })
+
+        return messaging().onTokenRefresh(token => {
+            AsyncStorage.getItem('access-token',(err,val) => {
+                fetch(BASE_URL+'/token/refresh',{
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer '+val
+                    },
+                    method: "POST",
+                    body: JSON.stringify({token})
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    AsyncStorage.removeItem('notification-key')
+                    AsyncStorage.setItem('notification-key',token);
+                })
+                .catch(err => {
+                    ToastAndroid.show('Oops... Something went wrong!',ToastAndroid.SHORT);
+                })
+            console.log(token,'refreshToken');
+        });
 
 
         // messaging().onNotificationOpenedApp(message => {

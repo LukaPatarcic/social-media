@@ -145,7 +145,7 @@ class SecurityController extends BaseController
         $em->remove($phone);
         $em->flush();
 
-        return $this->json([],Response::HTTP_NO_CONTENT);
+        return $this->json([],Response::HTTP_OK);
     }
 
     /**
@@ -168,5 +168,28 @@ class SecurityController extends BaseController
             return $this->render('redirectToMobile.html.twig');
         }
         return $this->redirect($_ENV['FRONTEND_URL'].'login?verified=true');
+    }
+
+    /**
+     * @Route("token/refresh", name="token_refresh", methods={"POST"})
+     * @IsGranted("ROLE_USER")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function refreshToken(Request $request)
+    {
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(),true);
+        if(!$data['token']) {
+            return $this->json([],Response::HTTP_BAD_REQUEST);
+        }
+
+        $phone = new PushNotification();
+        $phone->setUser($user)->setPhone($data['token']);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($phone);
+        $em->flush();
+
+        return $this->json([],Response::HTTP_CREATED);
     }
 }

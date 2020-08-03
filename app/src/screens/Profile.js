@@ -9,16 +9,11 @@ import {
     FlatList, ToastAndroid, SafeAreaView,
 } from 'react-native';
 import { Text } from 'native-base';
-import ImageResizer from 'react-native-image-resizer';
-import RNFS from 'react-native-fs';
 import AsyncStorage from "@react-native-community/async-storage";
 import {Avatar, Card, FAB, IconButton, Paragraph} from 'react-native-paper';
 import PostItem from "../components/PostItem";
-import PTRViewAndroid from "react-native-pull-to-refresh/lib/PullToRefreshView.android";
 import {BASE_URL} from "../config";
 import {AuthContext} from "../context/AuthProvider";
-import {formatImage} from "../helpers/functions";
-import PhotoUpload from "react-native-photo-upload";
 import ProfilePicture from "../components/ProfilePicture";
 
 export default class Profile extends React.Component {
@@ -30,6 +25,7 @@ export default class Profile extends React.Component {
             following: [],
             followers: [],
             token: null,
+            loadingPosts: false,
             redirect: false,
             loading: false,
             logout: false,
@@ -41,6 +37,7 @@ export default class Profile extends React.Component {
 
         this.getUserData = this.getUserData.bind(this);
         this.handleRefresh = this.handleRefresh.bind(this);
+        this.deletePost = this.deletePost.bind(this);
     }
 
     componentDidMount() {
@@ -103,6 +100,8 @@ export default class Profile extends React.Component {
            return;
        if(more) {
            this.setState({loadingMore: true})
+       } else {
+           this.setState({loadingPosts: true})
        }
        fetch(BASE_URL+'/post?offset='+offset+'&profile='+params,{
            headers: {
@@ -130,6 +129,9 @@ export default class Profile extends React.Component {
            }))
            .catch(err => {
                this.setState({error: true,loading: false});
+           })
+           .finally(() => {
+               this.setState({loadingPosts: false})
            })
    }
 
@@ -164,10 +166,29 @@ export default class Profile extends React.Component {
        });
    }
 
+    deletePost(id) {
+        fetch(BASE_URL+'/post/'+id,{
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+ this.state.token
+            },
+            method: "DELETE",
+        })
+            .then(response => response.json())
+            .then(data => {
+                ToastAndroid.show('Post deleted successfully',ToastAndroid.SHORT);
+                this.setState((prevState) => ({posts: prevState.posts.filter(post => post.id !== id)}));
+            })
+            .catch(err => {
+                ToastAndroid.show('Oops... Something went wrong!',ToastAndroid.SHORT);
+            })
+    }
+
    static contextType = AuthContext
 
     render() {
-        const {user,posts,refreshing,loading,hasMore,loadingMore,logoutLoading,id} = this.state;
+        const {user,posts,refreshing,loading,hasMore,loadingMore,logoutLoading,id,loadingPosts} = this.state;
         const {isMe,profileName} = this.props.route.params;
 
         if(loading) {
@@ -190,6 +211,7 @@ export default class Profile extends React.Component {
             >
                 <SafeAreaView>
                     <FlatList
+                        style={{width: '100%',height: '100%'}}
                         refreshing={refreshing}
                         onRefresh={() => this.handleRefresh()}
                         ListHeaderComponent={() => (
@@ -247,7 +269,9 @@ export default class Profile extends React.Component {
                         data={posts}
                         ListEmptyComponent={
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
-                                <Text style={{fontFamily: 'font',fontSize: 20,color: 'white'}}>No posts found...</Text>
+                                {loadingPosts ? <ActivityIndicator color={'red'} size={40} />
+                                : <Text style={{fontFamily: 'font',fontSize: 20,color: 'white'}}>No posts found...</Text>
+                                }
                             </View>
                         }
                         onEndReachedThreshold={0.6}
@@ -258,7 +282,7 @@ export default class Profile extends React.Component {
                         onEndReached={() => this.getPostsData(true)}
                         keyExtractor={(contact, index) => String(index)}
                         renderItem={({item}) => (
-                            <PostItem navigation={this.props.navigation} post={item} id={id} />
+                            <PostItem onDeletePost={this.deletePost} navigation={this.props.navigation} post={item} id={id} />
                         )}
                     />
                 <FAB

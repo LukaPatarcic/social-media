@@ -94,14 +94,16 @@ class CommentController extends BaseController
         $comment->setUser($user);
 
         $post = $this->getDoctrine()->getRepository(Post::class)->findOneBy(['id' => $data['post']]);
-        $sendTo = $post->getUser()->getPushNotifications()->toArray();
-
+        $pushNotifications = $post->getUser()->getPushNotifications();
+        $sendTo = [];
+        foreach ($pushNotifications as $notification) {
+            $sendTo[] = $notification->getPhone();
+        }
         $notification = new PushNotification();
         $notification->setTitle('Comment');
         $notification->setBody($user->getFirstName() . ' ' . $user->getLastName() . '(' . $user->getProfileName() . ') has commented on your post');
         $notification->setToMultiple($sendTo);
         $notification->sendNotification();
-
         $em = $this->getDoctrine()->getManager();
         $em->persist($comment);
         $em->flush();
@@ -132,6 +134,17 @@ class CommentController extends BaseController
         if($commentLiked) {
             return $this->json(['error' => 'Comment already liked'],Response::HTTP_BAD_REQUEST);
         }
+
+        $pushNotifications = $comment->getUser()->getPushNotifications();
+        $sendTo = [];
+        foreach ($pushNotifications as $notification) {
+            $sendTo[] = $notification->getPhone();
+        }
+        $notification = new PushNotification();
+        $notification->setTitle('Comment');
+        $notification->setBody($user->getFirstName() . ' ' . $user->getLastName() . '(' . $user->getProfileName() . ') has liked your comment');
+        $notification->setToMultiple($sendTo);
+        $notification->sendNotification();
 
         $commentLike = new CommentLike();
         $commentLike->setComment($comment)

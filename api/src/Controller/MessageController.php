@@ -10,6 +10,7 @@ use App\Form\MessageType;
 use App\Repository\MessageRepository;
 use App\Services\DataTransformer;
 use App\Services\Image;
+use App\Services\PushNotification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -85,6 +86,19 @@ class MessageController extends BaseController
         if($errors = $this->getErrorMessages($form)) {
             return $this->json(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
+        $toUser = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $data['toUser']]);
+
+        $devices = $toUser->getPushNotifications()->toArray();
+        $sendTo = [];
+        foreach ($devices as $device) {
+            $sendTo[] = $device->getPhone();
+        }
+        $notification = new PushNotification();
+        $notification->setTitle('Message');
+        $notification->setBody($user->getFirstName().' '.$user->getLastName().'('.$user->getProfileName().') has sent you a message');
+        $notification->setToMultiple($sendTo);
+        $notification->sendNotification();
+
 
         $message->setFromUser($user);
         $em = $this->getDoctrine()->getManager();
