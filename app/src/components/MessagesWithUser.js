@@ -14,8 +14,12 @@ export default class MessagesWithUser extends Component{
             messages: [],
             loading: true,
             refreshing: false,
+            sendingMessage: false,
             token: null,
-            message: ''
+            message: '',
+            offset: 0,
+            hasMore: true,
+            loadingMore: false
         }
 
         this.sendMessage = this.sendMessage.bind(this);
@@ -30,7 +34,8 @@ export default class MessagesWithUser extends Component{
 
         ws.io.on("message", (message) => {
             this.setState({
-                messages: [message,...this.state.messages]
+                messages: [message,...this.state.messages],
+                sendingMessage: false,
             })
         })
     }
@@ -38,7 +43,13 @@ export default class MessagesWithUser extends Component{
     sendMessage() {
         if(this.state.message.trim() == "") {
             ToastAndroid.show("Please enter a message",ToastAndroid.SHORT);
+            return;
         }
+        if(this.state.message.trim() > 255) {
+            ToastAndroid.show('Message too long',ToastAndroid.SHORT)
+            return;
+        }
+        this.setState({sendingMessage: true});
         const ws = this.context;
         const message = {
             "toUser": this.props.route.params.user.id,
@@ -50,20 +61,30 @@ export default class MessagesWithUser extends Component{
         })
     }
 
-    getData() {
+    getData(more = false) {
         const id = this.props.route.params.user.id;
-        fetch(BASE_URL+'/message?id='+id)
+        const {offset} = this.state;
+        if(more) {
+            this.setState({loadingMore: true})
+        }
+        fetch(BASE_URL+`/message?id=${id}&offset=${offset}`)
             .then(response => response.json())
             .then(data => {
-                this.setState({messages: data,loading: false})
+                this.setState((prevState) => ({
+                    messages: [...prevState.messages,...data],
+                    loading: false,
+                    loadingMore: false,
+                    hasMore: !!data.length,
+                    offset: prevState.offset + 20
+                }))
             })
             .catch(err => {
-                console.log(err);
+                ToastAndroid.show('Oops... Something went wrong!',ToastAndroid.SHORT);
             })
     }
 
     render() {
-        const {messages,loading} = this.state;
+        const {messages,loading,sendingMessage,hasMore,loadingMore} = this.state;
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%'}}
@@ -93,10 +114,16 @@ export default class MessagesWithUser extends Component{
                                     <Text style={{fontFamily: 'font', fontSize: 20}}>No messages...</Text>
                                 </View>
                             }
+                            ListFooterComponent={hasMore ?
+                                loadingMore ? <ActivityIndicator size={60} color={'red'} /> : null
+                                :
+                                <Text style={{textAlign: 'center',fontFamily: 'font',fontSize: 16,color: '#fff'}}>No more messages...</Text>}
                             keyExtractor={(contact, index) => String(index)}
                             renderItem={({item}) => (
                                 <SingleMessageItem navigation={this.props.navigation} message={item}/>
-                            )}/>
+                            )}
+                            onEndReached={() => this.getData(true)}
+                        />
                             <View style={{
                                 width: '100%',
                                 flex: 1,
@@ -122,12 +149,17 @@ export default class MessagesWithUser extends Component{
                                     />
                                 </View>
                                 <View style={{width: '15%'}}>
-                                    <IconButton
-                                        icon="send"
-                                        color={'red'}
-                                        size={30}
-                                        onPress={this.sendMessage}
-                                    />
+                                    {sendingMessage ?
+                                        <ActivityIndicator color={'red'} size={20} />
+                                    :
+                                        <IconButton
+                                            icon="send"
+                                            color={'red'}
+                                            size={30}
+                                            onPress={this.sendMessage}
+                                        />
+                                    }
+
                                 </View>
                             </View>
                         </>

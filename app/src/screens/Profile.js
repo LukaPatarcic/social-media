@@ -228,7 +228,7 @@ export default class Profile extends React.Component {
                                             <View style={{marginRight: 10}}>
                                                 <TouchableOpacity
                                                     style={{padding: 2}}
-                                                    onPress={() => this.props.navigation.navigate("Follow",{following: false})}
+                                                    onPress={() => this.props.navigation.navigate("Follow",{following: false,id: user.id})}
                                                 >
                                                     <Text style={{textAlign: 'center',fontFamily: 'font'}}>Followers</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.followers}</Text>
                                                 </TouchableOpacity>
@@ -236,7 +236,7 @@ export default class Profile extends React.Component {
                                             <View>
                                                 <TouchableOpacity
                                                     style={{padding: 2}}
-                                                    onPress={() => this.props.navigation.navigate("Follow",{following: true})}
+                                                    onPress={() => this.props.navigation.navigate("Follow",{following: true,id: user.id})}
                                                 >
                                                     <Text style={{textAlign: 'center',fontFamily: 'font'}}>Following</Text><Text style={{textAlign: 'center',fontFamily: 'font'}}>{user.following}</Text>
                                                 </TouchableOpacity>

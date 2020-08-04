@@ -11,7 +11,6 @@ var io = socket(server)
 var users = [];
 io.on('connection', (client) => {
     handleNewUser(client)
-    console.log(users);
     client.on('message', (message,token) => {
         request.post(
             'https://api.allshack.lukaku.tech/message',

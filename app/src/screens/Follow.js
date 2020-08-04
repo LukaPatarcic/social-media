@@ -43,7 +43,7 @@ export default class Comments extends React.Component {
     }
 
     getFollows(more = false) {
-        const {following} = this.props.route.params;
+        const {following,id} = this.props.route.params;
         const {offset,loadingMore,hasMore} = this.state;
 
         if(loadingMore || !hasMore)
@@ -54,8 +54,7 @@ export default class Comments extends React.Component {
         }
 
         AsyncStorage.getItem('access-token', (err, val) => {
-            const url = BASE_URL+`/${following ? 'following' : 'followers'}?offset=`+offset
-            console.log(url,following);
+            const url = BASE_URL+`/${following ? 'following' : 'followers'}?offset=${offset}&profileId=${id}`
             fetch(url,{
                 headers: {
                     'Accept': 'application/json',

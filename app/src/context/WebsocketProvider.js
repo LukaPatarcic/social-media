@@ -1,5 +1,5 @@
 import React from 'react';
-import socketIOClient from "socket.io-client";
+import openSocket from 'socket.io-client';
 import {WS_URL} from "../config";
 import {AsyncStorage} from "react-native";
 export const WebsocketContext = React.createContext({ io: null });
@@ -9,7 +9,7 @@ export class WebsocketProvider extends React.Component {
         super(props);
         this.state = {
             id: null,
-            io: null
+            io: {}
         }
     }
 
@@ -20,9 +20,10 @@ export class WebsocketProvider extends React.Component {
                 this.setState({
                     id: id
                 },() => {
-                    console.log(id);
                     this.setState({
-                        io: socketIOClient.connect(WS_URL,{query: `id=${this.state.id}`})
+                        io: openSocket(WS_URL,{query: `id=${this.state.id}`})
+                    },() => {
+                        console.log(this.state.io.connected);
                     })
                 })
             })

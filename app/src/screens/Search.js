@@ -1,5 +1,14 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, ScrollView, ActivityIndicator, FlatList, ToastAndroid,} from 'react-native';
+import {
+    View,
+    StyleSheet,
+    ImageBackground,
+    ScrollView,
+    ActivityIndicator,
+    FlatList,
+    ToastAndroid,
+    InteractionManager,
+} from 'react-native';
 import { Text } from 'native-base';
 import { Searchbar } from 'react-native-paper';
 import AsyncStorage from "@react-native-community/async-storage";
@@ -22,11 +31,16 @@ export default class Search extends React.Component {
 
         this.getFriends = debounce(this.getFriends,400);
         this.sendFriendRequestChangeState = this.sendFriendRequestChangeState.bind(this);
+        this.searchBar = React.createRef(null);
     }
 
     componentDidMount() {
         AsyncStorage.getItem('access-token', (err, val) => {
             this.setState({token: val})
+        });
+
+        InteractionManager.runAfterInteractions(() => {
+            this.searchBar.current.focus()
         });
     }
 
@@ -94,6 +108,7 @@ export default class Search extends React.Component {
             >
                 <View style={{backgroundColor: '#fff'}}>
                     <Searchbar
+                        ref={this.searchBar}
                         inputStyle={{fontFamily: 'font'}}
                         placeholder="Search"
                         onChangeText={this.updateSearch.bind(this)}
