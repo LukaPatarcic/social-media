@@ -32,8 +32,9 @@ class FriendController extends BaseController
         /** @var User $user */
         $user = $this->getUser();
         $offset = $request->query->getInt('offset',0);
+        $profileId = $request->query->getInt('profileId') ? $request->query->getInt('profileId') : $user->getId();
         /** @var FriendshipRequest $requests */
-        $friends = $this->getDoctrine()->getRepository(Friendship::class)->findUsersFollowing($user,10,$offset);
+        $friends = $this->getDoctrine()->getRepository(Friendship::class)->findUsersFollowing($profileId,10,$offset);
         if(!$friends) {
             return  $this->json([], Response::HTTP_NO_CONTENT);
         }
@@ -53,8 +54,9 @@ class FriendController extends BaseController
         /** @var User $user */
         $user = $this->getUser();
         $offset = $request->query->getInt('offset',0);
+        $profileId = $request->query->getInt('profileId') ? $request->query->getInt('profileId') : $user->getId();
         /** @var FriendshipRequest $requests */
-        $friends = $this->getDoctrine()->getRepository(Friendship::class)->findUsersFollowers($user,10,$offset);
+        $friends = $this->getDoctrine()->getRepository(Friendship::class)->findUsersFollowers($profileId,10,$offset);
         if(!$friends) {
             return  $this->json([], Response::HTTP_NO_CONTENT);
         }
@@ -72,7 +74,6 @@ class FriendController extends BaseController
      */
     public function deleteFriend($id)
     {
-        dd('whoa');
         $user = $this->getUser();
         if(!$id) {
             return $this->json([],Response::HTTP_BAD_REQUEST);

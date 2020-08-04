@@ -3,10 +3,6 @@ import {MDBCard, MDBCardBody, MDBCol, MDBRow} from "mdbreact";
 import AboutListItem from "./AboutListItem";
 
 export default class About extends React.Component{
-    constructor(props) {
-        super(props);
-
-    }
 
     render() {
         return (
@@ -16,12 +12,11 @@ export default class About extends React.Component{
                     <MDBRow className={'mt-5'}>
                         <MDBCol lg={6} md={12} className="px-4 mt-5">
                             <AboutListItem
-                                icon={'fas fa-user'}
+                                icon={'fas fa-users'}
                                 iconColor={'text-indigo'}
-                                title={'Connect multiple accounts'}
+                                title={'Connect with friends'}
                                 description={
-                                    'Have your account connect to your other social media ' +
-                                    'accounts like Facebook, Instagram, Twitter and other'
+                                    'Connect with your favourite people and share your cherished memories'
                                 }
                             />
                             <AboutListItem

@@ -5,7 +5,7 @@ export default class CookiePolicy extends React.Component{
 
     constructor(props) {
         super(props);
-        document.title = 'Allshak | Legal | Cookies'
+        document.title = 'Allshack | Legal | Cookies'
     }
 
 
@@ -17,9 +17,9 @@ export default class CookiePolicy extends React.Component{
                     <MDBCol>
                         <MDBCard>
                             <MDBCardBody>
-                                <h1>Cookie Policy for Allshak</h1>
+                                <h1>Cookie Policy for Allshack</h1>
 
-                                <p>This is the Cookie Policy for Allshak, accessible from https://allshak.lukaku.tech</p>
+                                <p>This is the Cookie Policy for Allshack, accessible from https://allshack.lukaku.tech</p>
 
                                 <p><strong>What Are Cookies</strong></p>
 

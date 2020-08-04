@@ -45,6 +45,7 @@ export default class Routing extends React.Component{
                     <Route exact={true} path="/profile/:profileName" render={(props) => (<ProfileContainer {...props} />)} />
                     <Route exact={true} path="/notification/list" component={NotificationList} />
                     {/* NOT FOUND */}
+                    <Route path={'/notfound'} component={Notfound} />
                     <Route component={Notfound} />
                 </Switch>
                 <MobileAppModal />

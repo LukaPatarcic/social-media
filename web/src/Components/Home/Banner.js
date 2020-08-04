@@ -20,7 +20,7 @@ export default class Banner extends React.Component{
                         </MDBCol>
                         <MDBCol sm={12}>
                             <p style={{fontSize: 20}} className={'mt-3'}>
-                                Have all your social media in one place. One account for everything!
+                                Best place for chatting with friends and sharing memories!
                             </p>
                             <MDBBtn color="red" size={'lg'} rounded>
                                 <Link className={'text-white'} to={REGISTER_URL}>Register Now</Link>

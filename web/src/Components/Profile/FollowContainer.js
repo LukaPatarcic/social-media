@@ -41,7 +41,9 @@ export default class FollowContainer extends Component{
 
     getUsers(followers) {
         const {offset} = this.state;
-        const url = followers ? `/followers` : `/following` + `?offset=${offset}`
+        const {profileId} = this.props;
+        let url = followers ? `/followers` : `/following`
+        url += `?offset=${offset}&profileId=${profileId}`;
         this.setState({loading: true})
         getUsers(url)
             .then(response => {
@@ -142,5 +144,6 @@ export default class FollowContainer extends Component{
 FollowContainer.propTypes = {
     followers: PropTypes.number,
     following: PropTypes.number,
-    loading: PropTypes.bool.isRequired
+    loading: PropTypes.bool.isRequired,
+    profileId: PropTypes.number.isRequired
 }

@@ -7,6 +7,7 @@ import './Home.css'
 import {AuthContext} from "../../Contexts/AuthContext";
 import PostCreate from "../Post/PostCreate";
 import PostContainer from "../Post/PostContainer";
+import MobileApp from "../Mobile/MobileApp";
 
 export default class Homepage extends Component{
     static contextType = AuthContext;
@@ -27,6 +28,7 @@ export default class Homepage extends Component{
                     <>
                         <Banner/>
                         <About/>
+                        <MobileApp/>
                         <Contact/>
                     </>
                 }

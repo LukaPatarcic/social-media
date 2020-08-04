@@ -3,6 +3,7 @@ import {MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBIcon, MDBInput, MDBRow} from "m
 import {ClipLoader} from "react-spinners";
 import SimpleReactValidator from "simple-react-validator";
 import PropTypes from 'prop-types'
+import Loading from "../../Helpers/Loading";
 const initialValue = {
     name: '',
     email: '',
@@ -103,19 +104,9 @@ export default class ContactForm extends Component{
                                         color="red"
                                         type="submit"
                                     >
-                                        {loading
-                                            ?
-                                            <>
-                                                <ClipLoader
-                                                    sizeUnit={"px"}
-                                                    size={20}
-                                                    color={'#f00'}
-                                                    loading={loading}
-                                                />
-                                            </>
-                                            :
-                                            <>Send <MDBIcon far icon="paper-plane" className="ml-1" /></>
-                                        }
+                                        <Loading loading={loading} size={20} color={'red'}>
+                                            Send <MDBIcon far icon="paper-plane" className="ml-1" />
+                                        </Loading>
                                     </MDBBtn>
                                 </div>
                             </form>

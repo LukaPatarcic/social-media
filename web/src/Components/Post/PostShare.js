@@ -21,12 +21,12 @@ export default class PostShare extends React.Component{
                     <MDBPopoverBody>
                         <FacebookShareButton
                             url={'https://allshack.lukaku.tech'}
-                            quote={'Testing123'}>
+                            quote={'Check out my post at Allshack'}>
                             <FacebookIcon size={32} round />
                         </FacebookShareButton>
                         <TwitterShareButton
                             url={'https://allshack.lukaku.tech'}
-                            quote={'Testing123'}
+                            quote={'Check out my post at Allshack'}
                         >
                             <TwitterIcon size={32} round />
                         </TwitterShareButton>
@@ -35,7 +35,7 @@ export default class PostShare extends React.Component{
                         </WhatsappShareButton>
                         <RedditShareButton
                             url={'https://allshack.lukaku.tech'}
-                            quote={'Testing123'}
+                            quote={'Check out my post at Allshack'}
                         >
                             <RedditIcon size={32} round/>
                         </RedditShareButton>

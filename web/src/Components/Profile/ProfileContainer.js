@@ -37,7 +37,8 @@ export default class ProfileContainer extends Component{
                 })
             })
             .catch(err => err.response.json().then(err => {
-                toastr.error(err.error);
+                console.log(this.props.history.push('/notfound'));
+                toastr.error(err.error ? err.error : 'Oops... something went wrong');
                 this.setState({loading: false})
             }))
     }
@@ -54,6 +55,10 @@ export default class ProfileContainer extends Component{
         const profileName = this.props.match.params.profileName;
         document.title = `Allshack | ${profileName}`
            this.getData(this.props.match.params.profileName)
+
+    }
+
+    componentWillUnmount() {
 
     }
 

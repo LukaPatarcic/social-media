@@ -25,7 +25,7 @@ export default class NotificationContainer extends Component{
                 this.setState({notifications: response});
             })
             .catch(err => err.response.json().then(err => {
-                toastr.error(err.error)
+                // toastr.error(err.error ? err.error : 'Oops... something went wrong')
             }))
 
     }
@@ -44,7 +44,7 @@ export default class NotificationContainer extends Component{
             .then(response => {
             })
             .catch(err => err.response.json().then(err => {
-                toastr.error(err.error)
+                toastr.error(err.error ? err.error : 'Oops... something went wrong')
             }))
 
     }
@@ -63,7 +63,7 @@ export default class NotificationContainer extends Component{
             .then(response => {
             })
             .catch(err => err.response.json().then(err => {
-                toastr.error(err.error)
+                toastr.error(err.error ? err.error : 'Oops... something went wrong')
             }))
     }
 

@@ -1,10 +1,11 @@
 import * as React from "react";
 import {MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
 import {Link} from "react-router-dom";
-
+import ls from 'local-storage'
 export default class Notfound extends React.Component{
 
     render() {
+        const profileName = ls.get('user').profileName;
         return (
             <MDBContainer className={'my-5'}>
                 <MDBRow center className={'my-5'}>
@@ -18,7 +19,7 @@ export default class Notfound extends React.Component{
                                 <h2>Page not found</h2>
                                 <h3>If you thing this is a mistake please contact customer support</h3>
                                 <p>Click the links below to go to a page</p>
-                                <Link to={'/'}>Go to homepage</Link> <Link to={'/profile'}>Go to profile</Link>
+                                <Link to={'/'}>Go to homepage</Link> <Link to={`/profile/${profileName}`}>Go to profile</Link>
                             </MDBCardBody>
                         </MDBCard>
                     </MDBCol>

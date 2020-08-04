@@ -35,7 +35,7 @@ class FriendRequestController extends BaseController
         }
 
         if(!$requests) {
-            return  $this->json([], Response::HTTP_NOT_FOUND);
+            return  $this->json([], Response::HTTP_OK);
         }
 
         return  $this->json($requests,Response::HTTP_OK);

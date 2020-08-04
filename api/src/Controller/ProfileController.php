@@ -33,9 +33,13 @@ class ProfileController extends BaseController
      */
     public function user(Request $request, DataTransformer $transformer)
     {
-        $profileName = $request->query->get('profileName') ? $request->query->getAlnum('profileName') : $this->getUser()->getProfileName();
+        $profileName = $request->query->get('profileName') ? $request->query->get('profileName') : $this->getUser()->getProfileName();
         /*** User $user*/
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['profileName' => $profileName]);
+
+        if(!$user) {
+            return $this->json([],Response::HTTP_NOT_FOUND);
+        }
 
         $data = $transformer->profileListDataTransformer($user);
 

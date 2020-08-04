@@ -204,14 +204,15 @@ export default class PostCreateForm extends Component{
                             </span>
                             }
                             <MDBModal isOpen={this.state.modal} toggle={this.toggle}>
-                                <MDBModalHeader toggle={this.toggle}>MDBModal title</MDBModalHeader>
+                                <MDBModalHeader toggle={this.toggle}>Resize image</MDBModalHeader>
                                 <MDBModalBody>
                                     <Cropper
                                         ref={this.cropper}
                                         src={this.state.imageToEdit}
-                                        style={{height: 400, width: '100%'}}
-                                        aspectRatio={1}
-                                        guides={false}
+                                        style={{width: '100%', height: 300, objectFit: 'contain'}}
+                                        viewMode={1}
+                                        dragMode={'move'}
+                                        guides={true}
                                     />
                                 </MDBModalBody>
                                 <MDBModalFooter>
@@ -241,8 +242,8 @@ export default class PostCreateForm extends Component{
                                         >
                                             {files.map((file,index) => {
                                                 return (
-                                                    <div className={'image-wrap'} key={index}>
-                                                        <img key={index} className={'mr-2 menu-image'} src={file.src.base64} width={100} height={100} style={{objectFit: 'cover'}} />
+                                                    <div className={'image-wrap mr-2'} key={index}>
+                                                        <img key={index} className={'mr-2 menu-image z-depth-1'} src={file.src.base64} width={100} height={100} style={{objectFit: 'cover'}} />
                                                         <div className={'overlay'}>
                                                             <MDBIcon className={'edit-image'} icon={'edit'} color={'white'} onClick={() => this.editImage(file.src.base64,file.id)} />
                                                             <MDBIcon className={'remove-image'} icon={'times'} color={'white'} onClick={() => this.removeImage(file.src.file.name)} />

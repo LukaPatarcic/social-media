@@ -21,20 +21,22 @@ class FriendshipRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param User $user
+     * @param $profileId
+     * @param int $limit
+     * @param int $offset
      * @return Friendship[] Returns an array of Friendship objects
      */
-    public function findUsersFollowers(User $user,$limit = 10,$offset = 0)
+    public function findUsersFollowers($profileId,$limit = 10,$offset = 0)
     {
         return $this->createQueryBuilder('f')
             ->join('f.user','ff')
             ->join('ff.friends','fff')
-            ->select('ff.id, ff.firstName, ff.lastName, ff.profileName, ff.createdAt, ff.profilePicture')
-            ->where('f.friend = :user')
+            ->select('distinct ff.id, ff.firstName, ff.lastName, ff.profileName, ff.createdAt, ff.profilePicture')
+            ->andWhere('f.friend = :profileId')
             ->orderBy('f.createdAt','DESC')
             ->setMaxResults($limit)
             ->setFirstResult($offset)
-            ->setParameter(':user',$user)
+            ->setParameter('profileId',$profileId)
             ->getQuery()
             ->getArrayResult()
             ;
@@ -42,20 +44,22 @@ class FriendshipRepository extends ServiceEntityRepository
 
 
     /**
-     * @param User $user
+     * @param $profileId
+     * @param int $limit
+     * @param int $offset
      * @return Friendship[] Returns an array of Friendship objects
      */
-    public function findUsersFollowing(User $user,$limit = 10,$offset = 0)
+    public function findUsersFollowing($profileId,$limit = 10,$offset = 0)
     {
         return $this->createQueryBuilder('f')
             ->join('f.friend','ff')
             ->join('f.user','fu')
-            ->select('ff.id, ff.firstName, ff.lastName, ff.profileName, ff.createdAt, ff.profilePicture')
-            ->where('f.user = :user')
+            ->select('distinct ff.id, ff.firstName, ff.lastName, ff.profileName, ff.createdAt, ff.profilePicture')
+            ->where('f.user = :profileId')
             ->orderBy('f.createdAt','DESC')
             ->setMaxResults($limit)
             ->setFirstResult($offset)
-            ->setParameter(':user',$user)
+            ->setParameter(':profileId',$profileId)
             ->getQuery()
             ->getArrayResult()
             ;

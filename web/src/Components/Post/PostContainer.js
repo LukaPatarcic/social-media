@@ -344,6 +344,6 @@ export default class PostContainer extends React.Component{
 
 PostContainer.propTypes = {
     showCreatePost: PropTypes.bool,
-    profile: PropTypes.number,
+    profile: PropTypes.string,
     onlyMe: PropTypes.bool
 };

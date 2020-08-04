@@ -39,7 +39,9 @@ export default class Profile extends React.Component{
                             src={file.length > 0 ? file[0].src.base64 : ''}
                             style={{height: 400, width: '100%'}}
                             aspectRatio={1}
-                            guides={false}
+                            viewMode={1}
+                            dragMode={'move'}
+                            guides={true}
                         />
                     </MDBModalBody>
                     <MDBModalFooter>
@@ -61,10 +63,10 @@ export default class Profile extends React.Component{
                                 <MDBRow className={'d-flex align-items-center justify-content-center'}>
                                     <MDBCol size={4} sm={4} md={2} className={'offset-md-2'} >
                                         <Loading loading={loading || uploadingImage}>
-                                            <div className={'image-wrap'}>
+                                            <div className={isMe ?'image-wrap': {}}>
                                                 <img
                                                     alt={''}
-                                                    className={'img-fluid menu-image rounded-circle'}
+                                                    className={isMe ? 'img-fluid menu-image rounded-circle' : 'img-fluid rounded-circle'}
                                                     src={
                                                         file.length > 0 ?
                                                             file[0].src.base64 :
@@ -72,6 +74,7 @@ export default class Profile extends React.Component{
                                                             setProfilePicture(user.firstName,user.lastName,128)
                                                     }
                                                 />
+                                                {isMe &&
                                                 <div className={'overlay overlay-rounded'}>
                                                     <Files
                                                         multiple={false}
@@ -96,6 +99,7 @@ export default class Profile extends React.Component{
                                                         )}
                                                     </Files>
                                                 </div>
+                                                }
                                             </div>
                                         </Loading>
                                     </MDBCol>
@@ -111,7 +115,7 @@ export default class Profile extends React.Component{
                                             </Loading>
                                         </h6>
                                         <MDBRow>
-                                            <FollowContainer loading={loading} followers={user.followers} following={user.following} />
+                                            {loading ? null : <FollowContainer loading={loading} followers={user.followers} following={user.following} profileId={user.id} />}
                                         </MDBRow>
                                     </MDBCol>
                                 </MDBRow>
@@ -121,7 +125,7 @@ export default class Profile extends React.Component{
                 </MDBRow>
                 <MDBRow>
                     <MDBCol sm={12}>
-                        {loading ? null : <PostContainer showCreatePost={isMe} profile={user.id} onlyMe={isMe} />}
+                        {loading ? null : <PostContainer showCreatePost={isMe} profile={user.profileName} onlyMe={isMe} />}
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>

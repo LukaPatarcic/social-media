@@ -151,8 +151,8 @@ class DataTransformer
     {
         $data = [];
         foreach ($posts as $k => $post) {
-            $data[$k]['id'] = $post['postId'];
-            $data[$k]['userId'] = $post['userId'];
+            $data[$k]['id'] = (int)$post['postId'];
+            $data[$k]['userId'] = (int)$post['userId'];
             $data[$k]['firstName'] = $post['firstName'];
             $data[$k]['lastName'] =$post['lastName'];
             $data[$k]['profileName'] =$post['profileName'];

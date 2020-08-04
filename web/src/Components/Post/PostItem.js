@@ -46,7 +46,6 @@ export default class PostItem extends Component{
             onPostLikesModalCloseHandler
         } = this.props;
         const {inputVisibility} = this.state;
-
         return (
             <MDBRow center>
                 <MDBCol size={12} md={12} lg={10} xl={8}>
@@ -90,16 +89,12 @@ export default class PostItem extends Component{
                                             length={post.images.length}
                                             showControls={post.images.length > 1 ? true : false}
                                             showIndicators={post.images.length > 1 ? true : false}
-                                            className="z-depth-1"
                                             mobileGesture={true}
-                                            style={{width: '100%'}}
                                         >
                                             <MDBCarouselInner>
                                                 {post.images.map((image,index) => (
                                                     <MDBCarouselItem itemId={index+1} key={index}>
-                                                        <MDBView>
-                                                            <img className="img-fluid" src={POST_IMAGE(post.profileName,image)} />
-                                                        </MDBView>
+                                                        <img className="d-block img-fluid" style={{height: 400}} src={POST_IMAGE(post.profileName,image)} />
                                                     </MDBCarouselItem>
                                                 ))}
                                             </MDBCarouselInner>
