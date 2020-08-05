@@ -4,9 +4,8 @@ import Login from "../screens/Login";
 import Register from "../screens/Register";
 import Feed from "../screens/Feed";
 import {AuthContext} from "../context/AuthProvider";
-import NavigationContainer from "@react-navigation/native/src/NavigationContainer";
+import { NavigationContainer } from '@react-navigation/native';
 import {CardStyleInterpolators, createStackNavigator, TransitionPresets} from "@react-navigation/stack";
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import Profile from "../screens/Profile";
 import RegisterTwo from "../screens/RegisterTwo";
 import RegisterThree from "../screens/RegisterThree";
@@ -29,28 +28,7 @@ export default function Router(){
     const linking = {
         prefixes: ['https://allshack.lukauku.tech/','allshack://'],
         config: {
-            screens: {
-                TabsScreen: {
-                    screens: {
-                        FeedStack: {
-                            screens: {
-                                Feed: 'FeedPath',
-                                MessagesWithUser: {
-                                    path: 'messages/:user',
-                                    params: {user: {}}
-                                },
-                                AddPost: 'addpost'
-                            }
-                        }
-                    }
-                },
-                Profile: {
-                    path: 'profile/:profile',
-                    params: {profileName: 'me'}
-                },
-                Notifications: 'notifications',
 
-            }
         }
     }
 
@@ -351,7 +329,7 @@ const TabsScreen = () => {
 
 const RootStack = createStackNavigator();
 const RootStackScreen = ({ state }) => (
-    <RootStack.Navigator headerMode="none" path={'register'}>
+    <RootStack.Navigator headerMode="none">
         {state.isLoading ?
             (
                 <RootStack.Screen

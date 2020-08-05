@@ -183,132 +183,124 @@ export default class AddPost extends React.Component{
                                 keyExtractor={(contact, index) => String(index)}
                                 horizontal={true}
                                 showsHorizontalScrollIndicator={false}
-                                renderItem={({item, index}) => {
-                                    if (index === 0) {
-                                        return (
-                                            <View
-                                                style={{
-                                                    width: 100,
-                                                    height: 100,
-                                                    backgroundColor: '#fff',
-                                                    flex: 1,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    borderRadius: 5
-                                                }}
+                                ListHeaderComponent={() => (
+                                    <View
+                                        style={{
+                                            width: 100,
+                                            height: 100,
+                                            backgroundColor: '#fff',
+                                            flex: 1,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: 5
+                                        }}
 
-                                            >
-                                                <Icon
-                                                    onPress={() => ImagePicker.launchCamera(options, (response) => {
-                                                        if (response.didCancel) {
-                                                            //nothing
-                                                        } else if (response.error) {
-                                                            ToastAndroid.show("Something went wrong while taking a picture...", ToastAndroid.SHORT);
-                                                        } else if (response.customButton) {
-                                                            //nothing
+                                    >
+                                        <Icon
+                                            onPress={() => ImagePicker.launchCamera(options, (response) => {
+                                                if (response.didCancel) {
+                                                    //nothing
+                                                } else if (response.error) {
+                                                    ToastAndroid.show("Something went wrong while taking a picture...", ToastAndroid.SHORT);
+                                                } else if (response.customButton) {
+                                                    //nothing
+                                                } else {
+                                                    this.setState((prevState) => ({
+                                                        photos: [{
+                                                            id: prevState.photos.length,
+                                                            selected: true,
+                                                            image: response.data
+                                                        }, ...prevState.photos],
+                                                        photosForUpload: [...response.data,prevState.photosForUpload]
+                                                    }))
+                                                }
+                                            })}
+                                            name={'camera'}
+                                            size={30}
+                                            color={'red'}
+                                        />
+                                    </View>
+                                )}
+                                ListFooterComponent={() => (
+                                    <View style={{
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: '#fff',
+                                        flex: 1,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: 5
+                                    }}>
+                                        <Icon
+                                            name={'images'}
+                                            size={30}
+                                            color={'red'}
+                                            onPress={() => {
+                                                ImagePicker.launchImageLibrary(options, (response) => {
+                                                    if (response.didCancel) {
+                                                        //nothing
+                                                    } else if (response.error) {
+                                                        ToastAndroid.show("Something went wrong while selecting your image...", ToastAndroid.SHORT);
+                                                    } else if (response.customButton) {
+                                                        //nothing
+                                                    } else {
+                                                        this.setState((prevState) => ({
+                                                            photos: [{
+                                                                selected: true,
+                                                                image: response.data,
+                                                                id: prevState.photos.length
+                                                            }, ...prevState.photos],
+                                                            photosForUpload: [...response.data,prevState.photosForUpload]
+                                                        }))
+                                                    }
+                                                });
+                                            }}
+                                        />
+                                    </View>
+                                )}
+                                renderItem={({item, index}) => (
+                                    <TouchableOpacity
+                                        activeOpacity={1}
+                                        onPress={() => {
+                                            this.setState((prevState) => {
+                                                var photos = [];
+                                                prevState.photos.filter((photo) => {
+                                                    if (photo.id === item.id) {
+                                                        if (!photo.selected) {
+                                                            photos = [...prevState.photosForUpload, photo.image];
                                                         } else {
-                                                            this.setState((prevState) => ({
-                                                                photos: [{
-                                                                    id: prevState.photos.length,
-                                                                    selected: true,
-                                                                    image: response.data
-                                                                }, ...prevState.photos]
-                                                            }))
+                                                            photos = prevState.photosForUpload.filter((image) => image !== photo.image)
                                                         }
-                                                    })}
-                                                    name={'camera'}
-                                                    size={30}
-                                                    color={'red'}
-                                                />
-                                            </View>
-                                        )
-
-                                    }
-
-                                    if (index === photos.length - 1) {
-                                        return (
-                                            <View style={{
+                                                        photo.selected = !photo.selected;
+                                                    }
+                                                    return photo;
+                                                })
+                                                return {
+                                                    photos: prevState.photos,
+                                                    photosForUpload: photos
+                                                }
+                                            })
+                                        }}
+                                    >
+                                        <ImageOverlay
+                                            onPress={() => console.log('pressed')}
+                                            containerStyle={{
                                                 width: 100,
                                                 height: 100,
-                                                backgroundColor: '#fff',
-                                                flex: 1,
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
+                                                marginHorizontal: 5,
                                                 borderRadius: 5
-                                            }}>
-                                                <Icon
-                                                    name={'images'}
-                                                    size={30}
-                                                    color={'red'}
-                                                    onPress={() => {
-                                                        ImagePicker.launchImageLibrary(options, (response) => {
-                                                            if (response.didCancel) {
-                                                                //nothing
-                                                            } else if (response.error) {
-                                                                ToastAndroid.show("Something went wrong while selecting your image...", ToastAndroid.SHORT);
-                                                            } else if (response.customButton) {
-                                                                //nothing
-                                                            } else {
-                                                                this.setState((prevState) => ({
-                                                                    photos: [{
-                                                                        selected: true,
-                                                                        image: response.data,
-                                                                        id: prevState.photos.length
-                                                                    }, ...prevState.photos]
-                                                                }))
-                                                            }
-                                                        });
-                                                    }}
-                                                />
-                                            </View>
-                                        )
-                                    }
-
-                                    return (
-                                        <TouchableOpacity
-                                            activeOpacity={1}
-                                            onPress={() => {
-                                                this.setState((prevState) => {
-                                                    var photos = [];
-                                                    prevState.photos.filter((photo) => {
-                                                        if (photo.id === item.id) {
-                                                            if (!photo.selected) {
-                                                                photos = [...prevState.photosForUpload, photo.image];
-                                                            } else {
-                                                                photos = prevState.photosForUpload.filter((image) => image !== photo.image)
-                                                            }
-                                                            photo.selected = !photo.selected;
-                                                        }
-                                                        return photo;
-                                                    })
-                                                    console.log(photos.length);
-                                                    return {
-                                                        photos: prevState.photos,
-                                                        photosForUpload: photos
-                                                    }
-                                                })
                                             }}
+                                            source={{uri: 'data:image/jpeg;base64,' + item.image}}
+                                            style={{width: 100, height: 100}}
+                                            overlayColor={item.selected ? 'red' : null}
+                                            overlayAlpha={0.5}
+                                            contentPosition="center"
+                                            title={item.selected ?
+                                                <Icon name={'check'} color={'white'} size={30}/> : null}
                                         >
-                                            <ImageOverlay
-                                                onPress={() => console.log('pressed')}
-                                                containerStyle={{
-                                                    width: 100,
-                                                    height: 100,
-                                                    marginHorizontal: 5,
-                                                    borderRadius: 5
-                                                }}
-                                                source={{uri: 'data:image/jpeg;base64,' + item.image}}
-                                                style={{width: 100, height: 100}}
-                                                overlayColor={item.selected ? 'red' : null}
-                                                overlayAlpha={0.5}
-                                                contentPosition="center"
-                                                title={item.selected ?
-                                                    <Icon name={'check'} color={'white'} size={30}/> : null}
-                                            >
-                                            </ImageOverlay>
-                                        </TouchableOpacity>
-                                    )
-                                }}
+                                        </ImageOverlay>
+                                    </TouchableOpacity>
+                                )}
                             />
                         }
                     </View>
