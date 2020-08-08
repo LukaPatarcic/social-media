@@ -20,6 +20,7 @@ export default class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: 0,
             user: {},
             posts: [],
             following: [],
@@ -189,7 +190,8 @@ export default class Profile extends React.Component {
 
     render() {
         const {user,posts,refreshing,loading,hasMore,loadingMore,logoutLoading,id,loadingPosts} = this.state;
-        const {isMe,profileName} = this.props.route.params;
+        const {profileName} = this.props.route.params;
+        const isMe = user.id == id;
 
         if(loading) {
             return (
@@ -222,7 +224,7 @@ export default class Profile extends React.Component {
                                     titleStyle={{fontFamily: 'font'}}
                                     title={user.profileName}
                                     subtitle={user.firstName + " " + user.lastName}
-                                    left={(props) => <ProfilePicture user={user} token={this.state.token} />}
+                                    left={(props) => <ProfilePicture user={user} token={this.state.token} isMe={isMe} />}
                                     right={() =>
                                         <View style={{flex: 1, flexDirection: 'row',justifyContent: 'center',alignItems: 'center',marginRight: 30}}>
                                             <View style={{marginRight: 10}}>

@@ -97,26 +97,12 @@ export default class App extends React.Component {
 
     }
 
-    static contextType = AuthContext;
-
     render() {
-        const auth = this.context;
         return(
             <AuthProvider>
-                <AuthContext>
-                    {({isAuth}) => (
-                        isAuth ?
-                            <WebsocketProvider>
-                                <PaperProvider theme={theme}>
-                                    <Router />
-                                </PaperProvider>
-                            </WebsocketProvider>
-                            :
-                            <PaperProvider theme={theme}>
-                                <Router />
-                            </PaperProvider>
-                    )}
-                </AuthContext>
+                <PaperProvider theme={theme}>
+                    <Router />
+                </PaperProvider>
             </AuthProvider>
         );
     }

@@ -23,6 +23,7 @@ export class AuthProvider extends React.Component {
 
 
     componentDidMount() {
+        console.log('auth')
         this.authenticateUser();
     }
 

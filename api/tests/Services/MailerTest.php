@@ -3,7 +3,6 @@
 namespace App\Tests\Services;
 
 use App\Services\Mailer;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class MailerTest extends KernelTestCase

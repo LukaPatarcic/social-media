@@ -211,7 +211,7 @@ export default class AddPost extends React.Component{
                                                             selected: true,
                                                             image: response.data
                                                         }, ...prevState.photos],
-                                                        photosForUpload: [...response.data,prevState.photosForUpload]
+                                                        photosForUpload: [response.data,...prevState.photosForUpload]
                                                     }))
                                                 }
                                             })}
@@ -250,7 +250,7 @@ export default class AddPost extends React.Component{
                                                                 image: response.data,
                                                                 id: prevState.photos.length
                                                             }, ...prevState.photos],
-                                                            photosForUpload: [...response.data,prevState.photosForUpload]
+                                                            photosForUpload: [response.data,...prevState.photosForUpload]
                                                         }))
                                                     }
                                                 });

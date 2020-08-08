@@ -36,7 +36,7 @@ class FriendController extends BaseController
         /** @var FriendshipRequest $requests */
         $friends = $this->getDoctrine()->getRepository(Friendship::class)->findUsersFollowing($profileId,10,$offset);
         if(!$friends) {
-            return  $this->json([], Response::HTTP_NO_CONTENT);
+            return  $this->json([], Response::HTTP_OK);
         }
         $data = $transformer->friendListDataTransformer($friends);
 
@@ -58,7 +58,7 @@ class FriendController extends BaseController
         /** @var FriendshipRequest $requests */
         $friends = $this->getDoctrine()->getRepository(Friendship::class)->findUsersFollowers($profileId,10,$offset);
         if(!$friends) {
-            return  $this->json([], Response::HTTP_NO_CONTENT);
+            return  $this->json([], Response::HTTP_OK);
         }
 
         $data = $transformer->friendListDataTransformer($friends);

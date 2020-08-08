@@ -77,7 +77,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "CommentList.js",
+    entryFile: "index.js",
     enableHermes: false,  // clean and rebuild if changing
 ]
 
@@ -181,9 +181,9 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-fs')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-image-resizer')
-    implementation project(':react-native-fs')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.google.firebase:firebase-analytics:17.2.2'

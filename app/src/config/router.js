@@ -22,6 +22,7 @@ import MessagesWithUser from "../components/MessagesWithUser";
 import NewMessage from "../components/NewMessage";
 import {BASE_URL} from "./index";
 import Follow from "../screens/Follow";
+import {WebsocketProvider} from "../context/WebsocketProvider";
 
 
 export default function Router(){
@@ -34,13 +35,17 @@ export default function Router(){
 
     return (
         <AuthContext.Consumer>
-            {(context) => {
-                return(
+            {(context) => context.isAuth ?
+                <WebsocketProvider>
                     <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
                         <RootStackScreen state={{...context}} />
                     </NavigationContainer>
-                )
-            }}
+                </WebsocketProvider>
+                :
+                <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+                    <RootStackScreen state={{...context}} />
+                </NavigationContainer>
+            }
         </AuthContext.Consumer>
     )
 }
