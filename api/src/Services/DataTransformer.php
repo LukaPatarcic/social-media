@@ -29,7 +29,7 @@ class DataTransformer
         $com['firstName'] = $comment->getUser()->getFirstName();
         $com['lastName'] = $comment->getUser()->getLastName();
         $com['profileName'] = $comment->getUser()->getProfileName();
-        $com['profilePicture'] = Image::getProfilePicture($comment->getUser()->getProfileName(),$comment->getUser()->getProfilePicture(),40,40);
+        $com['profilePicture'] = Image::getProfilePicture($comment->getUser()->getProfileName(),$comment->getUser()->getProfilePicture(),90,90);
         $com['text'] = $comment->getText();
         $com['createdAt'] = $comment->getCreatedAt();
         $com['subCommentCount'] = 0;
@@ -49,7 +49,7 @@ class DataTransformer
             $data[$key]['firstName'] = $value['firstName'];
             $data[$key]['lastName'] = $value['lastName'];
             $data[$key]['profileName'] = $value['profileName'];
-            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],35,35);
+            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],90,90);
             $data[$key]['text'] = $value['text'];
             $data[$key]['createdAt'] = $value['createdAt'];
             $data[$key]['subCommentCount'] = (int)$value['subCommentCount'];
@@ -71,7 +71,7 @@ class DataTransformer
                 'lastName' => $friend['lastName'],
                 'profileName' => $friend['profileName'],
                 'createdAt' => $friend['createdAt'],
-                'profilePicture' => Image::getProfilePicture($friend['profileName'],$friend['profilePicture'],45,45)
+                'profilePicture' => Image::getProfilePicture($friend['profileName'],$friend['profilePicture'],90,90)
             ];
         }
 
@@ -107,7 +107,7 @@ class DataTransformer
                 'profileName' => $profileName,
                 'firstName' => $firstName,
                 'lastName' => $lastName,
-                'profilePicture' => Image::getProfilePicture($profileName,$profilePicture,45,45)
+                'profilePicture' => Image::getProfilePicture($profileName,$profilePicture,120,120)
             ];
             $ifProfileAlreadyInArray = array_column($users, 'profileName');
             if(in_array($profileName,$ifProfileAlreadyInArray)) {
@@ -123,7 +123,7 @@ class DataTransformer
     public function messageListDataTransformer($messages,$user)
     {
         foreach ($messages as $key => $message) {
-            $profilePicture = Image::getProfilePicture($message['profileName'],$message['profilePicture'],45,45);
+            $profilePicture = Image::getProfilePicture($message['profileName'],$message['profilePicture'],120,120);
             unset($messages[$key]['profilePicture']);
             $messages[$key]['profilePicture'] = $profilePicture;
             $messages[$key]['isMe'] = $user->getProfileName() == $message['profileName'] ? true : false;
@@ -143,7 +143,7 @@ class DataTransformer
             "firstName" => $message->getFromUser()->getFirstName(),
             "lastName" => $message->getFromUser()->getLastName(),
             "profileName" => $message->getFromUser()->getProfileName(),
-            "profilePicture" => Image::getProfilePicture($message->getFromUser()->getProfileName(),$message->getFromUser()->getProfilePicture(),45,45),
+            "profilePicture" => Image::getProfilePicture($message->getFromUser()->getProfileName(),$message->getFromUser()->getProfilePicture(),90,90),
         ];
     }
 
@@ -157,7 +157,7 @@ class DataTransformer
             $data[$k]['lastName'] =$post['lastName'];
             $data[$k]['profileName'] =$post['profileName'];
             $data[$k]['text'] = $post['text'];
-            $data[$k]['profilePicture'] = Image::getProfilePicture($post['profileName'],$post['profilePicture'],45,45);
+            $data[$k]['profilePicture'] = Image::getProfilePicture($post['profileName'],$post['profilePicture'],90,90);
             $data[$k]['createdAt'] = $post['createdAt'];
             $data[$k]['likes'] = intval($post['likes']);
             $data[$k]['liked'] = (bool)$post['liked'];
@@ -170,7 +170,7 @@ class DataTransformer
                     'firstName' => $comment['firstName'],
                     'lastName' => $comment['lastName'],
                     'profileName' => $comment['profileName'],
-                    'profilePicture' => Image::getProfilePicture($comment['profileName'],$comment['profilePicture'],45,45),
+                    'profilePicture' => Image::getProfilePicture($comment['profileName'],$comment['profilePicture'],90,90),
                     'text' => $comment['text'],
                     'createdAt' => $comment['createdAt'],
                     'likes' => intval($comment['likes']),
@@ -251,7 +251,7 @@ class DataTransformer
 
             }
 
-            $q[$k]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],45,45);
+            $q[$k]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],120,120);
         }
 
         return $q;
@@ -266,7 +266,7 @@ class DataTransformer
             $data[$key]['firstName'] = $value['firstName'];
             $data[$key]['lastName'] = $value['lastName'];
             $data[$key]['profileName'] = $value['profileName'];
-            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],45,45);
+            $data[$key]['profilePicture'] = Image::getProfilePicture($value['profileName'],$value['profilePicture'],120,120);
             $data[$key]['text'] = $value['text'];
             $data[$key]['createdAt'] = $value['createdAt'];
         }

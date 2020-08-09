@@ -100,11 +100,10 @@ export default class Profile extends React.Component {
                         data={posts}
                         ListEmptyComponent={
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center',marginTop: 100}}>
-                                <Text style={{fontFamily: 'font',fontSize: 20}}>No posts found...</Text>
+                                <Text style={{fontFamily: 'font',fontSize: 20,color: 'white'}}>No posts found...</Text>
                             </View>
                         }
                         onEndReachedThreshold={0.6}
-                        // style={{marginTop: 5}}
                         ListFooterComponent={hasMore ?
                             loadingMore ? <ActivityIndicator size={60} color={'red'} /> : null
                             :

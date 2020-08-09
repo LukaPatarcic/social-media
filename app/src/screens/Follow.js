@@ -20,6 +20,7 @@ export default class Comments extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            userId: 0,
             follows: [],
             loading: true,
             loadingMore: false,
@@ -40,6 +41,9 @@ export default class Comments extends React.Component {
 
     componentDidMount() {
         this.getFollows();
+        AsyncStorage.getItem('id',(err,val) => {
+            this.setState({userId: val})
+        })
     }
 
     getFollows(more = false) {
@@ -122,8 +126,9 @@ export default class Comments extends React.Component {
     }
 
     render() {
-        const {following} = this.props.route.params;
-        const {follows,loading,loadingMore,hasMore,refreshing,dialogue,loadingDeleting} = this.state;
+        const {following,id} = this.props.route.params;
+        const {follows,loading,loadingMore,hasMore,refreshing,dialogue,loadingDeleting,userId} = this.state;
+        const isMe = id == userId;
 
         return (
             <ImageBackground
@@ -156,14 +161,20 @@ export default class Comments extends React.Component {
                             renderItem={({item,index}) => (
                                 <Card onLongPress={() => console.log('longpress')} style={{marginVertical: 5,fontFamily: 'font'}} key={index}>
                                     <Card.Title
-                                        title={item.firstName + " " + item.lastName}
+                                        title={<Text onPress={() => {
+                                            this.props.navigation.push("Profile", {profileName: item.profileName})
+                                            this.props.navigation.navigate("Profile")
+                                        }}>{item.firstName + " " + item.lastName}
+                                        </Text>}
                                         subtitle={item.profileName}
                                         left={() => (
                                             <Avatar.Image onPress={() => this.redirectToUser(item.profileName)} size={40} source={{uri: formatImage(item.profilePicture,item.firstName,item.lastName)}} />
                                         )}
                                         right={(props) => (
                                             following ?
-                                                <IconButton {...props} icon="dots-vertical" onPress={() => this.setState({dialogue: true,userToDelete: item.id})} />
+                                                isMe ?
+                                                    <IconButton {...props} icon="dots-vertical" onPress={() => this.setState({dialogue: true,userToDelete: item.id})} />
+                                                    :null
                                                 :
                                                 null
                                         )}

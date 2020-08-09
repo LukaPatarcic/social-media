@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url> <loc>https://allshack.lukaku.tech/</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/register</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/login</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/logout</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/legal/cookie</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/legal/privacy</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/legal/tos</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/profile/edit</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/profile/:profileName</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/notification/list</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/notfound</loc> </url>
+<url> <loc>https://allshack.lukaku.tech/</loc> </url>
+</urlset>

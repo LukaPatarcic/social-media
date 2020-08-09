@@ -101,6 +101,7 @@ export default class Search extends React.Component {
 
     render() {
         const {q,searchQuery,loading,token} = this.state;
+        const {message,navigation} = this.props
         return (
             <ImageBackground
                 style={{width: '100%', height: '100%'}}
@@ -136,9 +137,9 @@ export default class Search extends React.Component {
                                     key={index}
                                     getFriends={this.getFriends.bind(this)}
                                     token={token}
-                                    message={this.props.message}
+                                    message={message}
                                     sendFriendRequestChangeState={this.sendFriendRequestChangeState}
-                                    navigation={this.props.navigation}
+                                    navigation={navigation}
                                 />
                             )}
                         />

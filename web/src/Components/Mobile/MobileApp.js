@@ -15,7 +15,7 @@ export default class MobileApp extends Component {
                                 Download our mobile app for an even better experience!
                             </p>
                             <MDBBtn color="red" size={'lg'} rounded>
-                                <Link className={'text-white'} to={'https://downloads.allshack.lukaku.tech/Allshack.apk'}>Download now</Link>
+                                <a className={'text-white'} href={'https://downloads.allshack.lukaku.tech/Allshack.apk'}>Download now</a>
                             </MDBBtn>
                         </MDBCol>
                     </MDBRow>

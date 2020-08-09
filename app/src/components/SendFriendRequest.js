@@ -1,4 +1,4 @@
-import { Image, StyleSheet, ToastAndroid, View} from "react-native";
+import {Image, StyleSheet, Text, ToastAndroid, View} from "react-native";
 import React from "react";
 import {Card, IconButton, Avatar, Button} from "react-native-paper";
 import {BASE_URL} from "../config";
@@ -53,7 +53,16 @@ export default class SendFriendRequest extends React.Component{
         return (
             <Card onPress={this.props.message ? () => this.props.navigation.navigate('MessagesWithUser',{user:friend}) : () => this.redirectToUser()} style={{marginVertical: 5,backgroundColor:'#fff'}}>
                 <Card.Title
-                    title={friend.firstName+' '+friend.lastName}
+                    title={
+                        this.props.message ?
+
+                        <Text onPress={() => {
+                        this.props.navigation.push("Profile", {profileName: friend.profileName})
+                        this.props.navigation.navigate("Profile")
+                    }}>{friend.firstName + " " + friend.lastName}</Text>
+                            :
+                            friend.firstName + " " + friend.lastName
+                    }
                     subtitle={friend.profileName}
                     left={(props) => <Avatar.Image onPress={this.redirectToUser} {...props} source={{uri: formatImage(friend.profilePicture,friend.firstName,friend.lastName)}} />}
                     right={(props) => this.props.message
