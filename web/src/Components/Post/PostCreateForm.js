@@ -198,7 +198,7 @@ export default class PostCreateForm extends Component{
                                 <EmojiPicker
                                     emojiTooltip={true}
                                     title="Allshak"
-                                    style={{position: 'absolute', zIndex: 1}}
+                                    style={{position: 'absolute', zIndex: 10000}}
                                     onSelect={this.addEmoji.bind(this)}
                                 />
                             </span>

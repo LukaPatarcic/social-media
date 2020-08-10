@@ -69,13 +69,13 @@ export default class FollowContainer extends Component{
         const {modal,data,hasMoreUsers,loadingMoreUsers,header} = this.state;
         return (
             <>
-            <MDBCol className={'click'} sm={6} md={3} onClick={() => this.toggle(true)}>
+            <MDBCol className={'click'} sm={6} md={4} lg={4} xl={3} onClick={() => this.toggle(true)}>
                 Followers:{'\u00A0'}
                 <Loading loading={loading}>
                     <MDBBadge style={{fontSize: 14}} color={'red'}>{followers}</MDBBadge>
                 </Loading>
             </MDBCol>
-            <MDBCol className={'click'} sm={6} md={3} onClick={() => this.toggle(false)}>
+            <MDBCol className={'click'} sm={6} md={4} lg={4} xl={3} onClick={() => this.toggle(false)}>
                 Following:{'\u00A0'}
                 <Loading loading={loading}>
                     <MDBBadge style={{fontSize: 14}} color={'red'}>{following}</MDBBadge>
