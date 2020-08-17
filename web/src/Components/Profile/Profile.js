@@ -45,8 +45,8 @@ export default class Profile extends React.Component{
                         />
                     </MDBModalBody>
                     <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={onToggle}>Close</MDBBtn>
-                        <MDBBtn color="primary" onClick={onSaveChanges}>Save changes</MDBBtn>
+                        <MDBBtn color="grey" onClick={onToggle}>Close</MDBBtn>
+                        <MDBBtn color="danger" onClick={onSaveChanges}>Save changes</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
                 <MDBRow className={'mt-5'}>

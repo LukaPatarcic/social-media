@@ -91,6 +91,7 @@ export default class FollowContainer extends Component{
                                     <Link onClick={() => this.setState({modal: false})}  to={'/profile/' + user.profileName}>
                                         <img
                                             className={'img-fluid rounded-circle'}
+                                            style={{maxWidth: 45}}
                                             src={user.profilePicture ? user.profilePicture : setProfilePicture(user.firstName,user.lastName,45)}
                                             alt={''}
                                         />

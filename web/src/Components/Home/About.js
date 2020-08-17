@@ -30,13 +30,10 @@ export default class About extends React.Component{
                             />
                             
                             <AboutListItem
-                                icon={'fas fa-chart-pie'}
+                                icon={'fas fa-palette'}
                                 iconColor={'text-indigo'}
-                                title={'Check statistics'}
-                                description={'' +
-                                'Check your statistics on connected social media. ' +
-                                'See how many likes, posts and other fun stuff'
-                                }
+                                title={'Modern design'}
+                                description={'Have the best experience with out modern design and great UX'}
                             />
                         </MDBCol>
                         <MDBCol lg={6} md={12} className="px-4">

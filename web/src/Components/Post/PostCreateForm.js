@@ -216,8 +216,8 @@ export default class PostCreateForm extends Component{
                                     />
                                 </MDBModalBody>
                                 <MDBModalFooter>
-                                    <MDBBtn color="secondary" onClick={this.toggle}>Close</MDBBtn>
-                                    <MDBBtn color="primary" onClick={this.saveChanges}>Save changes</MDBBtn>
+                                    <MDBBtn color="grey" onClick={this.toggle}>Close</MDBBtn>
+                                    <MDBBtn color="danger" onClick={this.saveChanges}>Save changes</MDBBtn>
                                 </MDBModalFooter>
                             </MDBModal>
                             <Files
