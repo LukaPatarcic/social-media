@@ -55,13 +55,12 @@ export default class SendFriendRequest extends React.Component{
                 <Card.Title
                     title={
                         this.props.message ?
-
-                        <Text onPress={() => {
-                        this.props.navigation.push("Profile", {profileName: friend.profileName})
-                        this.props.navigation.navigate("Profile")
-                    }}>{friend.firstName + " " + friend.lastName}</Text>
-                            :
                             friend.firstName + " " + friend.lastName
+                            :
+                            <Text onPress={() => {
+                                this.props.navigation.push("Profile", {profileName: friend.profileName})
+                                this.props.navigation.navigate("Profile")
+                            }}>{friend.firstName + " " + friend.lastName}</Text>
                     }
                     subtitle={friend.profileName}
                     left={(props) => <Avatar.Image onPress={this.redirectToUser} {...props} source={{uri: formatImage(friend.profilePicture,friend.firstName,friend.lastName)}} />}

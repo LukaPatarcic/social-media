@@ -150,7 +150,7 @@ export default class Search extends React.Component {
 }
 
 Search.defaultProps = {
-    message: true
+    message: false
 }
 
 const styles = StyleSheet.create({
